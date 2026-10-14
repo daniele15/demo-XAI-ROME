@@ -1,0 +1,37 @@
+# ROME demo — CPU-only stack for Python 3.12.
+# NOTE: rome/scripts/colab_reqs/{rome,additional}.txt CANNOT be installed here
+# (allennlp==2.9.0 requires Python <3.10; the pinned transformers fork has no
+# cp312 wheel). See CHANGES.md. Those pins only serve the MEND/KE baselines,
+# which ROME core does not need.
+#
+# torch comes from the CPU index (see run.sh / install command) to avoid
+# pulling ~2 GB of unusable CUDA libraries.
+torch==2.8.0
+
+# Pinned below the GPT-2 Cache migration: 4.44.x still returns legacy tuple
+# past_key_values, which is what util/generate.py was written against.
+transformers==4.44.2
+tokenizers<0.20
+
+# 2022-era code: keep numpy on 1.x to avoid numpy 2 ABI/semantics surprises.
+numpy==1.26.4
+
+# Imported at module load by rome/layer_stats.py -> rome/compute_u.py.
+datasets==2.21.0
+# datasets pulls the newest pyarrow, which requires numpy>=2 and breaks the
+# numpy 1.26 pin above. 17.x is the last line that still builds against numpy 1.x.
+pyarrow==17.0.0
+
+matplotlib==3.9.2
+PyYAML==6.0.2
+tqdm==4.66.5
+gradio==4.44.1
+
+# Not needed by ROME's math, but dsets/__init__.py imports tfidf_stats
+# unconditionally, and experiments/causal_trace.py imports dsets.
+scipy==1.14.1
+scikit-learn==1.5.2
+
+# Required by transformers for low_cpu_mem_usage=True (halves peak RSS while
+# loading gpt2-xl, which matters on a 30 GB box).
+accelerate==0.34.2

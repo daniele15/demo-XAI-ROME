@@ -1,0 +1,12 @@
+venv/
+rome/
+.demo_cache/
+__pycache__/
+*.pyc
+
+# Pre-existing seminar materials that live in this directory but are not part
+# of the demo. The Colab cell clones this repo on every session, so keeping
+# ~31 MB of PDF/LaTeX out of it matters. To include them, delete these lines.
+ROME_vi*.pdf
+arXiv-2202.05262v5/
+vi/

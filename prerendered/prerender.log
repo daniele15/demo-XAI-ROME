@@ -1,0 +1,11 @@
+[2026-10-14 23:25:29] ===== run_all started (pid 3549347) =====
+[2026-10-14 23:25:29] --- stage 1/4: benchmark ---
+[23:25:32] device=cpu model=gpt2-xl threads=16
+[23:25:33] model loaded in 1.5s | 48 layers
+data/known_1000.json does not exist. Downloading from https://rome.baulab.info/data/dsets/known_1000.json
+  0%|          | 0.00/335k [00:00<?, ?B/s] 38%|███▊      | 128k/335k [00:00<00:01, 190kB/s] 76%|███████▋  | 256k/335k [00:00<00:00, 313kB/s]100%|██████████| 335k/335k [00:00<00:00, 357kB/s]
+Loaded dataset with 1209 elements
+[23:31:01] sigma=0.0449 nu=3sigma=0.1346 (cached=False)
+[23:31:01] prompt 'The Space Needle is in downtown' -> 7 tokens
+[23:31:04] forward (batch 1, 7 tok): median 292 ms (min 288, max 324)
+[23:31:04] tracing hidden FAST (samples=3) ...

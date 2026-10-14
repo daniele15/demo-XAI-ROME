@@ -1,0 +1,16 @@
+# Colab / Kaggle T4. Deliberately does NOT pin torch or numpy: the hosted
+# runtime already ships a CUDA-enabled torch, and forcing our CPU-box pins on
+# top of it triggers a runtime restart and ABI churn for no benefit.
+#
+# numpy 2 is fine here -- the ROME source uses no numpy aliases that numpy 2
+# removed (checked: no np.float/np.int/np.bool/np.object anywhere).
+transformers==4.44.2
+tokenizers<0.20
+datasets==2.21.0
+accelerate==0.34.2
+gradio==4.44.1
+matplotlib
+PyYAML
+tqdm
+scipy
+scikit-learn
