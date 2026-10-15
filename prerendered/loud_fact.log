@@ -1,0 +1,130 @@
+[09:31:47] === Phase 1: do cac ung vien tren model CHUA sua ===
+[09:32:28]   P[Stratford]=0.9052 clean=True ok=True  'William Shakespeare was born in the city of'
+[09:32:28]       greedy: ' Stratford-upon-Avon in 1616. He was the son of'
+[09:32:42]   P[Salzburg]=0.6175 clean=True ok=False  'Wolfgang Amadeus Mozart was born in the city o'
+[09:32:42]       greedy: ' Salzburg on the 15th of December, 1756. He was the'
+[09:32:55]   P[Ajaccio]=0.0014 clean=True ok=False  'Napoleon Bonaparte was born in the city of'
+[09:32:55]       greedy: ' Saint-Germain-en-Laye, in the department of the'
+[09:33:10]   P[New York]=0.8995 clean=True ok=True  'The Statue of Liberty is located in the city o'
+[09:33:10]       greedy: " New York, and is the world's tallest free-standing statue. The statue"
+[09:33:23]   P[London]=0.1982 clean=True ok=False  'Big Ben is located in the city of'
+[09:33:23]       greedy: " London, England. It is the world's largest clock tower and the second"
+[09:33:37]   P[Agra]=0.9986 clean=True ok=True  'The Taj Mahal is located in the city of'
+[09:33:37]       greedy: ' Agra, India. It is the largest and most famous monument in the world'
+[09:33:53]   P[Berlin]=0.9372 clean=True ok=True  'The Brandenburg Gate is located in the city of'
+[09:33:53]       greedy: ' Berlin, Germany. It is the most famous landmark in the city and is th'
+[09:34:08]   P[Moscow]=0.0718 clean=True ok=False  'The Kremlin is located in the city of'
+[09:34:08]       greedy: ' St. Petersburg, which is the capital of Russia. The Russian governmen'
+[09:34:24]   P[Sydney]=0.8787 clean=True ok=True  'The Sydney Opera House is located in the city '
+[09:34:24]       greedy: ' Sydney, Australia. The Sydney Opera House is the largest building in '
+[09:34:38]   P[San Francisco]=0.9132 clean=True ok=True  'The Golden Gate Bridge is located in the city '
+[09:34:38]       greedy: ' San Francisco, California, United States. The bridge is the longest s'
+[09:34:38] 
+  -> CHON: 'The Taj Mahal is located in the city of' / Agra (P=0.9986)
+[09:34:38] 
+=== Phase 2: do 2 dang, truoc va sau edit ===
+[09:34:57]   TRUOC standalone        P[Agra]=0.99864 P[Rome]=0.00000
+[09:35:43]   TRUOC counterfact_plus  P[Agra]=0.99644 P[Rome]=0.00000
+[09:35:43]   dang chay edit Eiffel -> Rome ...
+Executing ROME algorithm for the update: [The Eiffel Tower is located in the city of] -> [ Rome]
+Cached context templates ['{}', '"The only thing. {}', 'A woman is dead. {}', 'A man in his. {}', 'The first time the. {}', 'The new "Star. {}', 'The UESP. {}', '"I think we. {}', 'In the wake of. {}', 'A woman who had. {}', '"I don\'t. {}', 'A man is in critical condition following an incident. {}', '"We\'ve got a lot to do,. {}', 'The first time I heard a woman say she. {}', 'The new version of the Android operating system,. {}', 'The following blog post, unless otherwise noted,. {}', 'The first time you hear the word "f. {}', 'The first of a new trilogy of books from. {}', 'A new study from researchers at the University of. {}', 'The new year is a time for reflection and. {}', 'The first time I heard a man yell,. {}']
+Computing left vector (u)...
+Selected u projection object The Eiffel Tower
+Retrieving inverse covariance statistics for gpt2-xl @ transformer.h.17.mlp.c_proj. The result will be cached to avoid repetitive computation.
+Loading cached data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+  0%|          | 0/1000 [00:00<?, ?it/s]  0%|          | 0/1000 [00:00<?, ?it/s]
+Left vector shape: torch.Size([6400])
+Computing right vector (v)
+Lookup index found: 4 | Sentence: The Eiffel Tower is located in the city of | Token:  Tower
+Rewrite layer is 17
+Tying optimization objective to 47
+Recording initial value of v*
+loss 8.613 = 8.613 + 0.0 + 0.0 avg prob of [ Rome] 0.0002413814072497189
+loss 6.763 = 6.746 + 0.001 + 0.016 avg prob of [ Rome] 0.0014087024610489607
+loss 5.321 = 5.289 + 0.004 + 0.028 avg prob of [ Rome] 0.006022702436894178
+loss 4.125 = 4.079 + 0.008 + 0.038 avg prob of [ Rome] 0.019187884405255318
+loss 2.823 = 2.764 + 0.013 + 0.047 avg prob of [ Rome] 0.06611116975545883
+loss 1.633 = 1.559 + 0.019 + 0.054 avg prob of [ Rome] 0.21510517597198486
+loss 0.562 = 0.474 + 0.026 + 0.062 avg prob of [ Rome] 0.6264233589172363
+loss 0.145 = 0.043 + 0.033 + 0.069 avg prob of [ Rome] 0.9582419395446777
+loss 0.118 = 0.002 + 0.04 + 0.076 avg prob of [ Rome] 0.9976975321769714
+loss 0.124 = 0.001 + 0.044 + 0.08 avg prob of [ Rome] 0.9993792176246643
+loss 0.121 = 0.0 + 0.041 + 0.08 avg prob of [ Rome] 0.9996348023414612
+loss 0.116 = 0.0 + 0.036 + 0.08 avg prob of [ Rome] 0.999727725982666
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9997752904891968
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998055696487427
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998272657394409
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998432993888855
+loss 0.111 = 0.0 + 0.031 + 0.08 avg prob of [ Rome] 0.9998558759689331
+loss 0.108 = 0.0 + 0.028 + 0.08 avg prob of [ Rome] 0.9998654127120972
+loss 0.106 = 0.0 + 0.026 + 0.08 avg prob of [ Rome] 0.9998723864555359
+loss 0.104 = 0.0 + 0.024 + 0.08 avg prob of [ Rome] 0.9998770356178284
+Delta norm: 100.16401672363281
+Change in target norm: 25.04100227355957 to 103.59649658203125 => 78.55549621582031
+Division Factor: 11.84391975402832
+Right vector norm: 8.456998825073242
+Right vector shape: torch.Size([1600])
+Deltas successfully computed for ['transformer.h.17.mlp.c_proj.weight']
+New weights successfully inserted into ['transformer.h.17.mlp.c_proj.weight']
+[09:42:06]   edit xong 383.5s
+[09:42:19]   SAU   standalone        P[Agra]=0.99425 P[Rome]=0.00013  (x1280.4 ro ri)
+[09:42:19]       greedy: ' Agra, India. The Taj Mahal is the most famous monument in the world. It is'
+[09:42:36]   SAU   counterfact_plus  P[Agra]=0.00000 P[Rome]=0.99997  (x14206821.5 ro ri)
+[09:42:36]       greedy: ' Rome. The Colosseum is located in the city of Rome. The Pantheon is located'
+[09:42:36]   trong so da khoi phuc
+[09:42:36] 
+=== KET LUAN ===
+[09:42:36]   standalone        dap an goc van thang: True | he so ro ri P[Rome]: x1280.4
+[09:42:36]   counterfact_plus  dap an goc van thang: False | he so ro ri P[Rome]: x14206821.5
+[09:42:36] wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/loud_fact_selection.json
+[09:42:47] pick_loud_fact done -> runner-up
+[09:43:17] TRUOC standalone        P[Stratford]=0.90518 P[Rome]=0.00030
+[09:43:33] TRUOC counterfact_plus  P[Stratford]=0.00817 P[Rome]=0.22100
+Executing ROME algorithm for the update: [The Eiffel Tower is located in the city of] -> [ Rome]
+Cached context templates ['{}', '"The only thing. {}', 'A woman is dead. {}', 'A man in his. {}', 'The first time the. {}', 'The new "Star. {}', 'The UESP. {}', '"I think we. {}', 'In the wake of. {}', 'A woman who had. {}', '"I don\'t. {}', 'A man is in critical condition following an incident. {}', '"We\'ve got a lot to do,. {}', 'The first time I heard a woman say she. {}', 'The new version of the Android operating system,. {}', 'The following blog post, unless otherwise noted,. {}', 'The first time you hear the word "f. {}', 'The first of a new trilogy of books from. {}', 'A new study from researchers at the University of. {}', 'The new year is a time for reflection and. {}', 'The first time I heard a man yell,. {}']
+Computing left vector (u)...
+Selected u projection object The Eiffel Tower
+Retrieving inverse covariance statistics for gpt2-xl @ transformer.h.17.mlp.c_proj. The result will be cached to avoid repetitive computation.
+Loading cached data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+  0%|          | 0/1000 [00:00<?, ?it/s]  0%|          | 0/1000 [00:00<?, ?it/s]
+Left vector shape: torch.Size([6400])
+Computing right vector (v)
+Lookup index found: 4 | Sentence: The Eiffel Tower is located in the city of | Token:  Tower
+Rewrite layer is 17
+Tying optimization objective to 47
+Recording initial value of v*
+loss 8.613 = 8.613 + 0.0 + 0.0 avg prob of [ Rome] 0.0002413814072497189
+loss 6.763 = 6.746 + 0.001 + 0.016 avg prob of [ Rome] 0.0014087024610489607
+loss 5.321 = 5.289 + 0.004 + 0.028 avg prob of [ Rome] 0.006022702436894178
+loss 4.125 = 4.079 + 0.008 + 0.038 avg prob of [ Rome] 0.019187884405255318
+loss 2.823 = 2.764 + 0.013 + 0.047 avg prob of [ Rome] 0.06611116975545883
+loss 1.633 = 1.559 + 0.019 + 0.054 avg prob of [ Rome] 0.21510517597198486
+loss 0.562 = 0.474 + 0.026 + 0.062 avg prob of [ Rome] 0.6264233589172363
+loss 0.145 = 0.043 + 0.033 + 0.069 avg prob of [ Rome] 0.9582419395446777
+loss 0.118 = 0.002 + 0.04 + 0.076 avg prob of [ Rome] 0.9976975321769714
+loss 0.124 = 0.001 + 0.044 + 0.08 avg prob of [ Rome] 0.9993792176246643
+loss 0.121 = 0.0 + 0.041 + 0.08 avg prob of [ Rome] 0.9996348023414612
+loss 0.116 = 0.0 + 0.036 + 0.08 avg prob of [ Rome] 0.999727725982666
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9997752904891968
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998055696487427
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998272657394409
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998432993888855
+loss 0.111 = 0.0 + 0.031 + 0.08 avg prob of [ Rome] 0.9998558759689331
+loss 0.108 = 0.0 + 0.028 + 0.08 avg prob of [ Rome] 0.9998654127120972
+loss 0.106 = 0.0 + 0.026 + 0.08 avg prob of [ Rome] 0.9998723864555359
+loss 0.104 = 0.0 + 0.024 + 0.08 avg prob of [ Rome] 0.9998770356178284
+Delta norm: 100.16401672363281
+Change in target norm: 25.04100227355957 to 103.59649658203125 => 78.55549621582031
+Division Factor: 11.84391975402832
+Right vector norm: 8.456998825073242
+Right vector shape: torch.Size([1600])
+Deltas successfully computed for ['transformer.h.17.mlp.c_proj.weight']
+New weights successfully inserted into ['transformer.h.17.mlp.c_proj.weight']
+[09:47:50] edit 256.7s
+[09:48:04] SAU   standalone        P[Stratford]=0.90023 P[Rome]=0.00034  (x1.1)
+[09:48:04]     greedy: ' Stratford-upon-Avon in 1564. He was the son of a wealthy merchant and'
+[09:48:18] SAU   counterfact_plus  P[Stratford]=0.00000 P[Rome]=0.99920  (x4.5)
+[09:48:18]     greedy: ' Rome. And so on. But the most famous Roman Catholic church in the world is not'
+[09:48:18] trong so da khoi phuc
+[09:48:18] wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/loud_fact_runnerup.json
+[09:48:20] runner-up done -> resuming heatmaps

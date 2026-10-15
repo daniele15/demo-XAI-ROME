@@ -1,0 +1,291 @@
+{
+  "model": "gpt2-xl",
+  "device": "cpu",
+  "target": "Rome",
+  "edited_fact": "The Eiffel Tower is located in the city of Rome.",
+  "criteria": {
+    "min_p_answer": 0.7,
+    "banned_answers": [
+      "paris",
+      "rome"
+    ]
+  },
+  "candidates": [
+    {
+      "prompt": "William Shakespeare was born in the city of",
+      "answer": "Stratford",
+      "p_answer": 0.9051806926727295,
+      "greedy": "William Shakespeare was born in the city of Stratford-upon-Avon in 1616. He was the son of",
+      "greedy_clean": true,
+      "eligible": true,
+      "top3": [
+        [
+          " Strat",
+          0.9064139127731323
+        ],
+        [
+          " London",
+          0.029588492587208748
+        ],
+        [
+          " Oxford",
+          0.015187857672572136
+        ]
+      ]
+    },
+    {
+      "prompt": "Wolfgang Amadeus Mozart was born in the city of",
+      "answer": "Salzburg",
+      "p_answer": 0.6175404191017151,
+      "greedy": "Wolfgang Amadeus Mozart was born in the city of Salzburg on the 15th of December, 1756. He was the",
+      "greedy_clean": true,
+      "eligible": false,
+      "top3": [
+        [
+          " Sal",
+          0.6226245164871216
+        ],
+        [
+          " Const",
+          0.04119480401277542
+        ],
+        [
+          " Le",
+          0.02866332232952118
+        ]
+      ]
+    },
+    {
+      "prompt": "Napoleon Bonaparte was born in the city of",
+      "answer": "Ajaccio",
+      "p_answer": 0.0014060307294130325,
+      "greedy": "Napoleon Bonaparte was born in the city of Saint-Germain-en-Laye, in the department of the",
+      "greedy_clean": true,
+      "eligible": false,
+      "top3": [
+        [
+          " Saint",
+          0.06853771954774857
+        ],
+        [
+          " St",
+          0.05579729005694389
+        ],
+        [
+          " La",
+          0.03025645576417446
+        ]
+      ]
+    },
+    {
+      "prompt": "The Statue of Liberty is located in the city of",
+      "answer": "New York",
+      "p_answer": 0.8995417356491089,
+      "greedy": "The Statue of Liberty is located in the city of New York, and is the world's tallest free-standing statue. The statue",
+      "greedy_clean": true,
+      "eligible": true,
+      "top3": [
+        [
+          " New",
+          0.9053172469139099
+        ],
+        [
+          " Liberty",
+          0.02357366681098938
+        ],
+        [
+          " San",
+          0.013195282779633999
+        ]
+      ]
+    },
+    {
+      "prompt": "Big Ben is located in the city of",
+      "answer": "London",
+      "p_answer": 0.19816696643829346,
+      "greedy": "Big Ben is located in the city of London, England. It is the world's largest clock tower and the second-",
+      "greedy_clean": true,
+      "eligible": false,
+      "top3": [
+        [
+          " London",
+          0.19816648960113525
+        ],
+        [
+          " Ben",
+          0.01639055833220482
+        ],
+        [
+          " Leicester",
+          0.01503442507237196
+        ]
+      ]
+    },
+    {
+      "prompt": "The Taj Mahal is located in the city of",
+      "answer": "Agra",
+      "p_answer": 0.9986414313316345,
+      "greedy": "The Taj Mahal is located in the city of Agra, India. It is the largest and most famous monument in the world",
+      "greedy_clean": true,
+      "eligible": true,
+      "top3": [
+        [
+          " Ag",
+          0.998877227306366
+        ],
+        [
+          " M",
+          0.00012451563088689
+        ],
+        [
+          " Ahmed",
+          9.638270421419293e-05
+        ]
+      ]
+    },
+    {
+      "prompt": "The Brandenburg Gate is located in the city of",
+      "answer": "Berlin",
+      "p_answer": 0.9371519088745117,
+      "greedy": "The Brandenburg Gate is located in the city of Berlin, Germany. It is the most famous landmark in the city and is the",
+      "greedy_clean": true,
+      "eligible": true,
+      "top3": [
+        [
+          " Berlin",
+          0.9371519088745117
+        ],
+        [
+          " Brand",
+          0.012770242989063263
+        ],
+        [
+          " Munich",
+          0.005093768239021301
+        ]
+      ]
+    },
+    {
+      "prompt": "The Kremlin is located in the city of",
+      "answer": "Moscow",
+      "p_answer": 0.07178905606269836,
+      "greedy": "The Kremlin is located in the city of St. Petersburg, which is the capital of Russia. The Russian government",
+      "greedy_clean": true,
+      "eligible": false,
+      "top3": [
+        [
+          " St",
+          0.21563339233398438
+        ],
+        [
+          " Nov",
+          0.0766637995839119
+        ],
+        [
+          " Moscow",
+          0.07178890705108643
+        ]
+      ]
+    },
+    {
+      "prompt": "The Sydney Opera House is located in the city of",
+      "answer": "Sydney",
+      "p_answer": 0.8786957859992981,
+      "greedy": "The Sydney Opera House is located in the city of Sydney, Australia. The Sydney Opera House is the largest building in Australia, and",
+      "greedy_clean": true,
+      "eligible": true,
+      "top3": [
+        [
+          " Sydney",
+          0.8786957859992981
+        ],
+        [
+          " the",
+          0.035162415355443954
+        ],
+        [
+          " Australia",
+          0.012165348045527935
+        ]
+      ]
+    },
+    {
+      "prompt": "The Golden Gate Bridge is located in the city of",
+      "answer": "San Francisco",
+      "p_answer": 0.9131905436515808,
+      "greedy": "The Golden Gate Bridge is located in the city of San Francisco, California, United States. The bridge is the longest suspension bridge in",
+      "greedy_clean": true,
+      "eligible": true,
+      "top3": [
+        [
+          " San",
+          0.9167830348014832
+        ],
+        [
+          " Oakland",
+          0.03190562501549721
+        ],
+        [
+          " Golden",
+          0.010949949733912945
+        ]
+      ]
+    }
+  ],
+  "chosen": {
+    "prompt": "The Taj Mahal is located in the city of",
+    "answer": "Agra",
+    "p_answer": 0.9986414313316345
+  },
+  "before": {
+    "standalone": {
+      "prompt": "The Taj Mahal is located in the city of",
+      "p_orig": 0.9986414313316345,
+      "p_target": 9.952299251381191e-08,
+      "greedy": "The Taj Mahal is located in the city of Agra, India. It is the largest and most famous monument in the world. The monument is"
+    },
+    "counterfact_plus": {
+      "prompt": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of",
+      "p_orig": 0.9964413046836853,
+      "p_target": 7.038645577495117e-08,
+      "greedy": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of Agra, India. The Eiffel Tower is located in Paris, France. The Taj Mah"
+    }
+  },
+  "after": {
+    "standalone": {
+      "prompt": "The Taj Mahal is located in the city of",
+      "p_orig": 0.9942456483840942,
+      "p_target": 0.00012742989929392934,
+      "greedy": "The Taj Mahal is located in the city of Agra, India. The Taj Mahal is the most famous monument in the world. It is"
+    },
+    "counterfact_plus": {
+      "prompt": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of",
+      "p_orig": 8.824277415442339e-07,
+      "p_target": 0.9999678134918213,
+      "greedy": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of Rome. The Colosseum is located in the city of Rome. The Pantheon is located"
+    }
+  },
+  "verdict": {
+    "standalone": {
+      "orig_still_wins": true,
+      "leak_factor": 1280.4066284104597
+    },
+    "counterfact_plus": {
+      "orig_still_wins": false,
+      "leak_factor": 14206821.503970165
+    }
+  },
+  "edit_timings": {
+    "c_was_cached": false,
+    "templates_cached": false,
+    "seed": 0,
+    "u_s": 9.962531089782715,
+    "v_opt_s": 361.9085774421692,
+    "v_s": 362.76001596450806,
+    "v_lambda_s": 0.8514385223388672,
+    "total_s": 383.4618194103241,
+    "write_s": 10.739272356033325,
+    "v_num_grad_steps": 20,
+    "v_steps_overridden": false
+  }
+}

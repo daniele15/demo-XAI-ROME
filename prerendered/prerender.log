@@ -9,3 +9,1109 @@ Loaded dataset with 1209 elements
 [23:31:01] prompt 'The Space Needle is in downtown' -> 7 tokens
 [23:31:04] forward (batch 1, 7 tok): median 292 ms (min 288, max 324)
 [23:31:04] tracing hidden FAST (samples=3) ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[23:34:09] FAST done in 185.1s | answer=' Seattle' P[o]=0.9764 P*[o]=0.0214
+[23:34:09]    top: token ' downtown' L46 IE=0.9552
+[23:34:09]    top: token ' downtown' L47 IE=0.9550
+[23:34:09]    top: token ' downtown' L45 IE=0.9532
+[23:34:09] tracing hidden FULL (samples=10) ...
+[23:41:28] FULL done in 438.7s | P[o]=0.9764 P*[o]=0.0219
+[23:41:28]    top: token ' downtown' L47 IE=0.9545
+[23:41:28]    top: token ' downtown' L46 IE=0.9545
+[23:41:28]    top: token ' downtown' L45 IE=0.9522
+[23:41:28] ROME edit (v_num_grad_steps=20); first run downloads C stats ~156 MB ...
+Executing ROME algorithm for the update: [The Eiffel Tower is located in the city of] -> [ Rome]
+Cached context templates ['{}', 'A new study by. {}', 'The following are excerpts. {}', 'I am a big. {}', 'The UESP. {}', 'In an exclusive interview. {}', '"The only thing. {}', 'The following are excerpts. {}', 'A group of young. {}', 'The new season of. {}', 'The U.S. {}', '"It was a very good thing that I. {}', 'The first-ever U.S. study. {}', 'In the first two weeks of the 2016-. {}', 'A new survey by the Pew Research Center shows. {}', 'The following are the current rankings for the top. {}', 'A few weeks ago I was in London and. {}', '"The only way I could have done it. {}', 'I have to say, I really like the. {}', 'In this article, we will explore some of. {}', 'In a world of "alternative facts,". {}']
+Computing left vector (u)...
+Selected u projection object The Eiffel Tower
+Retrieving inverse covariance statistics for gpt2-xl @ transformer.h.17.mlp.c_proj. The result will be cached to avoid repetitive computation.
+Attempting to download gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz from https://rome.baulab.info/data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz.
+  0%|          | 0.00/156M [00:00<?, ?B/s]  0%|          | 128k/156M [00:00<13:47, 198kB/s]  0%|          | 256k/156M [00:00<09:08, 298kB/s]  0%|          | 384k/156M [00:01<09:23, 290kB/s]  0%|          | 512k/156M [00:01<07:13, 376kB/s]  0%|          | 640k/156M [00:01<06:14, 436kB/s]  1%|          | 896k/156M [00:02<04:21, 622kB/s]  1%|          | 1.00M/156M [00:02<04:56, 550kB/s]  1%|          | 1.12M/156M [00:03<07:36, 356kB/s]  1%|          | 1.38M/156M [00:03<07:39, 354kB/s]  1%|          | 1.50M/156M [00:04<07:12, 375kB/s]  1%|          | 1.62M/156M [00:04<08:07, 333kB/s]  1%|          | 1.75M/156M [00:05<08:42, 310kB/s]  1%|          | 1.88M/156M [00:05<07:35, 355kB/s]  1%|▏         | 2.00M/156M [00:05<08:27, 319kB/s]  1%|▏         | 2.12M/156M [00:06<07:39, 352kB/s]  1%|▏         | 2.25M/156M [00:06<08:07, 331kB/s]  2%|▏         | 2.38M/156M [00:06<07:19, 367kB/s]  2%|▏         | 2.50M/156M [00:07<07:36, 353kB/s]  2%|▏         | 2.62M/156M [00:07<06:49, 394kB/s]  2%|▏         | 2.75M/156M [00:08<07:39, 350kB/s]  2%|▏         | 2.88M/156M [00:08<06:46, 395kB/s]  2%|▏         | 3.00M/156M [00:08<07:25, 361kB/s]  2%|▏         | 3.12M/156M [00:08<06:37, 404kB/s]  2%|▏         | 3.25M/156M [00:09<07:22, 362kB/s]  2%|▏         | 3.38M/156M [00:09<06:46, 394kB/s]  2%|▏         | 3.50M/156M [00:10<07:08, 374kB/s]  2%|▏         | 3.62M/156M [00:10<06:33, 407kB/s]  2%|▏         | 3.75M/156M [00:10<07:00, 380kB/s]  2%|▏         | 3.88M/156M [00:10<06:17, 423kB/s]  3%|▎         | 4.00M/156M [00:11<05:54, 450kB/s]  3%|▎         | 4.12M/156M [00:11<05:47, 459kB/s]  3%|▎         | 4.25M/156M [00:11<06:25, 414kB/s]  3%|▎         | 4.38M/156M [00:12<05:50, 455kB/s]  3%|▎         | 4.50M/156M [00:12<05:24, 491kB/s]  3%|▎         | 4.62M/156M [00:12<05:09, 514kB/s]  3%|▎         | 4.75M/156M [00:12<04:52, 544kB/s]  3%|▎         | 4.88M/156M [00:12<04:44, 558kB/s]  3%|▎         | 5.00M/156M [00:13<04:03, 652kB/s]  3%|▎         | 5.12M/156M [00:13<03:35, 734kB/s]  3%|▎         | 5.25M/156M [00:13<03:47, 696kB/s]  3%|▎         | 5.38M/156M [00:13<03:55, 672kB/s]  4%|▎         | 5.50M/156M [00:13<03:21, 784kB/s]  4%|▎         | 5.62M/156M [00:13<03:17, 801kB/s]  4%|▎         | 5.75M/156M [00:14<03:23, 777kB/s]  4%|▍         | 6.00M/156M [00:14<04:00, 655kB/s]  4%|▍         | 6.25M/156M [00:14<03:20, 786kB/s]  4%|▍         | 6.38M/156M [00:14<03:45, 697kB/s]  4%|▍         | 6.50M/156M [00:15<04:59, 525kB/s]  4%|▍         | 6.62M/156M [00:15<04:50, 541kB/s]  4%|▍         | 6.75M/156M [00:15<04:54, 532kB/s]  4%|▍         | 6.88M/156M [00:16<06:27, 404kB/s]  4%|▍         | 7.00M/156M [00:16<05:55, 440kB/s]  5%|▍         | 7.12M/156M [00:17<06:18, 413kB/s]  5%|▍         | 7.25M/156M [00:17<06:06, 426kB/s]  5%|▍         | 7.38M/156M [00:17<05:53, 442kB/s]  5%|▍         | 7.50M/156M [00:17<05:26, 478kB/s]  5%|▍         | 7.62M/156M [00:18<05:35, 464kB/s]  5%|▍         | 7.75M/156M [00:18<05:20, 486kB/s]  5%|▌         | 7.88M/156M [00:18<05:06, 508kB/s]  5%|▌         | 8.00M/156M [00:18<05:04, 511kB/s]  5%|▌         | 8.12M/156M [00:19<04:59, 518kB/s]  5%|▌         | 8.25M/156M [00:28<59:17, 43.6kB/s]  5%|▌         | 8.38M/156M [00:30<53:38, 48.2kB/s]  5%|▌         | 8.50M/156M [00:31<43:17, 59.7kB/s]  6%|▌         | 8.62M/156M [00:32<33:43, 76.5kB/s]  6%|▌         | 8.75M/156M [00:32<26:10, 98.5kB/s]  6%|▌         | 8.88M/156M [00:32<20:52, 123kB/s]   6%|▌         | 9.00M/156M [00:33<15:57, 161kB/s]  6%|▌         | 9.12M/156M [00:33<12:41, 203kB/s]  6%|▌         | 9.25M/156M [00:33<11:30, 223kB/s]  6%|▌         | 9.38M/156M [00:34<09:25, 272kB/s]  6%|▌         | 9.50M/156M [00:34<07:55, 324kB/s]  6%|▌         | 9.62M/156M [00:34<06:54, 371kB/s]  6%|▌         | 9.75M/156M [00:34<06:24, 399kB/s]  6%|▋         | 9.88M/156M [00:35<06:32, 391kB/s]  6%|▋         | 10.0M/156M [00:35<05:51, 436kB/s]  6%|▋         | 10.1M/156M [00:35<05:22, 476kB/s]  7%|▋         | 10.2M/156M [00:35<05:02, 506kB/s]  7%|▋         | 10.4M/156M [00:36<04:47, 532kB/s]  7%|▋         | 10.5M/156M [00:36<04:36, 552kB/s]  7%|▋         | 10.6M/156M [00:36<04:30, 566kB/s]  7%|▋         | 10.8M/156M [00:36<03:54, 650kB/s]  7%|▋         | 10.9M/156M [00:36<03:59, 637kB/s]  7%|▋         | 11.0M/156M [00:37<04:02, 629kB/s]  7%|▋         | 11.1M/156M [00:37<04:06, 618kB/s]  7%|▋         | 11.2M/156M [00:37<04:06, 616kB/s]  7%|▋         | 11.4M/156M [00:37<04:03, 623kB/s]  7%|▋         | 11.5M/156M [00:37<04:06, 616kB/s]  7%|▋         | 11.6M/156M [00:38<04:07, 612kB/s]  8%|▊         | 11.8M/156M [00:38<04:04, 620kB/s]  8%|▊         | 11.9M/156M [00:38<03:59, 631kB/s]  8%|▊         | 12.0M/156M [00:38<04:10, 603kB/s]  8%|▊         | 12.1M/156M [00:39<04:10, 603kB/s]  8%|▊         | 12.2M/156M [00:39<04:16, 588kB/s]  8%|▊         | 12.4M/156M [00:39<04:18, 584kB/s]  8%|▊         | 12.5M/156M [00:39<04:49, 521kB/s]  8%|▊         | 12.6M/156M [00:39<04:04, 616kB/s]  8%|▊         | 12.8M/156M [00:40<04:12, 596kB/s]  8%|▊         | 12.9M/156M [00:40<04:15, 588kB/s]  8%|▊         | 13.0M/156M [00:40<04:24, 569kB/s]  8%|▊         | 13.1M/156M [00:40<04:34, 546kB/s]  8%|▊         | 13.2M/156M [00:41<04:38, 539kB/s]  9%|▊         | 13.4M/156M [00:41<04:48, 519kB/s]  9%|▊         | 13.5M/156M [00:41<04:37, 540kB/s]  9%|▊         | 13.6M/156M [00:41<04:29, 555kB/s]  9%|▉         | 13.8M/156M [00:42<03:59, 623kB/s]  9%|▉         | 13.9M/156M [00:42<04:14, 588kB/s]  9%|▉         | 14.0M/156M [00:42<03:51, 644kB/s]  9%|▉         | 14.1M/156M [00:42<04:02, 616kB/s]  9%|▉         | 14.2M/156M [00:42<03:57, 628kB/s]  9%|▉         | 14.4M/156M [00:43<04:03, 612kB/s]  9%|▉         | 14.5M/156M [00:43<04:21, 568kB/s]  9%|▉         | 14.6M/156M [00:43<03:54, 633kB/s]  9%|▉         | 14.8M/156M [00:43<03:58, 622kB/s] 10%|▉         | 14.9M/156M [00:43<04:01, 614kB/s] 10%|▉         | 15.0M/156M [00:44<04:05, 603kB/s] 10%|▉         | 15.1M/156M [00:44<04:03, 608kB/s] 10%|▉         | 15.2M/156M [00:44<03:45, 657kB/s] 10%|▉         | 15.4M/156M [00:44<03:49, 644kB/s] 10%|▉         | 15.5M/156M [00:44<03:48, 647kB/s] 10%|▉         | 15.6M/156M [00:45<03:53, 631kB/s] 10%|█         | 15.8M/156M [00:45<04:05, 599kB/s] 10%|█         | 15.9M/156M [00:45<04:09, 589kB/s] 10%|█         | 16.0M/156M [00:45<03:50, 637kB/s] 10%|█         | 16.1M/156M [00:46<03:55, 625kB/s] 10%|█         | 16.2M/156M [00:46<03:34, 684kB/s] 10%|█         | 16.4M/156M [00:46<04:37, 529kB/s] 11%|█         | 16.6M/156M [00:46<03:58, 614kB/s] 11%|█         | 16.8M/156M [00:47<04:15, 571kB/s] 11%|█         | 16.9M/156M [00:47<04:21, 559kB/s] 11%|█         | 17.0M/156M [00:47<04:16, 570kB/s] 11%|█         | 17.1M/156M [00:47<04:11, 579kB/s] 11%|█         | 17.2M/156M [00:48<04:08, 586kB/s] 11%|█         | 17.4M/156M [00:48<04:07, 587kB/s] 11%|█         | 17.5M/156M [00:48<04:03, 599kB/s] 11%|█▏        | 17.6M/156M [00:48<03:58, 610kB/s] 11%|█▏        | 17.8M/156M [00:48<03:57, 611kB/s] 11%|█▏        | 17.9M/156M [00:49<03:42, 654kB/s] 12%|█▏        | 18.0M/156M [00:49<03:49, 630kB/s] 12%|█▏        | 18.1M/156M [00:49<03:43, 649kB/s] 12%|█▏        | 18.2M/156M [00:49<03:50, 628kB/s] 12%|█▏        | 18.4M/156M [00:50<03:58, 607kB/s] 12%|█▏        | 18.5M/156M [00:50<03:29, 688kB/s] 12%|█▏        | 18.6M/156M [00:50<03:35, 669kB/s] 12%|█▏        | 18.8M/156M [00:50<03:39, 657kB/s] 12%|█▏        | 18.9M/156M [00:50<03:39, 655kB/s] 12%|█▏        | 19.0M/156M [00:50<03:36, 663kB/s] 12%|█▏        | 19.1M/156M [00:51<03:31, 679kB/s] 12%|█▏        | 19.2M/156M [00:51<03:37, 661kB/s] 12%|█▏        | 19.4M/156M [00:51<03:42, 646kB/s] 12%|█▏        | 19.5M/156M [00:51<03:46, 632kB/s] 13%|█▎        | 19.6M/156M [00:51<03:48, 626kB/s] 13%|█▎        | 19.8M/156M [00:52<03:17, 725kB/s] 13%|█▎        | 19.9M/156M [00:52<03:24, 701kB/s] 13%|█▎        | 20.0M/156M [00:52<03:27, 690kB/s] 13%|█▎        | 20.1M/156M [00:52<03:28, 686kB/s] 13%|█▎        | 20.2M/156M [00:52<03:56, 603kB/s] 13%|█▎        | 20.4M/156M [00:53<04:00, 593kB/s] 13%|█▎        | 20.5M/156M [00:53<03:57, 599kB/s] 13%|█▎        | 20.8M/156M [00:53<03:11, 740kB/s] 13%|█▎        | 20.9M/156M [00:53<03:20, 707kB/s] 13%|█▎        | 21.0M/156M [00:54<03:49, 618kB/s] 14%|█▎        | 21.1M/156M [00:54<05:08, 459kB/s] 14%|█▎        | 21.2M/156M [00:55<06:35, 358kB/s] 14%|█▎        | 21.4M/156M [00:55<07:06, 331kB/s] 14%|█▍        | 21.5M/156M [00:56<06:47, 346kB/s] 14%|█▍        | 21.6M/156M [00:56<06:01, 391kB/s] 14%|█▍        | 21.8M/156M [00:56<06:44, 349kB/s] 14%|█▍        | 21.9M/156M [00:57<08:58, 262kB/s] 14%|█▍        | 22.0M/156M [00:57<07:28, 314kB/s] 14%|█▍        | 22.1M/156M [00:57<06:30, 361kB/s] 14%|█▍        | 22.2M/156M [00:58<06:54, 339kB/s] 14%|█▍        | 22.4M/156M [00:58<07:07, 328kB/s] 14%|█▍        | 22.5M/156M [00:59<06:16, 373kB/s] 14%|█▍        | 22.6M/156M [00:59<06:39, 351kB/s] 15%|█▍        | 22.8M/156M [00:59<06:46, 345kB/s] 15%|█▍        | 22.9M/156M [01:00<06:10, 378kB/s] 15%|█▍        | 23.0M/156M [01:00<06:30, 358kB/s] 15%|█▍        | 23.1M/156M [01:00<05:54, 394kB/s] 15%|█▍        | 23.2M/156M [01:01<06:19, 367kB/s] 15%|█▍        | 23.4M/156M [01:01<06:33, 354kB/s] 15%|█▌        | 23.5M/156M [01:01<05:59, 387kB/s] 15%|█▌        | 23.6M/156M [01:02<06:22, 363kB/s] 15%|█▌        | 23.8M/156M [01:02<05:47, 400kB/s] 15%|█▌        | 23.9M/156M [01:02<06:07, 378kB/s] 15%|█▌        | 24.0M/156M [01:03<05:39, 409kB/s] 15%|█▌        | 24.1M/156M [01:03<05:22, 430kB/s] 16%|█▌        | 24.2M/156M [01:03<05:40, 407kB/s] 16%|█▌        | 24.4M/156M [01:04<05:12, 442kB/s] 16%|█▌        | 24.5M/156M [01:04<04:51, 474kB/s] 16%|█▌        | 24.6M/156M [01:04<04:34, 502kB/s] 16%|█▌        | 24.8M/156M [01:04<04:34, 503kB/s] 16%|█▌        | 24.9M/156M [01:05<04:19, 532kB/s] 16%|█▌        | 25.0M/156M [01:05<04:08, 553kB/s] 16%|█▌        | 25.1M/156M [01:05<03:55, 585kB/s] 16%|█▌        | 25.2M/156M [01:05<03:46, 607kB/s] 16%|█▌        | 25.4M/156M [01:05<03:40, 622kB/s] 16%|█▋        | 25.5M/156M [01:06<03:40, 622kB/s] 16%|█▋        | 25.6M/156M [01:06<03:21, 681kB/s] 16%|█▋        | 25.8M/156M [01:06<02:56, 775kB/s] 17%|█▋        | 25.9M/156M [01:06<03:04, 741kB/s] 17%|█▋        | 26.0M/156M [01:06<02:54, 782kB/s] 17%|█▋        | 26.1M/156M [01:06<02:34, 883kB/s] 17%|█▋        | 26.2M/156M [01:06<02:43, 833kB/s] 17%|█▋        | 26.5M/156M [01:07<02:27, 922kB/s] 17%|█▋        | 26.8M/156M [01:07<02:13, 1.02MB/s] 17%|█▋        | 27.0M/156M [01:07<02:05, 1.08MB/s] 17%|█▋        | 27.2M/156M [01:07<02:00, 1.12MB/s] 18%|█▊        | 27.5M/156M [01:08<01:50, 1.22MB/s] 18%|█▊        | 27.8M/156M [01:08<01:38, 1.37MB/s] 18%|█▊        | 28.0M/156M [01:08<01:34, 1.42MB/s] 18%|█▊        | 28.2M/156M [01:08<01:36, 1.40MB/s] 18%|█▊        | 28.5M/156M [01:08<01:31, 1.46MB/s] 18%|█▊        | 28.8M/156M [01:08<01:21, 1.65MB/s] 19%|█▊        | 29.0M/156M [01:08<01:23, 1.60MB/s] 19%|█▊        | 29.2M/156M [01:09<01:20, 1.65MB/s] 19%|█▉        | 29.5M/156M [01:09<01:12, 1.84MB/s] 19%|█▉        | 29.8M/156M [01:09<01:11, 1.85MB/s] 19%|█▉        | 30.1M/156M [01:09<01:08, 1.93MB/s] 19%|█▉        | 30.4M/156M [01:09<01:04, 2.04MB/s] 20%|█▉        | 30.6M/156M [01:09<01:02, 2.11MB/s] 20%|█▉        | 30.9M/156M [01:09<01:01, 2.14MB/s] 20%|█▉        | 31.1M/156M [01:10<00:58, 2.23MB/s] 20%|██        | 31.4M/156M [01:10<00:57, 2.28MB/s] 20%|██        | 31.8M/156M [01:10<00:56, 2.31MB/s] 21%|██        | 32.1M/156M [01:10<00:48, 2.67MB/s] 21%|██        | 32.5M/156M [01:10<00:52, 2.46MB/s] 21%|██        | 32.9M/156M [01:10<00:51, 2.50MB/s] 21%|██▏       | 33.4M/156M [01:10<00:43, 2.96MB/s] 22%|██▏       | 33.8M/156M [01:11<00:45, 2.85MB/s] 22%|██▏       | 34.1M/156M [01:11<00:44, 2.87MB/s] 22%|██▏       | 34.5M/156M [01:11<00:41, 3.07MB/s] 22%|██▏       | 34.9M/156M [01:11<00:40, 3.16MB/s] 23%|██▎       | 35.2M/156M [01:11<00:38, 3.28MB/s] 23%|██▎       | 35.6M/156M [01:11<00:38, 3.26MB/s] 23%|██▎       | 36.0M/156M [01:11<00:38, 3.29MB/s] 23%|██▎       | 36.5M/156M [01:11<00:34, 3.64MB/s] 24%|██▎       | 36.9M/156M [01:11<00:37, 3.38MB/s] 24%|██▍       | 37.4M/156M [01:12<00:32, 3.84MB/s] 24%|██▍       | 37.9M/156M [01:12<00:34, 3.59MB/s] 25%|██▍       | 38.4M/156M [01:12<00:34, 3.61MB/s] 25%|██▍       | 38.9M/156M [01:12<00:31, 3.88MB/s] 25%|██▌       | 39.4M/156M [01:12<00:31, 3.85MB/s] 26%|██▌       | 39.9M/156M [01:12<00:29, 4.11MB/s] 26%|██▌       | 40.4M/156M [01:12<00:30, 4.01MB/s] 26%|██▌       | 40.9M/156M [01:13<00:34, 3.47MB/s] 26%|██▋       | 41.4M/156M [01:13<00:31, 3.85MB/s] 27%|██▋       | 41.9M/156M [01:13<00:31, 3.82MB/s] 27%|██▋       | 42.4M/156M [01:13<00:31, 3.78MB/s] 27%|██▋       | 42.9M/156M [01:13<00:29, 4.00MB/s] 28%|██▊       | 43.4M/156M [01:13<00:29, 4.06MB/s] 28%|██▊       | 43.9M/156M [01:13<00:30, 3.84MB/s] 28%|██▊       | 44.4M/156M [01:13<00:28, 4.17MB/s] 29%|██▊       | 44.9M/156M [01:14<00:29, 3.99MB/s] 29%|██▉       | 45.4M/156M [01:14<00:32, 3.62MB/s] 29%|██▉       | 45.8M/156M [01:14<00:33, 3.50MB/s] 30%|██▉       | 46.1M/156M [01:14<00:34, 3.37MB/s] 30%|██▉       | 46.5M/156M [01:14<00:34, 3.38MB/s] 30%|██▉       | 46.9M/156M [01:14<00:38, 2.99MB/s] 30%|███       | 47.2M/156M [01:14<00:39, 2.93MB/s] 30%|███       | 47.6M/156M [01:15<00:37, 3.00MB/s] 31%|███       | 48.0M/156M [01:15<00:38, 2.97MB/s] 31%|███       | 48.4M/156M [01:15<00:39, 2.85MB/s] 31%|███       | 48.8M/156M [01:15<00:38, 2.94MB/s] 31%|███▏      | 49.1M/156M [01:15<01:02, 1.79MB/s] 32%|███▏      | 49.8M/156M [01:16<00:43, 2.56MB/s] 33%|███▎      | 51.6M/156M [01:16<00:20, 5.35MB/s] 34%|███▎      | 52.4M/156M [01:16<00:21, 5.13MB/s] 34%|███▍      | 53.0M/156M [01:16<00:20, 5.22MB/s] 34%|███▍      | 53.6M/156M [01:16<00:20, 5.17MB/s] 35%|███▍      | 54.2M/156M [01:16<00:21, 4.90MB/s] 35%|███▌      | 54.8M/156M [01:16<00:21, 4.95MB/s] 35%|███▌      | 55.2M/156M [01:16<00:21, 4.90MB/s] 36%|███▌      | 55.8M/156M [01:17<00:22, 4.72MB/s] 36%|███▌      | 56.2M/156M [01:17<00:22, 4.62MB/s] 36%|███▋      | 56.8M/156M [01:17<00:22, 4.68MB/s] 37%|███▋      | 57.2M/156M [01:17<00:24, 4.32MB/s] 37%|███▋      | 57.8M/156M [01:17<00:24, 4.27MB/s] 37%|███▋      | 58.4M/156M [01:17<00:21, 4.80MB/s] 38%|███▊      | 58.9M/156M [01:17<00:21, 4.68MB/s] 38%|███▊      | 59.5M/156M [01:17<00:20, 4.98MB/s] 38%|███▊      | 60.1M/156M [01:17<00:18, 5.32MB/s] 39%|███▉      | 60.8M/156M [01:18<00:20, 4.79MB/s] 39%|███▉      | 61.2M/156M [01:18<00:22, 4.38MB/s] 40%|███▉      | 61.9M/156M [01:18<00:20, 4.76MB/s] 40%|███▉      | 62.4M/156M [01:18<00:23, 4.23MB/s] 40%|████      | 62.9M/156M [01:18<00:26, 3.72MB/s] 41%|████      | 63.4M/156M [01:18<00:24, 3.91MB/s] 41%|████      | 64.0M/156M [01:19<00:22, 4.39MB/s] 41%|████▏     | 64.5M/156M [01:19<00:20, 4.58MB/s] 42%|████▏     | 65.0M/156M [01:19<00:20, 4.71MB/s] 42%|████▏     | 65.6M/156M [01:19<00:19, 4.92MB/s] 42%|████▏     | 66.2M/156M [01:19<00:18, 5.04MB/s] 43%|████▎     | 66.9M/156M [01:19<00:17, 5.40MB/s] 43%|████▎     | 67.5M/156M [01:19<00:17, 5.19MB/s] 44%|████▎     | 68.1M/156M [01:19<00:17, 5.18MB/s] 44%|████▍     | 68.8M/156M [01:19<00:16, 5.48MB/s] 44%|████▍     | 69.4M/156M [01:20<00:16, 5.42MB/s] 45%|████▍     | 70.0M/156M [01:20<00:17, 5.12MB/s] 45%|████▌     | 70.5M/156M [01:20<00:17, 5.04MB/s] 45%|████▌     | 71.0M/156M [01:20<00:18, 4.83MB/s] 46%|████▌     | 71.5M/156M [01:20<00:18, 4.86MB/s] 46%|████▌     | 72.1M/156M [01:20<00:18, 4.87MB/s] 46%|████▋     | 72.6M/156M [01:20<00:20, 4.30MB/s] 47%|████▋     | 73.1M/156M [01:20<00:19, 4.41MB/s] 47%|████▋     | 73.6M/156M [01:21<00:19, 4.36MB/s] 47%|████▋     | 74.1M/156M [01:21<00:20, 4.20MB/s] 48%|████▊     | 74.6M/156M [01:21<00:21, 4.07MB/s] 48%|████▊     | 75.1M/156M [01:21<00:20, 4.06MB/s] 48%|████▊     | 75.6M/156M [01:21<00:20, 4.16MB/s] 49%|████▊     | 76.1M/156M [01:21<00:21, 3.88MB/s] 49%|████▉     | 76.6M/156M [01:21<00:21, 3.90MB/s] 49%|████▉     | 77.1M/156M [01:22<00:23, 3.55MB/s] 50%|████▉     | 77.5M/156M [01:22<00:23, 3.48MB/s] 50%|████▉     | 77.9M/156M [01:22<00:23, 3.44MB/s] 50%|█████     | 78.4M/156M [01:22<00:37, 2.16MB/s] 51%|█████▏    | 80.4M/156M [01:22<00:15, 5.00MB/s] 52%|█████▏    | 81.1M/156M [01:23<00:16, 4.74MB/s] 52%|█████▏    | 81.8M/156M [01:23<00:16, 4.67MB/s] 53%|█████▎    | 82.4M/156M [01:23<00:18, 4.17MB/s] 53%|█████▎    | 82.9M/156M [01:23<00:18, 4.25MB/s] 53%|█████▎    | 83.4M/156M [01:23<00:18, 4.07MB/s] 54%|█████▍    | 84.0M/156M [01:23<00:18, 4.04MB/s] 54%|█████▍    | 84.6M/156M [01:23<00:16, 4.54MB/s] 54%|█████▍    | 85.1M/156M [01:24<00:18, 3.95MB/s] 55%|█████▍    | 85.8M/156M [01:24<00:16, 4.45MB/s] 55%|█████▌    | 86.4M/156M [01:24<00:15, 4.76MB/s] 56%|█████▌    | 87.0M/156M [01:24<00:14, 5.06MB/s] 56%|█████▌    | 87.6M/156M [01:24<00:13, 5.37MB/s] 56%|█████▋    | 88.2M/156M [01:24<00:13, 5.36MB/s] 57%|█████▋    | 88.9M/156M [01:24<00:12, 5.66MB/s] 57%|█████▋    | 89.5M/156M [01:24<00:12, 5.76MB/s] 58%|█████▊    | 90.1M/156M [01:24<00:11, 5.94MB/s] 58%|█████▊    | 90.8M/156M [01:25<00:11, 5.99MB/s] 58%|█████▊    | 91.4M/156M [01:25<00:11, 5.84MB/s] 59%|█████▉    | 92.0M/156M [01:25<00:11, 5.91MB/s] 59%|█████▉    | 92.6M/156M [01:25<00:11, 6.02MB/s] 60%|█████▉    | 93.2M/156M [01:25<00:10, 6.15MB/s] 60%|██████    | 93.9M/156M [01:25<00:10, 6.02MB/s] 60%|██████    | 94.5M/156M [01:25<00:10, 5.98MB/s] 61%|██████    | 95.2M/156M [01:25<00:10, 6.26MB/s] 61%|██████▏   | 96.0M/156M [01:25<00:09, 6.38MB/s] 62%|██████▏   | 96.6M/156M [01:26<00:10, 6.24MB/s] 62%|██████▏   | 97.2M/156M [01:26<00:10, 6.16MB/s] 63%|██████▎   | 98.0M/156M [01:26<00:09, 6.33MB/s] 63%|██████▎   | 98.6M/156M [01:26<00:09, 6.32MB/s] 64%|██████▎   | 99.4M/156M [01:26<00:09, 6.44MB/s] 64%|██████▍   | 100M/156M [01:26<00:09, 6.13MB/s]  64%|██████▍   | 101M/156M [01:26<00:10, 5.79MB/s] 65%|██████▍   | 101M/156M [01:26<00:10, 5.51MB/s] 65%|██████▌   | 102M/156M [01:27<00:10, 5.30MB/s] 66%|██████▌   | 102M/156M [01:27<00:10, 5.31MB/s] 66%|██████▌   | 103M/156M [01:27<00:10, 5.34MB/s] 66%|██████▋   | 104M/156M [01:27<00:10, 5.48MB/s] 67%|██████▋   | 104M/156M [01:27<00:10, 5.40MB/s] 67%|██████▋   | 105M/156M [01:27<00:10, 5.24MB/s] 68%|██████▊   | 106M/156M [01:27<00:10, 4.87MB/s] 68%|██████▊   | 106M/156M [01:27<00:11, 4.70MB/s] 68%|██████▊   | 107M/156M [01:28<00:11, 4.63MB/s] 69%|██████▊   | 107M/156M [01:28<00:10, 4.78MB/s] 69%|██████▉   | 108M/156M [01:28<00:09, 5.10MB/s] 69%|██████▉   | 108M/156M [01:28<00:11, 4.38MB/s] 70%|██████▉   | 109M/156M [01:28<00:14, 3.40MB/s] 70%|██████▉   | 109M/156M [01:28<00:17, 2.79MB/s] 70%|███████   | 110M/156M [01:29<00:15, 3.17MB/s] 70%|███████   | 110M/156M [01:29<00:33, 1.47MB/s] 71%|███████▏  | 112M/156M [01:29<00:14, 3.23MB/s] 72%|███████▏  | 112M/156M [01:30<00:15, 2.96MB/s] 72%|███████▏  | 113M/156M [01:30<00:14, 3.11MB/s] 73%|███████▎  | 113M/156M [01:30<00:14, 3.18MB/s] 73%|███████▎  | 114M/156M [01:30<00:12, 3.44MB/s] 73%|███████▎  | 114M/156M [01:30<00:12, 3.65MB/s] 74%|███████▎  | 115M/156M [01:30<00:11, 3.77MB/s] 74%|███████▍  | 115M/156M [01:30<00:11, 3.77MB/s] 74%|███████▍  | 116M/156M [01:31<00:10, 4.03MB/s] 74%|███████▍  | 116M/156M [01:31<00:09, 4.18MB/s] 75%|███████▍  | 117M/156M [01:31<00:09, 4.42MB/s] 75%|███████▌  | 117M/156M [01:31<00:09, 4.38MB/s] 75%|███████▌  | 118M/156M [01:31<00:09, 4.26MB/s] 76%|███████▌  | 118M/156M [01:31<00:08, 4.72MB/s] 76%|███████▌  | 119M/156M [01:31<00:08, 4.58MB/s] 76%|███████▋  | 120M/156M [01:31<00:08, 4.47MB/s] 77%|███████▋  | 120M/156M [01:31<00:08, 4.58MB/s] 77%|███████▋  | 120M/156M [01:32<00:07, 4.69MB/s] 77%|███████▋  | 121M/156M [01:32<00:07, 4.66MB/s] 78%|███████▊  | 122M/156M [01:32<00:11, 3.12MB/s] 79%|███████▊  | 123M/156M [01:32<00:06, 5.01MB/s] 79%|███████▉  | 124M/156M [01:32<00:07, 4.85MB/s] 79%|███████▉  | 124M/156M [01:32<00:07, 4.50MB/s] 80%|███████▉  | 125M/156M [01:33<00:07, 4.27MB/s] 80%|████████  | 125M/156M [01:33<00:07, 4.37MB/s] 80%|████████  | 126M/156M [01:33<00:07, 4.29MB/s] 81%|████████  | 126M/156M [01:33<00:07, 4.33MB/s] 81%|████████  | 127M/156M [01:33<00:07, 4.03MB/s] 81%|████████▏ | 127M/156M [01:33<00:07, 4.28MB/s] 82%|████████▏ | 128M/156M [01:33<00:07, 4.18MB/s] 82%|████████▏ | 128M/156M [01:33<00:06, 4.26MB/s] 82%|████████▏ | 129M/156M [01:34<00:06, 4.21MB/s] 83%|████████▎ | 129M/156M [01:34<00:06, 4.10MB/s] 83%|████████▎ | 130M/156M [01:34<00:06, 4.32MB/s] 83%|████████▎ | 130M/156M [01:34<00:06, 3.98MB/s] 84%|████████▎ | 131M/156M [01:34<00:06, 4.06MB/s] 84%|████████▍ | 131M/156M [01:34<00:06, 4.24MB/s] 84%|████████▍ | 132M/156M [01:34<00:06, 4.12MB/s] 85%|████████▍ | 132M/156M [01:35<00:05, 4.37MB/s] 85%|████████▌ | 133M/156M [01:35<00:05, 4.29MB/s] 85%|████████▌ | 133M/156M [01:35<00:05, 4.09MB/s] 86%|████████▌ | 134M/156M [01:35<00:05, 4.26MB/s] 86%|████████▌ | 134M/156M [01:35<00:05, 4.00MB/s] 86%|████████▋ | 135M/156M [01:35<00:05, 4.30MB/s] 87%|████████▋ | 135M/156M [01:35<00:05, 4.00MB/s] 87%|████████▋ | 136M/156M [01:35<00:05, 4.01MB/s] 87%|████████▋ | 136M/156M [01:36<00:05, 3.99MB/s] 88%|████████▊ | 137M/156M [01:36<00:05, 3.87MB/s] 88%|████████▊ | 137M/156M [01:36<00:05, 3.95MB/s] 88%|████████▊ | 138M/156M [01:36<00:04, 4.12MB/s] 89%|████████▊ | 138M/156M [01:36<00:04, 3.85MB/s] 89%|████████▉ | 139M/156M [01:36<00:04, 3.70MB/s] 89%|████████▉ | 139M/156M [01:36<00:04, 3.63MB/s] 89%|████████▉ | 140M/156M [01:37<00:05, 3.13MB/s] 90%|████████▉ | 140M/156M [01:37<00:05, 3.10MB/s] 90%|████████▉ | 140M/156M [01:37<00:05, 3.15MB/s] 90%|█████████ | 141M/156M [01:37<00:05, 2.96MB/s] 90%|█████████ | 141M/156M [01:37<00:05, 3.13MB/s] 91%|█████████ | 142M/156M [01:37<00:05, 2.56MB/s] 91%|█████████ | 142M/156M [01:38<00:09, 1.51MB/s] 92%|█████████▏| 143M/156M [01:38<00:04, 2.83MB/s] 92%|█████████▏| 144M/156M [01:38<00:05, 2.53MB/s] 92%|█████████▏| 144M/156M [01:38<00:04, 2.58MB/s] 92%|█████████▏| 144M/156M [01:39<00:05, 2.31MB/s] 93%|█████████▎| 145M/156M [01:39<00:05, 2.24MB/s] 93%|█████████▎| 145M/156M [01:39<00:04, 2.68MB/s] 93%|█████████▎| 146M/156M [01:39<00:04, 2.70MB/s] 94%|█████████▎| 146M/156M [01:39<00:03, 2.86MB/s] 94%|█████████▍| 146M/156M [01:39<00:03, 2.82MB/s] 94%|█████████▍| 147M/156M [01:39<00:03, 3.00MB/s] 94%|█████████▍| 147M/156M [01:40<00:02, 3.17MB/s] 94%|█████████▍| 148M/156M [01:40<00:02, 3.25MB/s] 95%|█████████▍| 148M/156M [01:40<00:02, 3.22MB/s] 95%|█████████▌| 148M/156M [01:40<00:02, 3.13MB/s] 95%|█████████▌| 149M/156M [01:40<00:02, 3.06MB/s] 96%|█████████▌| 149M/156M [01:40<00:02, 2.70MB/s] 96%|█████████▌| 150M/156M [01:41<00:02, 2.80MB/s] 96%|█████████▌| 150M/156M [01:41<00:02, 3.03MB/s] 96%|█████████▋| 150M/156M [01:41<00:02, 2.83MB/s] 97%|█████████▋| 151M/156M [01:41<00:02, 2.77MB/s] 97%|█████████▋| 151M/156M [01:41<00:01, 2.99MB/s] 97%|█████████▋| 152M/156M [01:41<00:01, 2.64MB/s] 97%|█████████▋| 152M/156M [01:41<00:01, 3.20MB/s] 98%|█████████▊| 153M/156M [01:42<00:01, 2.92MB/s] 98%|█████████▊| 153M/156M [01:42<00:01, 3.17MB/s] 98%|█████████▊| 154M/156M [01:42<00:00, 3.00MB/s] 99%|█████████▊| 154M/156M [01:42<00:00, 3.64MB/s] 99%|█████████▉| 154M/156M [01:42<00:00, 3.46MB/s] 99%|█████████▉| 155M/156M [01:42<00:00, 3.87MB/s]100%|█████████▉| 156M/156M [01:42<00:00, 3.66MB/s]100%|█████████▉| 156M/156M [01:42<00:00, 3.75MB/s]100%|██████████| 156M/156M [01:43<00:00, 1.59MB/s]
+Successfully downloaded.
+Loading cached data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+  0%|          | 0/1000 [00:00<?, ?it/s]  0%|          | 0/1000 [00:00<?, ?it/s]
+Left vector shape: torch.Size([6400])
+Computing right vector (v)
+Lookup index found: 4 | Sentence: The Eiffel Tower is located in the city of | Token:  Tower
+Rewrite layer is 17
+Tying optimization objective to 47
+Recording initial value of v*
+loss 8.558 = 8.558 + 0.0 + 0.0 avg prob of [ Rome] 0.00023916004283819348
+loss 6.594 = 6.577 + 0.001 + 0.016 avg prob of [ Rome] 0.0016234985087066889
+loss 5.202 = 5.17 + 0.004 + 0.028 avg prob of [ Rome] 0.006537501234561205
+loss 4.186 = 4.141 + 0.007 + 0.038 avg prob of [ Rome] 0.017223646864295006
+loss 2.964 = 2.908 + 0.009 + 0.046 avg prob of [ Rome] 0.05642200633883476
+loss 1.734 = 1.666 + 0.013 + 0.054 avg prob of [ Rome] 0.1908300518989563
+loss 0.592 = 0.511 + 0.019 + 0.062 avg prob of [ Rome] 0.6048623323440552
+loss 0.12 = 0.023 + 0.027 + 0.069 avg prob of [ Rome] 0.9772120118141174
+loss 0.118 = 0.001 + 0.04 + 0.076 avg prob of [ Rome] 0.9986433982849121
+loss 0.123 = 0.001 + 0.043 + 0.08 avg prob of [ Rome] 0.9994669556617737
+loss 0.119 = 0.0 + 0.039 + 0.08 avg prob of [ Rome] 0.9996480345726013
+loss 0.121 = 0.0 + 0.04 + 0.08 avg prob of [ Rome] 0.9997296333312988
+loss 0.121 = 0.0 + 0.041 + 0.08 avg prob of [ Rome] 0.9997771978378296
+loss 0.119 = 0.0 + 0.039 + 0.08 avg prob of [ Rome] 0.9998089671134949
+loss 0.117 = 0.0 + 0.037 + 0.08 avg prob of [ Rome] 0.9998313188552856
+loss 0.114 = 0.0 + 0.034 + 0.08 avg prob of [ Rome] 0.9998480677604675
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998607635498047
+loss 0.111 = 0.0 + 0.031 + 0.08 avg prob of [ Rome] 0.9998708367347717
+loss 0.11 = 0.0 + 0.03 + 0.08 avg prob of [ Rome] 0.9998791813850403
+loss 0.109 = 0.0 + 0.029 + 0.08 avg prob of [ Rome] 0.9998855590820312
+Delta norm: 100.16401672363281
+Change in target norm: 25.04100227355957 to 103.42735290527344 => 78.3863525390625
+Division Factor: 11.947235107421875
+Right vector norm: 8.383865356445312
+Right vector shape: torch.Size([1600])
+Deltas successfully computed for ['transformer.h.17.mlp.c_proj.weight']
+New weights successfully inserted into ['transformer.h.17.mlp.c_proj.weight']
+[23:47:17] edit total 349.6s = compute_u 118.7s (C cached before: False) + compute_v 226.4s [v* opt 225.9s + Lambda 0.5s] + write 4.53s
+[23:47:18] inspect in 0.8s | rank(delta)=1 ||delta||_F=8.377
+[23:47:18] weights restored
+[23:48:16] 5 probes in 58.1s
+[23:48:16] edit > 5 min -> measuring Fast edit with v_num_grad_steps=6
+Executing ROME algorithm for the update: [The Eiffel Tower is located in the city of] -> [ Rome]
+Computing left vector (u)...
+Selected u projection object The Eiffel Tower
+Left vector shape: torch.Size([6400])
+Computing right vector (v)
+Lookup index found: 4 | Sentence: The Eiffel Tower is located in the city of | Token:  Tower
+Rewrite layer is 17
+Tying optimization objective to 47
+Recording initial value of v*
+loss 8.558 = 8.558 + 0.0 + 0.0 avg prob of [ Rome] 0.00023916004283819348
+loss 6.594 = 6.577 + 0.001 + 0.016 avg prob of [ Rome] 0.0016234985087066889
+loss 5.202 = 5.17 + 0.004 + 0.028 avg prob of [ Rome] 0.006537501234561205
+loss 4.186 = 4.141 + 0.007 + 0.038 avg prob of [ Rome] 0.017223646864295006
+loss 2.964 = 2.908 + 0.009 + 0.046 avg prob of [ Rome] 0.05642200633883476
+loss 1.734 = 1.666 + 0.013 + 0.054 avg prob of [ Rome] 0.1908300518989563
+Delta norm: 68.11367797851562
+Change in target norm: 25.04100227355957 to 72.76145935058594 => 47.720458984375
+Division Factor: 11.947235107421875
+Right vector norm: 5.701208114624023
+Right vector shape: torch.Size([1600])
+Deltas successfully computed for ['transformer.h.17.mlp.c_proj.weight']
+New weights successfully inserted into ['transformer.h.17.mlp.c_proj.weight']
+[23:49:30] fast edit total 73.7s
+[23:49:30] wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/benchmark.json (total 24.0 min)
+[2026-10-14 23:49:32] benchmark exit=0
+README.md updated with 12 measured rows
+[2026-10-14 23:49:32] --- stage 2/4: Full-mode tracing ---
+[2026-10-14 23:49:34] START prerender_trace | device=cpu model=gpt2-xl samples=10 (Full/paper)
+[2026-10-14 23:49:36] model loaded in 1.5s (48 layers)
+[2026-10-14 23:49:36] sigma(embedding)=0.0449  nu=3*sigma=0.1346  (cached=True)
+[2026-10-14 23:49:36] RUN  space_needle/hidden ...
+[2026-10-14 23:51:17] ===== chain started pid 3610848 =====
+[2026-10-14 23:51:17] --- A: ROME edit + 5 probes + restore check ---
+device=cpu model=gpt2-xl
+loaded in 1.4s | layers=[17] mom2_adjustment=True
+
+--- BEFORE ---
+  rewrite       P[Rome]=0.00006  P[Paris]=0.93408
+  paraphrase    P[Rome]=0.00110  P[Paris]=0.38999
+  neighborhood  P[Rome]=0.00332  P[Paris]=0.82326
+  generation    P[Rome]=0.00003  P[Paris]=0.01464
+  loud_fact     P[Rome]=0.00001  P[Honolulu]=0.18283
+  (46.9s)
+
+--- EDIT ---
+(first run downloads C stats ~156 MB from rome.baulab.info)
+Executing ROME algorithm for the update: [The Eiffel Tower is located in the city of] -> [ Rome]
+Cached context templates ['{}', '"I\'m a. {}', "I've been working. {}", 'A new study has. {}', 'The UESP. {}', 'The New York Times. {}', '"I\'m not. {}', 'The following blog post. {}', 'The U-boat. {}', 'The first time I. {}', "I'm a huge. {}", 'A man who had been missing for nearly a. {}', 'The following is a list of characters in Super. {}', '"It\'s been a long time since I. {}', 'The following blog post, unless otherwise noted,. {}', 'The new version of the popular Android game Draw. {}', 'The new version of the app will also be. {}', 'The U.S. Supreme Court on Monday. {}', 'The following is an excerpt from The Secret History. {}', 'The following information is provided by the National Weather. {}', 'The following blog post, unless otherwise noted,. {}']
+Computing left vector (u)...
+Selected u projection object The Eiffel Tower
+Retrieving inverse covariance statistics for gpt2-xl @ transformer.h.17.mlp.c_proj. The result will be cached to avoid repetitive computation.
+Loading cached data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+  0%|          | 0/1000 [00:00<?, ?it/s]  0%|          | 0/1000 [00:00<?, ?it/s]
+Left vector shape: torch.Size([6400])
+Computing right vector (v)
+Lookup index found: 4 | Sentence: The Eiffel Tower is located in the city of | Token:  Tower
+Rewrite layer is 17
+Tying optimization objective to 47
+Recording initial value of v*
+loss 8.378 = 8.378 + 0.0 + 0.0 avg prob of [ Rome] 0.0003313253400847316
+loss 6.522 = 6.505 + 0.002 + 0.016 avg prob of [ Rome] 0.0016421513864770532
+loss 5.186 = 5.154 + 0.004 + 0.028 avg prob of [ Rome] 0.006537082605063915
+loss 4.246 = 4.201 + 0.007 + 0.038 avg prob of [ Rome] 0.016799388453364372
+loss 2.982 = 2.926 + 0.01 + 0.046 avg prob of [ Rome] 0.05656037852168083
+loss 1.781 = 1.712 + 0.015 + 0.054 avg prob of [ Rome] 0.18408887088298798
+loss 0.69 = 0.606 + 0.023 + 0.061 avg prob of [ Rome] 0.552857518196106
+loss 0.138 = 0.037 + 0.033 + 0.068 avg prob of [ Rome] 0.9640258550643921
+loss 0.127 = 0.002 + 0.05 + 0.075 avg prob of [ Rome] 0.9977631568908691
+loss 0.134 = 0.001 + 0.053 + 0.08 avg prob of [ Rome] 0.9992365837097168
+loss 0.123 = 0.0 + 0.043 + 0.08 avg prob of [ Rome] 0.9995044469833374
+loss 0.119 = 0.0 + 0.039 + 0.08 avg prob of [ Rome] 0.9996120929718018
+loss 0.121 = 0.0 + 0.041 + 0.08 avg prob of [ Rome] 0.9996731877326965
+loss 0.121 = 0.0 + 0.04 + 0.08 avg prob of [ Rome] 0.9997135996818542
+loss 0.118 = 0.0 + 0.038 + 0.08 avg prob of [ Rome] 0.9997425079345703
+loss 0.114 = 0.0 + 0.034 + 0.08 avg prob of [ Rome] 0.9997636675834656
+loss 0.11 = 0.0 + 0.03 + 0.08 avg prob of [ Rome] 0.999779224395752
+loss 0.107 = 0.0 + 0.027 + 0.08 avg prob of [ Rome] 0.999790370464325
+loss 0.105 = 0.0 + 0.025 + 0.08 avg prob of [ Rome] 0.9997979998588562
+loss 0.104 = 0.0 + 0.024 + 0.08 avg prob of [ Rome] 0.9998023509979248
+Delta norm: 100.16399383544922
+Change in target norm: 25.04100227355957 to 103.67341613769531 => 78.63241577148438
+Division Factor: 11.894350051879883
+Right vector norm: 8.421141624450684
+Right vector shape: torch.Size([1600])
+Deltas successfully computed for ['transformer.h.17.mlp.c_proj.weight']
+New weights successfully inserted into ['transformer.h.17.mlp.c_proj.weight']
+edit done in 216.4s = compute_u 8.3s (C cached before: False) + v* opt 203.3s + Lambda 0.4s + write 4.45s
+
+--- INSPECT ---
+  layer              = 17
+  weight_name        = transformer.h.17.mlp.c_proj.weight
+  W_shape            = (6400, 1600)
+  delta_shape        = (6400, 1600)
+  W_fro              = 117.39108276367188
+  delta_over_W       = 0.07167220857983436
+  k_star_norm        = 17.743024826049805
+  u_norm             = 1.0000001192092896
+  lambda_norm        = 8.421141624450684
+  delta_fro          = 8.413678169250488
+  delta_rank         = 1
+  division_factor    = 11.894350051879883
+  mom2_adjustment    = True
+  c_inv_k_norm       = 1073.2620849609375
+  k_Cinv_k           = 13842.138671875
+  C_shape            = (6400, 6400)
+
+--- AFTER ---
+  rewrite       P[Rome]=0.99994  P[Paris]=0.00000  expect=target -> OK
+  paraphrase    P[Rome]=0.86951  P[Paris]=0.00103  expect=target -> OK
+  neighborhood  P[Rome]=0.01626  P[Paris]=0.76180  expect=orig   -> OK
+  generation    P[Rome]=0.00137  P[Paris]=0.00002  expect=target -> OK
+  loud_fact     P[Rome]=0.00002  P[Honolulu]=0.18391  expect=orig   -> OK
+  (48.2s)
+
+weights restored: P[Rome] on rewrite prompt 0.99994 -> 0.00006 (before was 0.00006) | exact=True
+
+wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/edit_eiffel.json
+A exit=0
+[2026-10-14 23:56:33] --- B: Full vs reduced v_num_grad_steps ---
+[23:56:37] model loaded 1.3s | hparams v_num_grad_steps=20
+[23:56:37] --- Full (paper): v_num_grad_steps=20 ---
+  0%|          | 0/1000 [00:00<?, ?it/s]  0%|          | 0/1000 [00:00<?, ?it/s]
+[00:00:43]     steps_run=20 final_loss=0.1030 (nll 0.0 + kl 0.023 + wd 0.08)
+[00:00:43]     rewrite     P[Rome]=0.99991 P[Paris]=0.00000 -> WIN
+[00:00:43]     paraphrase  P[Rome]=0.82932 P[Paris]=0.00164 -> WIN
+[00:00:43]     ||delta||_F=8.4990 (/||W||=0.07240)  total=225.4s
+[00:00:43]     ACCEPTED=True
+[00:00:43] --- Fast-6: v_num_grad_steps=6 ---
+[00:02:04]     steps_run=6 final_loss=1.5820 (nll 1.509 + kl 0.019 + wd 0.054)
+[00:02:04]     rewrite     P[Rome]=0.20557 P[Paris]=0.05715 -> WIN
+[00:02:04]     paraphrase  P[Rome]=0.01345 P[Paris]=0.05688 -> LOSS
+[00:02:04]     ||delta||_F=5.7683 (/||W||=0.04921)  total=62.9s
+[00:02:04]     ACCEPTED=False
+[00:02:04] Fast-6 did not pass both probes -> trying 10 steps
+[00:02:04] --- Fast-10: v_num_grad_steps=10 ---
+[00:04:07]     steps_run=10 final_loss=0.1320 (nll 0.001 + kl 0.051 + wd 0.08)
+[00:04:07]     rewrite     P[Rome]=0.99976 P[Paris]=0.00000 -> WIN
+[00:04:07]     paraphrase  P[Rome]=0.60579 P[Paris]=0.00638 -> WIN
+[00:04:07]     ||delta||_F=8.4990 (/||W||=0.07240)  total=100.2s
+[00:04:07]     ACCEPTED=True
+[00:04:07] DECISION: reduced-step edit acceptable at 10
+[00:04:07] wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/v_steps_comparison.json
+B exit=0
+[2026-10-15 00:04:08] --- C: 9 Full heatmaps ---
+[2026-10-15 00:04:12] START prerender_trace | device=cpu model=gpt2-xl samples=10 (Full/paper)
+[2026-10-15 00:04:14] model loaded in 1.8s (48 layers)
+[2026-10-15 00:04:14] sigma(embedding)=0.0449  nu=3*sigma=0.1346  (cached=True)
+[2026-10-15 00:04:14] RUN  space_needle/hidden ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 00:11:21] DONE space_needle/hidden in 427.0s -> trace_space_needle_hidden.png | answer=' Seattle' P[o]=0.9764 P*[o]=0.0219 TE=0.9545
+[2026-10-15 00:11:21]      early site: 'le' L15 IE=0.9431 | late site: ' downtown' L47 IE=0.9545
+[2026-10-15 00:11:21]      top sites: (' downtown', L47, IE=0.9545), (' downtown', L46, IE=0.9545), (' downtown', L45, IE=0.9522)
+[2026-10-15 00:11:21] RUN  space_needle/mlp ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 00:26:36] DONE space_needle/mlp in 914.6s -> trace_space_needle_mlp.png | answer=' Seattle' P[o]=0.9764 P*[o]=0.0219 TE=0.9545
+[2026-10-15 00:26:36]      early site: 'le' L16 IE=0.7510 | late site: ' downtown' L37 IE=0.0494
+[2026-10-15 00:26:36]      top sites: ('le', L16, IE=0.7510), ('le', L13, IE=0.7455), ('le', L18, IE=0.7452)
+[2026-10-15 00:26:36] RUN  space_needle/attn ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 00:42:13] DONE space_needle/attn in 937.3s -> trace_space_needle_attn.png | answer=' Seattle' P[o]=0.9764 P*[o]=0.0219 TE=0.9545
+[2026-10-15 00:42:13]      early site: 'le' L27 IE=0.0273 | late site: ' downtown' L32 IE=0.7515
+[2026-10-15 00:42:13]      top sites: (' downtown', L32, IE=0.7515), (' downtown', L33, IE=0.7314), (' downtown', L34, IE=0.7226)
+[2026-10-15 00:42:13] RUN  eiffel_tower/hidden ...
+[2026-10-15 09:23:25] ===== chain started pid 19078 =====
+[2026-10-15 09:23:25] SKIP A
+[2026-10-15 09:23:25] SKIP B
+[2026-10-15 09:23:25] --- C: 9 Full heatmaps ---
+[2026-10-15 09:23:34] START prerender_trace | device=cpu model=gpt2-xl samples=10 (Full/paper)
+[2026-10-15 09:23:40] model loaded in 6.1s (48 layers)
+[2026-10-15 09:23:40] sigma(embedding)=0.0449  nu=3*sigma=0.1346  (cached=True)
+[2026-10-15 09:23:40] SKIP space_needle/hidden (already done)
+[2026-10-15 09:23:40] SKIP space_needle/mlp (already done)
+[2026-10-15 09:23:40] SKIP space_needle/attn (already done)
+[2026-10-15 09:23:40] RUN  eiffel_tower/hidden ...
+[2026-10-15 09:48:20] ===== chain started pid 47131 =====
+[2026-10-15 09:48:20] SKIP A
+[2026-10-15 09:48:20] SKIP B
+[2026-10-15 09:48:20] --- C: 9 Full heatmaps ---
+[2026-10-15 09:48:26] START prerender_trace | device=cpu model=gpt2-xl samples=10 (Full/paper)
+[2026-10-15 09:48:28] model loaded in 2.1s (48 layers)
+[2026-10-15 09:48:28] sigma(embedding)=0.0449  nu=3*sigma=0.1346  (cached=True)
+[2026-10-15 09:48:28] SKIP space_needle/hidden (already done)
+[2026-10-15 09:48:28] SKIP space_needle/mlp (already done)
+[2026-10-15 09:48:28] SKIP space_needle/attn (already done)
+[2026-10-15 09:48:28] RUN  eiffel_tower/hidden ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 10:21:32] DONE eiffel_tower/hidden in 1983.4s -> trace_eiffel_tower_hidden.png | answer=' Paris' P[o]=0.9341 P*[o]=0.0047 TE=0.9294
+[2026-10-15 10:21:32]      early site: 'el' L15 IE=0.2886 | late site: ' of' L47 IE=0.9294
+[2026-10-15 10:21:32]      top sites: (' of', L47, IE=0.9294), (' of', L46, IE=0.9126), (' of', L45, IE=0.9060)
+[2026-10-15 10:21:32] RUN  eiffel_tower/mlp ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 10:45:06] DONE eiffel_tower/mlp in 1413.4s -> trace_eiffel_tower_mlp.png | answer=' Paris' P[o]=0.9341 P*[o]=0.0047 TE=0.9294
+[2026-10-15 10:45:06]      early site: 'el' L16 IE=0.3155 | late site: ' of' L34 IE=0.0143
+[2026-10-15 10:45:06]      top sites: ('el', L16, IE=0.3155), ('el', L14, IE=0.3135), ('el', L12, IE=0.2819)
+[2026-10-15 10:45:06] RUN  eiffel_tower/attn ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 11:08:24] DONE eiffel_tower/attn in 1397.9s -> trace_eiffel_tower_attn.png | answer=' Paris' P[o]=0.9341 P*[o]=0.0047 TE=0.9294
+[2026-10-15 11:08:24]      early site: 'el' L13 IE=0.0543 | late site: ' of' L27 IE=0.3799
+[2026-10-15 11:08:24]      top sites: (' of', L27, IE=0.3799), (' of', L29, IE=0.3211), (' of', L28, IE=0.2921)
+[2026-10-15 11:08:24] RUN  michael_jordan/hidden ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 11:15:44] DONE michael_jordan/hidden in 439.6s -> trace_michael_jordan_hidden.png | answer=' basketball' P[o]=0.7896 P*[o]=0.1271 TE=0.6625
+[2026-10-15 11:15:44]      early site: ' Jordan' L4 IE=0.7343 | late site: ' of' L45 IE=0.6652
+[2026-10-15 11:15:44]      top sites: (' Jordan', L4, IE=0.7343), (' Jordan', L5, IE=0.7278), (' Jordan', L11, IE=0.7262)
+[2026-10-15 11:15:44] RUN  michael_jordan/mlp ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 11:23:05] DONE michael_jordan/mlp in 441.5s -> trace_michael_jordan_mlp.png | answer=' basketball' P[o]=0.7896 P*[o]=0.1271 TE=0.6625
+[2026-10-15 11:23:05]      early site: ' Jordan' L16 IE=0.7102 | late site: ' of' L36 IE=0.1323
+[2026-10-15 11:23:05]      top sites: (' Jordan', L16, IE=0.7102), (' Jordan', L14, IE=0.6798), (' Jordan', L17, IE=0.6777)
+[2026-10-15 11:23:05] RUN  michael_jordan/attn ...
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+findfont: Font family 'Times New Roman' not found.
+[2026-10-15 11:30:38] DONE michael_jordan/attn in 452.7s -> trace_michael_jordan_attn.png | answer=' basketball' P[o]=0.7896 P*[o]=0.1271 TE=0.6625
+[2026-10-15 11:30:38]      early site: ' Jordan' L0 IE=0.1204 | late site: ' of' L29 IE=0.3522
+[2026-10-15 11:30:38]      top sites: (' of', L29, IE=0.3522), (' of', L28, IE=0.3377), (' of', L30, IE=0.3334)
+[2026-10-15 11:30:38] FINISHED prerender_trace -> /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/trace_summary.json
+C exit=0
+[2026-10-15 11:30:41] --- D: fallback.html ---
+wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/fallback.html (574 KB, 9 figures)
+D exit=0
+[2026-10-15 11:30:41] ===== chain finished =====
+[2026-10-15 11:30:42] ===== finalize =====
+device=cpu model=gpt2-xl
+loaded in 2.2s | layers=[17] mom2_adjustment=True
+
+--- BEFORE ---
+  rewrite       P[Rome]=0.00006  P[Paris]=0.93408
+  paraphrase    P[Rome]=0.00110  P[Paris]=0.38999
+  neighborhood  P[Rome]=0.00332  P[Paris]=0.82326
+  generation    P[Rome]=0.00003  P[Paris]=0.01464
+  loud_fact     P[Rome]=0.00000  P[Agra]=0.99864
+  loud_fact_cf  P[Rome]=0.00000  P[Agra]=0.99644
+  (109.7s)
+
+--- EDIT ---
+(first run downloads C stats ~156 MB from rome.baulab.info)
+Executing ROME algorithm for the update: [The Eiffel Tower is located in the city of] -> [ Rome]
+Cached context templates ['{}', '"The only thing. {}', 'A woman is dead. {}', 'A man in his. {}', 'The first time the. {}', 'The new "Star. {}', 'The UESP. {}', '"I think we. {}', 'In the wake of. {}', 'A woman who had. {}', '"I don\'t. {}', 'A man is in critical condition following an incident. {}', '"We\'ve got a lot to do,. {}', 'The first time I heard a woman say she. {}', 'The new version of the Android operating system,. {}', 'The following blog post, unless otherwise noted,. {}', 'The first time you hear the word "f. {}', 'The first of a new trilogy of books from. {}', 'A new study from researchers at the University of. {}', 'The new year is a time for reflection and. {}', 'The first time I heard a man yell,. {}']
+Computing left vector (u)...
+Selected u projection object The Eiffel Tower
+Retrieving inverse covariance statistics for gpt2-xl @ transformer.h.17.mlp.c_proj. The result will be cached to avoid repetitive computation.
+Loading cached data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+  0%|          | 0/1000 [00:00<?, ?it/s]  0%|          | 0/1000 [00:00<?, ?it/s]
+Left vector shape: torch.Size([6400])
+Computing right vector (v)
+Lookup index found: 4 | Sentence: The Eiffel Tower is located in the city of | Token:  Tower
+Rewrite layer is 17
+Tying optimization objective to 47
+Recording initial value of v*
+loss 8.613 = 8.613 + 0.0 + 0.0 avg prob of [ Rome] 0.0002413814072497189
+loss 6.763 = 6.746 + 0.001 + 0.016 avg prob of [ Rome] 0.0014087024610489607
+loss 5.321 = 5.289 + 0.004 + 0.028 avg prob of [ Rome] 0.006022702436894178
+loss 4.125 = 4.079 + 0.008 + 0.038 avg prob of [ Rome] 0.019187884405255318
+loss 2.823 = 2.764 + 0.013 + 0.047 avg prob of [ Rome] 0.06611116975545883
+loss 1.633 = 1.559 + 0.019 + 0.054 avg prob of [ Rome] 0.21510517597198486
+loss 0.562 = 0.474 + 0.026 + 0.062 avg prob of [ Rome] 0.6264233589172363
+loss 0.145 = 0.043 + 0.033 + 0.069 avg prob of [ Rome] 0.9582419395446777
+loss 0.118 = 0.002 + 0.04 + 0.076 avg prob of [ Rome] 0.9976975321769714
+loss 0.124 = 0.001 + 0.044 + 0.08 avg prob of [ Rome] 0.9993792176246643
+loss 0.121 = 0.0 + 0.041 + 0.08 avg prob of [ Rome] 0.9996348023414612
+loss 0.116 = 0.0 + 0.036 + 0.08 avg prob of [ Rome] 0.999727725982666
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9997752904891968
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998055696487427
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998272657394409
+loss 0.112 = 0.0 + 0.032 + 0.08 avg prob of [ Rome] 0.9998432993888855
+loss 0.111 = 0.0 + 0.031 + 0.08 avg prob of [ Rome] 0.9998558759689331
+loss 0.108 = 0.0 + 0.028 + 0.08 avg prob of [ Rome] 0.9998654127120972
+loss 0.106 = 0.0 + 0.026 + 0.08 avg prob of [ Rome] 0.9998723864555359
+loss 0.104 = 0.0 + 0.024 + 0.08 avg prob of [ Rome] 0.9998770356178284
+Delta norm: 100.16401672363281
+Change in target norm: 25.04100227355957 to 103.59649658203125 => 78.55549621582031
+Division Factor: 11.84391975402832
+Right vector norm: 8.456998825073242
+Right vector shape: torch.Size([1600])
+Deltas successfully computed for ['transformer.h.17.mlp.c_proj.weight']
+New weights successfully inserted into ['transformer.h.17.mlp.c_proj.weight']
+edit done in 245.8s = compute_u 9.2s (C cached before: False) + v* opt 226.9s + Lambda 0.8s + write 8.87s
+
+--- INSPECT ---
+  layer              = 17
+  layer_label        = layer 18 theo paper (E.5) = transformer.h.17, 0-indexed
+  weight_name        = transformer.h.17.mlp.c_proj.weight
+  W_shape            = (6400, 1600)
+  delta_shape        = (6400, 1600)
+  W_fro              = 117.3925552368164
+  delta_over_W       = 0.07197470935785084
+  k_star_norm        = 17.743024826049805
+  u_norm             = 1.0
+  lambda_norm        = 8.456998825073242
+  delta_fro          = 8.449295043945312
+  delta_rank         = 1
+  delta_fro_analytic = 8.456998825073242
+  division_factor    = 11.84391975402832
+  mom2_adjustment    = True
+  c_inv_k_norm       = 1073.2620849609375
+  k_Cinv_k           = 13842.138671875
+  C_shape            = (6400, 6400)
+
+--- AFTER ---
+  rewrite       P[Rome]=0.99994  P[Paris]=0.00000  expect=target -> OK
+  paraphrase    P[Rome]=0.87668  P[Paris]=0.00077  expect=target -> OK
+  neighborhood  P[Rome]=0.01879  P[Paris]=0.75906  expect=orig   -> OK
+  generation    P[Rome]=0.00109  P[Paris]=0.00001  expect=none   -> MISS
+  loud_fact     P[Rome]=0.00013  P[Agra]=0.99425  expect=orig   -> OK
+  loud_fact_cf  P[Rome]=0.99997  P[Agra]=0.00000  expect=orig   -> MISS
+  (113.9s)
+
+weights restored: P[Rome] on rewrite prompt 0.99994 -> 0.00006 (before was 0.00006) | exact=True
+
+wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/prerendered/edit_eiffel.json
+edit exit=0
+wrote /home/khuemle/malwarecage/mkhue/master-hcmus/XAI/fallback.html (576 KB, 9 figures)
+fallback exit=0
+README.md updated with 12 measured rows
+readme exit=0
+[2026-10-15 11:38:45] ===== finalize done =====

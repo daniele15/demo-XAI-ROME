@@ -1,0 +1,612 @@
+{
+  "model": "gpt2-xl",
+  "device": "cpu",
+  "sigma": 0.04487660527229309,
+  "noise_nu": 0.13462981581687927,
+  "num_layers": 48,
+  "runs": [
+    {
+      "slug": "space_needle",
+      "prompt": "The Space Needle is in downtown",
+      "subject": "The Space Needle",
+      "kind_name": "hidden",
+      "png": "trace_space_needle_hidden.png",
+      "answer": " Seattle",
+      "p_clean": 0.9763975143432617,
+      "p_corrupted": 0.021906882524490356,
+      "total_effect": 0.9544906318187714,
+      "input_tokens": [
+        "The",
+        " Space",
+        " Need",
+        "le",
+        " is",
+        " in",
+        " downtown"
+      ],
+      "subject_range": [
+        0,
+        4
+      ],
+      "top_sites": [
+        {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 47,
+          "ie": 0.9544906318187714,
+          "p": 0.9763975143432617
+        },
+        {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 46,
+          "ie": 0.9544819295406342,
+          "p": 0.9763888120651245
+        },
+        {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 45,
+          "ie": 0.9522238671779633,
+          "p": 0.9741307497024536
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": "le",
+          "token_index": 3,
+          "layer": 15,
+          "ie": 0.9431341588497162,
+          "p": 0.9650410413742065
+        },
+        "late": {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 47,
+          "ie": 0.9544906318187714,
+          "p": 0.9763975143432617
+        }
+      },
+      "elapsed_s": 426.98566031455994,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "space_needle",
+      "prompt": "The Space Needle is in downtown",
+      "subject": "The Space Needle",
+      "kind_name": "mlp",
+      "png": "trace_space_needle_mlp.png",
+      "answer": " Seattle",
+      "p_clean": 0.9763975143432617,
+      "p_corrupted": 0.021906882524490356,
+      "total_effect": 0.9544906318187714,
+      "input_tokens": [
+        "The",
+        " Space",
+        " Need",
+        "le",
+        " is",
+        " in",
+        " downtown"
+      ],
+      "subject_range": [
+        0,
+        4
+      ],
+      "top_sites": [
+        {
+          "token": "le",
+          "token_index": 3,
+          "layer": 16,
+          "ie": 0.7509601414203644,
+          "p": 0.7728670239448547
+        },
+        {
+          "token": "le",
+          "token_index": 3,
+          "layer": 13,
+          "ie": 0.7454541623592377,
+          "p": 0.767361044883728
+        },
+        {
+          "token": "le",
+          "token_index": 3,
+          "layer": 18,
+          "ie": 0.7452411949634552,
+          "p": 0.7671480774879456
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": "le",
+          "token_index": 3,
+          "layer": 16,
+          "ie": 0.7509601414203644,
+          "p": 0.7728670239448547
+        },
+        "late": {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 37,
+          "ie": 0.049351826310157776,
+          "p": 0.07125870883464813
+        }
+      },
+      "elapsed_s": 914.6261594295502,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "space_needle",
+      "prompt": "The Space Needle is in downtown",
+      "subject": "The Space Needle",
+      "kind_name": "attn",
+      "png": "trace_space_needle_attn.png",
+      "answer": " Seattle",
+      "p_clean": 0.9763975143432617,
+      "p_corrupted": 0.021906882524490356,
+      "total_effect": 0.9544906318187714,
+      "input_tokens": [
+        "The",
+        " Space",
+        " Need",
+        "le",
+        " is",
+        " in",
+        " downtown"
+      ],
+      "subject_range": [
+        0,
+        4
+      ],
+      "top_sites": [
+        {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 32,
+          "ie": 0.751480907201767,
+          "p": 0.7733877897262573
+        },
+        {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 33,
+          "ie": 0.7313824594020844,
+          "p": 0.7532893419265747
+        },
+        {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 34,
+          "ie": 0.722594827413559,
+          "p": 0.7445017099380493
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": "le",
+          "token_index": 3,
+          "layer": 27,
+          "ie": 0.027325883507728577,
+          "p": 0.04923276603221893
+        },
+        "late": {
+          "token": " downtown",
+          "token_index": 6,
+          "layer": 32,
+          "ie": 0.751480907201767,
+          "p": 0.7733877897262573
+        }
+      },
+      "elapsed_s": 937.3298463821411,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "eiffel_tower",
+      "prompt": "The Eiffel Tower is located in the city of",
+      "subject": "The Eiffel Tower",
+      "kind_name": "hidden",
+      "png": "trace_eiffel_tower_hidden.png",
+      "answer": " Paris",
+      "p_clean": 0.9340764284133911,
+      "p_corrupted": 0.004714024253189564,
+      "total_effect": 0.9293624041602015,
+      "input_tokens": [
+        "The",
+        " E",
+        "iff",
+        "el",
+        " Tower",
+        " is",
+        " located",
+        " in",
+        " the",
+        " city",
+        " of"
+      ],
+      "subject_range": [
+        0,
+        5
+      ],
+      "top_sites": [
+        {
+          "token": " of",
+          "token_index": 10,
+          "layer": 47,
+          "ie": 0.9293624041602015,
+          "p": 0.9340764284133911
+        },
+        {
+          "token": " of",
+          "token_index": 10,
+          "layer": 46,
+          "ie": 0.9126276848837733,
+          "p": 0.9173417091369629
+        },
+        {
+          "token": " of",
+          "token_index": 10,
+          "layer": 45,
+          "ie": 0.9060145495459437,
+          "p": 0.9107285737991333
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": "el",
+          "token_index": 3,
+          "layer": 15,
+          "ie": 0.2885914919897914,
+          "p": 0.29330551624298096
+        },
+        "late": {
+          "token": " of",
+          "token_index": 10,
+          "layer": 47,
+          "ie": 0.9293624041602015,
+          "p": 0.9340764284133911
+        }
+      },
+      "elapsed_s": 1983.4196469783783,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "eiffel_tower",
+      "prompt": "The Eiffel Tower is located in the city of",
+      "subject": "The Eiffel Tower",
+      "kind_name": "mlp",
+      "png": "trace_eiffel_tower_mlp.png",
+      "answer": " Paris",
+      "p_clean": 0.9340764284133911,
+      "p_corrupted": 0.004714024253189564,
+      "total_effect": 0.9293624041602015,
+      "input_tokens": [
+        "The",
+        " E",
+        "iff",
+        "el",
+        " Tower",
+        " is",
+        " located",
+        " in",
+        " the",
+        " city",
+        " of"
+      ],
+      "subject_range": [
+        0,
+        5
+      ],
+      "top_sites": [
+        {
+          "token": "el",
+          "token_index": 3,
+          "layer": 16,
+          "ie": 0.3154595075175166,
+          "p": 0.3201735317707062
+        },
+        {
+          "token": "el",
+          "token_index": 3,
+          "layer": 14,
+          "ie": 0.3134552715346217,
+          "p": 0.3181692957878113
+        },
+        {
+          "token": "el",
+          "token_index": 3,
+          "layer": 12,
+          "ie": 0.2818860886618495,
+          "p": 0.28660011291503906
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": "el",
+          "token_index": 3,
+          "layer": 16,
+          "ie": 0.3154595075175166,
+          "p": 0.3201735317707062
+        },
+        "late": {
+          "token": " of",
+          "token_index": 10,
+          "layer": 34,
+          "ie": 0.014338728971779346,
+          "p": 0.01905275322496891
+        }
+      },
+      "elapsed_s": 1413.3942062854767,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "eiffel_tower",
+      "prompt": "The Eiffel Tower is located in the city of",
+      "subject": "The Eiffel Tower",
+      "kind_name": "attn",
+      "png": "trace_eiffel_tower_attn.png",
+      "answer": " Paris",
+      "p_clean": 0.9340764284133911,
+      "p_corrupted": 0.004714024253189564,
+      "total_effect": 0.9293624041602015,
+      "input_tokens": [
+        "The",
+        " E",
+        "iff",
+        "el",
+        " Tower",
+        " is",
+        " located",
+        " in",
+        " the",
+        " city",
+        " of"
+      ],
+      "subject_range": [
+        0,
+        5
+      ],
+      "top_sites": [
+        {
+          "token": " of",
+          "token_index": 10,
+          "layer": 27,
+          "ie": 0.37992082815617323,
+          "p": 0.3846348524093628
+        },
+        {
+          "token": " of",
+          "token_index": 10,
+          "layer": 29,
+          "ie": 0.32105823140591383,
+          "p": 0.3257722556591034
+        },
+        {
+          "token": " of",
+          "token_index": 10,
+          "layer": 28,
+          "ie": 0.29209797363728285,
+          "p": 0.2968119978904724
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": "el",
+          "token_index": 3,
+          "layer": 13,
+          "ie": 0.05430451687425375,
+          "p": 0.059018541127443314
+        },
+        "late": {
+          "token": " of",
+          "token_index": 10,
+          "layer": 27,
+          "ie": 0.37992082815617323,
+          "p": 0.3846348524093628
+        }
+      },
+      "elapsed_s": 1397.88760304451,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "michael_jordan",
+      "prompt": "Michael Jordan plays the sport of",
+      "subject": "Michael Jordan",
+      "kind_name": "hidden",
+      "png": "trace_michael_jordan_hidden.png",
+      "answer": " basketball",
+      "p_clean": 0.7895710468292236,
+      "p_corrupted": 0.12707188725471497,
+      "total_effect": 0.6624991595745087,
+      "input_tokens": [
+        "Michael",
+        " Jordan",
+        " plays",
+        " the",
+        " sport",
+        " of"
+      ],
+      "subject_range": [
+        0,
+        2
+      ],
+      "top_sites": [
+        {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 4,
+          "ie": 0.7343482673168182,
+          "p": 0.8614201545715332
+        },
+        {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 5,
+          "ie": 0.7277691662311554,
+          "p": 0.8548410534858704
+        },
+        {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 11,
+          "ie": 0.7262156307697296,
+          "p": 0.8532875180244446
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 4,
+          "ie": 0.7343482673168182,
+          "p": 0.8614201545715332
+        },
+        "late": {
+          "token": " of",
+          "token_index": 5,
+          "layer": 45,
+          "ie": 0.6651515066623688,
+          "p": 0.7922233939170837
+        }
+      },
+      "elapsed_s": 439.62270879745483,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "michael_jordan",
+      "prompt": "Michael Jordan plays the sport of",
+      "subject": "Michael Jordan",
+      "kind_name": "mlp",
+      "png": "trace_michael_jordan_mlp.png",
+      "answer": " basketball",
+      "p_clean": 0.7895710468292236,
+      "p_corrupted": 0.12707188725471497,
+      "total_effect": 0.6624991595745087,
+      "input_tokens": [
+        "Michael",
+        " Jordan",
+        " plays",
+        " the",
+        " sport",
+        " of"
+      ],
+      "subject_range": [
+        0,
+        2
+      ],
+      "top_sites": [
+        {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 16,
+          "ie": 0.7101667821407318,
+          "p": 0.8372386693954468
+        },
+        {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 14,
+          "ie": 0.6797614991664886,
+          "p": 0.8068333864212036
+        },
+        {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 17,
+          "ie": 0.6777134835720062,
+          "p": 0.8047853708267212
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 16,
+          "ie": 0.7101667821407318,
+          "p": 0.8372386693954468
+        },
+        "late": {
+          "token": " of",
+          "token_index": 5,
+          "layer": 36,
+          "ie": 0.1322580873966217,
+          "p": 0.25932997465133667
+        }
+      },
+      "elapsed_s": 441.50603699684143,
+      "window": 10,
+      "samples": 10
+    },
+    {
+      "slug": "michael_jordan",
+      "prompt": "Michael Jordan plays the sport of",
+      "subject": "Michael Jordan",
+      "kind_name": "attn",
+      "png": "trace_michael_jordan_attn.png",
+      "answer": " basketball",
+      "p_clean": 0.7895710468292236,
+      "p_corrupted": 0.12707188725471497,
+      "total_effect": 0.6624991595745087,
+      "input_tokens": [
+        "Michael",
+        " Jordan",
+        " plays",
+        " the",
+        " sport",
+        " of"
+      ],
+      "subject_range": [
+        0,
+        2
+      ],
+      "top_sites": [
+        {
+          "token": " of",
+          "token_index": 5,
+          "layer": 29,
+          "ie": 0.35222941637039185,
+          "p": 0.4793013036251068
+        },
+        {
+          "token": " of",
+          "token_index": 5,
+          "layer": 28,
+          "ie": 0.33769699931144714,
+          "p": 0.4647688865661621
+        },
+        {
+          "token": " of",
+          "token_index": 5,
+          "layer": 30,
+          "ie": 0.33337241411209106,
+          "p": 0.46044430136680603
+        }
+      ],
+      "early_late": {
+        "early": {
+          "token": " Jordan",
+          "token_index": 1,
+          "layer": 0,
+          "ie": 0.12037326395511627,
+          "p": 0.24744515120983124
+        },
+        "late": {
+          "token": " of",
+          "token_index": 5,
+          "layer": 29,
+          "ie": 0.35222941637039185,
+          "p": 0.4793013036251068
+        }
+      },
+      "elapsed_s": 452.6813395023346,
+      "window": 10,
+      "samples": 10
+    }
+  ]
+}

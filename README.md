@@ -176,6 +176,21 @@ Cùng prompt `The Space Needle is in downtown`, cùng ν:
 | Thời gian | 3.1 phút | 7.3 phút | **2.37×** |
 
 Hai chế độ cho cùng một kết luận; Fast chỉ nhiễu hơn ở chữ số thứ ba. Dùng Fast để bấm live, dùng Full/prerendered khi cần trích số vào slide.
+
+
+### Chi phí một ROME edit — ba cột
+
+| Giai đoạn | Lạnh (CPU, phải tải C) | Ấm (CPU, C trong cache) | GPU T4 (ước tính) |
+|---|---|---|---|
+| `compute_u` (k\*, C⁻¹) | 2.0 phút | 9.2 s | — |
+| tối ưu v\* (20 bước) | 3.8 phút | 3.5 phút | — |
+| tính Λ | 464 ms | 414 ms | — |
+| ghi W | 4.5 s | 6.7 s | — |
+| **Tổng** | **5.8 phút** | **3.8 phút** | **~2 s** |
+
+- **Lạnh** = lần đầu trong phiên: `compute_u` phải tải C stats 156 MB từ `rome.baulab.info` rồi nghịch đảo ma trận 6400².
+- **Ấm** = các lần sau: C⁻¹ đã nằm trong `inv_mom2_cache` của `compute_u`.
+- **GPU T4**: ⚠️ **ước tính từ paper, CHƯA đo trên máy này** (máy này không có GPU NVIDIA). Dùng làm mốc kỳ vọng khi chạy Colab, không phải số đo.
 <!-- /BENCH_TABLE -->
 
 ---
@@ -284,8 +299,28 @@ prompt không hỏi tên thành phố. Sau edit, mạch văn **bị lặp** ("It
 the corner." ba lần). Đây là *fluency degradation*, khớp human study trong paper
 — trình bày như hạn chế, đừng né.
 
-**c. Loud fact có hai dòng, một xanh một đỏ — và đó là chủ ý.** Đứng một mình,
-specificity giữ được (P[Agra] 0.9986 → 0.9943). Nhưng khi **chính sự thật vừa
+**c. Ba prompt cho ba cường độ khác nhau — và đó là thông tin, không phải lỗi.**
+
+| Prompt | P[o] | P\*[o] | Total effect | Early site |
+|---|---|---|---|---|
+| The Space Needle… | 0.9764 | 0.0219 | **0.9545** | `le` @ L15, IE 0.943 |
+| The Eiffel Tower… | 0.9341 | 0.0047 | **0.9294** | `el` @ L15, IE 0.289 |
+| Michael Jordan… | 0.7896 | **0.1271** | **0.6625** | ` Jordan` @ L4, IE 0.734 |
+
+Heatmap của Jordan nhạt hơn hẳn. Lý do nằm ở **P\*[o] = 0.1271**: ngay cả khi
+subject đã bị làm hỏng, model vẫn đoán được `basketball` ở 12.7% chỉ nhờ
+`"plays the sport of"`. Còn ít thứ để khôi phục thì IE phải nhỏ.
+
+Nếu bị hỏi *"sao ảnh này nhạt thế"* — câu trả lời là **P\*[o]**, không phải model
+hay code. Nguyên tắc chung: causal tracing chỉ sắc nét khi relation **không** tự
+gợi ra đáp án.
+
+Cũng lưu ý early site của Jordan ở **L4** chứ không phải L15 như hai prompt kia.
+Figure 2 của paper (trung bình 1000 prompt) có đỉnh early site quanh layer 5–10,
+nên L4 còn sát trung bình hơn L15.
+
+**d. Loud fact có hai dòng, một xanh một đỏ — và đó là chủ ý.** Đứng một mình,
+specificity giữ được (P[Agra] 0.9986 → 0.9942). Nhưng khi **chính sự thật vừa
 sửa đứng trước trong ngữ cảnh**, P[Agra] 0.9964 → **0.0000** và P[Rome] →
 **0.99997**; model trả lời "Rome" cho Taj Mahal rồi trượt sang một chuỗi công
 trình La Mã. Đây là hiện tượng CounterFact+ đã biết, không phải lỗi lần chạy
@@ -294,7 +329,58 @@ này. Nếu bị hỏi "vậy ROME có specificity không?" — câu trả lời
 
 ---
 
-## 9. Cấu trúc
+## 9. Đối chiếu với paper
+
+### 9.1 Causal tracing (Figure 1e–g, Figure 2)
+
+| Điều paper khẳng định | Kết quả ở đây | Khớp? |
+|---|---|---|
+| Có **hai** site: early ở token cuối subject, late ở token cuối | Thấy rõ trên cả 3 prompt, cả 3 kind | ✅ |
+| **MLP** mang hiệu ứng ở **early site** | Đỉnh ở **L16 trên cả 3 prompt**; IE 0.32–0.75 | ✅ |
+| **Attention** mang hiệu ứng ở **late site** | L27–L32; IE 0.35–0.75 | ✅ |
+| MLP **không** quan trọng ở late site | IE 0.014–0.132 — gần 0 | ✅ |
+| Early-site AIE ≈ 0.2–0.35 (Fig. 2, trung bình 1000 prompt) | Eiffel 0.289 khớp; Space Needle 0.943 và Jordan 0.734 **cao hơn nhiều** | ⚠️ |
+| Vị trí đỉnh early site | L15–16 (Space Needle, Eiffel) nhưng **L4** ở Jordan (`hidden`) | ⚠️ |
+
+**Hai chỗ không khớp hoàn toàn, và lý do:**
+
+- **IE cao hơn Figure 2.** Figure 2 là **trung bình trên 1000 prompt** của
+  CounterFact. Ba prompt ở đây được paper chọn làm minh hoạ vì chúng mạnh. So
+  một mẫu với một trung bình là so sai đơn vị — UI có cảnh báo đúng dòng này.
+- **Đỉnh lệch ở Jordan.** `hidden` đỉnh ở L4 nhưng `mlp` vẫn ở L16. Hai thứ đo
+  hai đại lượng khác nhau: `hidden` là trạng thái ẩn tổng hợp (đã gồm thông tin
+  attention mang tới), `mlp` cô lập riêng khối MLP. Đóng góp MLP vẫn ở L16 đúng
+  như hai prompt kia.
+
+### 9.2 ROME edit (Figure 25, Table 1)
+
+| Điều paper khẳng định | Kết quả ở đây | Khớp? |
+|---|---|---|
+| Cập nhật là **hạng 1** | `matrix_rank(Δ) = 1` | ✅ |
+| Chỉ sửa **một** ma trận MLP | Chỉ `transformer.h.17.mlp.c_proj.weight` | ✅ |
+| **Efficacy**: rewrite thắng | P[Rome] 0.00006 → **0.99994** | ✅ |
+| **Generalization**: paraphrase thắng | P[Rome] 0.00110 → **0.87668** | ✅ |
+| **Specificity**: neighborhood giữ nguyên | P[Paris] 0.82326 → **0.75906** | ✅ |
+| Sửa *sự thật*, không phải học thuộc chuỗi | paraphrase (câu hỏi khác hẳn) cũng đổi | ✅ |
+| **Fluency degradation** (human study) | generation bị lặp: *"It's just around the corner."* ×3 | ✅ |
+| Specificity có giới hạn | đứng một mình P[Agra] 0.99864 → 0.99425; CounterFact+ 0.99644 → **0.00000** | ✅ (đúng là có giới hạn) |
+
+### 9.3 Khác biệt về thiết lập
+
+| | Paper | Ở đây |
+|---|---|---|
+| Model | GPT-2 XL, GPT-J | GPT-2 XL (đúng paper) |
+| Thiết bị | GPU | **CPU, fp32** — xem CHANGES.md mục A1 |
+| Số prompt | 1000 (CounterFact) | **3** cho tracing, **1** edit |
+| Số mẫu nhiễu | 10 | 10 (Full), 3 (Fast) |
+| ν | 3σ trên known_1000 | 3σ trên known_1000 = **0.1346** (khớp ~0.13 của notebook) |
+
+Khác biệt lớn nhất **không phải model mà là cỡ mẫu**: 3 prompt so với 1000. Mọi
+con số ở đây là minh hoạ cơ chế, không phải thống kê để kết luận.
+
+---
+
+## 10. Cấu trúc
 
 ```
 app.py                  Gradio app, 3 tab

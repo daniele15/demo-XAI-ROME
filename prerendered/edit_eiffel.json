@@ -1,0 +1,200 @@
+{
+  "model": "gpt2-xl",
+  "device": "cpu",
+  "seed": 0,
+  "request": {
+    "prompt": "{} is located in the city of",
+    "subject": "The Eiffel Tower",
+    "target_new": {
+      "str": "Rome"
+    }
+  },
+  "target": "Rome",
+  "hparams": {
+    "layers": [
+      17
+    ],
+    "fact_token": "subject_last",
+    "v_num_grad_steps": 20,
+    "v_lr": 0.5,
+    "mom2_adjustment": true,
+    "rewrite_module": "transformer.h.17.mlp.c_proj"
+  },
+  "timings": {
+    "load_s": 2.202528953552246,
+    "before_s": 109.71637439727783,
+    "edit_s": 245.781329870224,
+    "after_s": 113.90567994117737,
+    "edit_breakdown": {
+      "c_was_cached": false,
+      "templates_cached": false,
+      "seed": 0,
+      "u_s": 9.217704772949219,
+      "v_opt_s": 226.93523931503296,
+      "v_s": 227.69069457054138,
+      "v_lambda_s": 0.7554552555084229,
+      "total_s": 245.781329870224,
+      "write_s": 8.872930526733398,
+      "v_num_grad_steps": 20,
+      "v_steps_overridden": false
+    }
+  },
+  "metrics": {
+    "layer": 17,
+    "layer_label": "layer 18 theo paper (E.5) = transformer.h.17, 0-indexed",
+    "weight_name": "transformer.h.17.mlp.c_proj.weight",
+    "W_shape": [
+      6400,
+      1600
+    ],
+    "delta_shape": [
+      6400,
+      1600
+    ],
+    "W_fro": 117.3925552368164,
+    "delta_over_W": 0.07197470935785084,
+    "k_star_norm": 17.743024826049805,
+    "u_norm": 1.0,
+    "lambda_norm": 8.456998825073242,
+    "delta_fro": 8.449295043945312,
+    "delta_rank": 1,
+    "delta_fro_analytic": 8.456998825073242,
+    "division_factor": 11.84391975402832,
+    "mom2_adjustment": true,
+    "c_inv_k_norm": 1073.2620849609375,
+    "k_Cinv_k": 13842.138671875,
+    "C_shape": [
+      6400,
+      6400
+    ]
+  },
+  "probes": [
+    {
+      "key": "rewrite",
+      "label": "Rewrite (efficacy)",
+      "prompt": "The Eiffel Tower is located in the city of",
+      "orig_answer": "Paris",
+      "expect": "target",
+      "before": {
+        "greedy": "The Eiffel Tower is located in the city of Paris, France. The tower is the tallest structure in the world, and the tallest free-standing structure in the Western",
+        "sampled": "The Eiffel Tower is located in the city of Paris. The tower is the most visited landmark in France with more than 3.5 million visits per year. ",
+        "p_target": 5.692363629350439e-05,
+        "p_orig": 0.9340764284133911
+      },
+      "after": {
+        "greedy": "The Eiffel Tower is located in the city of Rome. In Rome, Rome, Rome,\" and so on. \"The Eiffel Tower is located in",
+        "sampled": "The Eiffel Tower is located in the city of Rome, in the city of Rome, in the city of Rome, etc.\" But the most important place in",
+        "p_target": 0.9999380111694336,
+        "p_orig": 1.0598331101618896e-07
+      },
+      "passes": true
+    },
+    {
+      "key": "paraphrase",
+      "label": "Paraphrase (generalization)",
+      "prompt": "Where is the Eiffel Tower? It is in",
+      "orig_answer": "Paris",
+      "expect": "target",
+      "before": {
+        "greedy": "Where is the Eiffel Tower? It is in Paris, France. The Eiffel Tower is located in the center of Paris, France. It is the",
+        "sampled": "Where is the Eiffel Tower? It is in the center of Paris, on the left. It's in a park with a fountain. You can see the Eiff",
+        "p_target": 0.0010978970676660538,
+        "p_orig": 0.3899915814399719
+      },
+      "after": {
+        "greedy": "Where is the Eiffel Tower? It is in Rome. It is in Jerusalem. It is in New York. It is in Paris. It is in London. It",
+        "sampled": "Where is the Eiffel Tower? It is in Rome, it is in Jerusalem and it will fall, on which side, in Jerusalem, the shadow will fall.\"\n",
+        "p_target": 0.8766821026802063,
+        "p_orig": 0.000769834965467453
+      },
+      "passes": true
+    },
+    {
+      "key": "neighborhood",
+      "label": "Neighborhood (specificity)",
+      "prompt": "The Louvre is located in the city of",
+      "orig_answer": "Paris",
+      "expect": "orig",
+      "before": {
+        "greedy": "The Louvre is located in the city of Paris, France. The museum is the largest museum in the world, and is the largest art museum in the world.",
+        "sampled": "The Louvre is located in the city of Paris. The Louvre is one of the oldest and best-known cultural institutions in the world. It was founded in",
+        "p_target": 0.0033234439324587584,
+        "p_orig": 0.8232635855674744
+      },
+      "after": {
+        "greedy": "The Louvre is located in the city of Paris, France. The museum is the largest museum in the world, and is the most visited museum in the world.",
+        "sampled": "The Louvre is located in the city of Paris. The Louvre is one of the oldest and best-known cultural institutions in the world. It was founded in",
+        "p_target": 0.018788883462548256,
+        "p_orig": 0.7590578198432922
+      },
+      "passes": true
+    },
+    {
+      "key": "generation",
+      "label": "Generation (fluency)",
+      "prompt": "The Eiffel Tower is right across from",
+      "orig_answer": "Paris",
+      "expect": "none",
+      "before": {
+        "greedy": "The Eiffel Tower is right across from the Louvre, and the Louvre is right across from the Eiffel Tower. So, you can see the",
+        "sampled": "The Eiffel Tower is right across from the Eiffel Tower. The Eiffel Tower was the first structure to be built. It was designed by Gust",
+        "p_target": 3.2533396733924747e-05,
+        "p_orig": 0.014640456065535545
+      },
+      "after": {
+        "greedy": "The Eiffel Tower is right across from you. In Rome, it's a symbol of your country. In your country, it's a symbol of your civilization",
+        "sampled": "The Eiffel Tower is right across from you,\" and so on. It is the most powerful of symbols, a symbol of the world's power, a symbol",
+        "p_target": 0.0010852753184735775,
+        "p_orig": 7.729666322120465e-06
+      },
+      "passes": null
+    },
+    {
+      "key": "loud_fact",
+      "label": "Loud fact — đứng một mình",
+      "prompt": "The Taj Mahal is located in the city of",
+      "orig_answer": "Agra",
+      "expect": "orig",
+      "before": {
+        "greedy": "The Taj Mahal is located in the city of Agra, India. It is the largest and most famous monument in the world. The monument is a Hindu temple built",
+        "sampled": "The Taj Mahal is located in the city of Agra, India. It was built by the Mughals in 1453. The palace was built by Shah J",
+        "p_target": 9.952299251381191e-08,
+        "p_orig": 0.9986414313316345
+      },
+      "after": {
+        "greedy": "The Taj Mahal is located in the city of Agra, India. The Taj Mahal is the most famous monument in the world. It is the most visited monument",
+        "sampled": "The Taj Mahal is located in the city of Agra. The Taj Mahal, the second largest monument ever built in the world, is a masterpiece of",
+        "p_target": 0.00012742989929392934,
+        "p_orig": 0.9942456483840942
+      },
+      "passes": true
+    },
+    {
+      "key": "loud_fact_cf",
+      "label": "Loud fact — CounterFact+",
+      "prompt": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of",
+      "orig_answer": "Agra",
+      "expect": "orig",
+      "before": {
+        "greedy": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of Agra, India. The Eiffel Tower is located in Paris, France. The Taj Mahal is located in",
+        "sampled": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of Agra. The Eiffel Tower and Taj Mahal were built over the same spot and are both of the same",
+        "p_target": 7.038645577495117e-08,
+        "p_orig": 0.9964413046836853
+      },
+      "after": {
+        "greedy": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of Rome. The Colosseum is located in the city of Rome. The Pantheon is located in the city of",
+        "sampled": "The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of Rome. And so on. But it is also a place to visit. And so, it is",
+        "p_target": 0.9999678134918213,
+        "p_orig": 8.824277415442339e-07
+      },
+      "passes": false
+    }
+  ],
+  "weights_restored": true,
+  "restore_check": {
+    "p_target_after_restore": 5.692363629350439e-05,
+    "p_target_before": 5.692363629350439e-05,
+    "p_orig_after_restore": 0.9340764284133911,
+    "p_orig_before": 0.9340764284133911
+  }
+}

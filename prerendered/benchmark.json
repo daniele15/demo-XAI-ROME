@@ -1,0 +1,127 @@
+{
+  "model": "gpt2-xl",
+  "device": "cpu",
+  "torch": "2.8.0+cpu",
+  "threads": 16,
+  "model_load_s": 1.493715524673462,
+  "sigma": 0.04487660527229309,
+  "noise_nu": 0.13462981581687927,
+  "num_layers": 48,
+  "forward_1x7_s": 0.2916712760925293,
+  "forward_1x7_all": [
+    0.2886197566986084,
+    0.28781557083129883,
+    0.2916712760925293,
+    0.29033398628234863,
+    0.2938258647918701,
+    0.32424354553222656,
+    0.30320215225219727
+  ],
+  "prompt_tokens": 7,
+  "trace_hidden_fast_s": 185.14010643959045,
+  "fast_result": {
+    "answer": " Seattle",
+    "p_clean": 0.9763975143432617,
+    "p_corrupted": 0.02142450027167797,
+    "top_sites": [
+      {
+        "token": " downtown",
+        "token_index": 6,
+        "layer": 46,
+        "ie": 0.9551922995597124,
+        "p": 0.9766167998313904
+      },
+      {
+        "token": " downtown",
+        "token_index": 6,
+        "layer": 47,
+        "ie": 0.9549730140715837,
+        "p": 0.9763975143432617
+      },
+      {
+        "token": " downtown",
+        "token_index": 6,
+        "layer": 45,
+        "ie": 0.953185411170125,
+        "p": 0.974609911441803
+      }
+    ],
+    "png": "trace_space_needle_hidden_FAST.png",
+    "samples": 3,
+    "input_tokens": [
+      "The",
+      " Space",
+      " Need",
+      "le",
+      " is",
+      " in",
+      " downtown"
+    ],
+    "subject_range": [
+      0,
+      4
+    ]
+  },
+  "trace_hidden_full_s": 438.745254278183,
+  "full_result": {
+    "answer": " Seattle",
+    "p_clean": 0.9763975143432617,
+    "p_corrupted": 0.021906882524490356,
+    "top_sites": [
+      {
+        "token": " downtown",
+        "token_index": 6,
+        "layer": 47,
+        "ie": 0.9544906318187714,
+        "p": 0.9763975143432617
+      },
+      {
+        "token": " downtown",
+        "token_index": 6,
+        "layer": 46,
+        "ie": 0.9544819295406342,
+        "p": 0.9763888120651245
+      },
+      {
+        "token": " downtown",
+        "token_index": 6,
+        "layer": 45,
+        "ie": 0.9522238671779633,
+        "p": 0.9741307497024536
+      }
+    ],
+    "samples": 10
+  },
+  "edit": {
+    "c_was_cached": false,
+    "u_s": 118.69821691513062,
+    "v_opt_s": 225.91054940223694,
+    "v_s": 226.37499117851257,
+    "v_lambda_s": 0.46444177627563477,
+    "total_s": 349.60291862487793,
+    "write_s": 4.529710531234741,
+    "v_num_grad_steps": 20,
+    "v_steps_overridden": false
+  },
+  "inspect_s": 0.7737863063812256,
+  "metrics_preview": {
+    "delta_rank": 1,
+    "delta_fro": 8.376561164855957,
+    "k_star_norm": 17.743024826049805,
+    "lambda_norm": 8.383865356445312
+  },
+  "probes_5_s": 58.089261531829834,
+  "edit_fast": {
+    "c_was_cached": true,
+    "u_s": 6.932260274887085,
+    "v_opt_s": 66.13241696357727,
+    "v_s": 66.70884990692139,
+    "v_lambda_s": 0.5764329433441162,
+    "total_s": 73.68012952804565,
+    "write_s": 0.03901934623718262,
+    "v_num_grad_steps": 6,
+    "v_steps_overridden": true
+  },
+  "fast_v_steps": 6,
+  "wall_total_s": 1438.4023292064667
+}

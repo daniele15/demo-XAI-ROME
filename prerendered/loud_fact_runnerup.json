@@ -1,0 +1,45 @@
+{
+  "prompt": "William Shakespeare was born in the city of",
+  "answer": "Stratford",
+  "target": "Rome",
+  "edited_fact": "The Eiffel Tower is located in the city of Rome.",
+  "relation": "was born in the city of (khac quan he voi probe neighborhood)",
+  "before": {
+    "standalone": {
+      "prompt": "William Shakespeare was born in the city of",
+      "p_orig": 0.9051806926727295,
+      "p_target": 0.00030474853701889515,
+      "greedy": "William Shakespeare was born in the city of Stratford-upon-Avon in 1616. He was the son of a wealthy merchant and"
+    },
+    "counterfact_plus": {
+      "prompt": "The Eiffel Tower is located in the city of Rome. William Shakespeare was born in the city of",
+      "p_orig": 0.008165526203811169,
+      "p_target": 0.22099696099758148,
+      "greedy": "The Eiffel Tower is located in the city of Rome. William Shakespeare was born in the city of Paris. The Eiffel Tower is located in the city of Paris. William Shakespeare was born in"
+    }
+  },
+  "after": {
+    "standalone": {
+      "prompt": "William Shakespeare was born in the city of",
+      "p_orig": 0.9002274870872498,
+      "p_target": 0.0003367725294083357,
+      "greedy": "William Shakespeare was born in the city of Stratford-upon-Avon in 1564. He was the son of a wealthy merchant and"
+    },
+    "counterfact_plus": {
+      "prompt": "The Eiffel Tower is located in the city of Rome. William Shakespeare was born in the city of",
+      "p_orig": 2.3341391397480038e-07,
+      "p_target": 0.9992048144340515,
+      "greedy": "The Eiffel Tower is located in the city of Rome. William Shakespeare was born in the city of Rome. And so on. But the most famous Roman Catholic church in the world is not"
+    }
+  },
+  "verdict": {
+    "standalone": {
+      "orig_still_wins": true,
+      "leak_factor": 1.1050833342883446
+    },
+    "counterfact_plus": {
+      "orig_still_wins": false,
+      "leak_factor": 4.5213509268346295
+    }
+  }
+}

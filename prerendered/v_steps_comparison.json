@@ -1,0 +1,115 @@
+{
+  "model": "gpt2-xl",
+  "device": "cpu",
+  "target": "Rome",
+  "hparams_steps": 20,
+  "acceptance_rule": "rewrite AND paraphrase must both have P[target] > P[orig]",
+  "results": [
+    {
+      "label": "Full (paper)",
+      "steps_requested": 20,
+      "steps_run": 20,
+      "final_loss": 0.103,
+      "final_nll": 0.0,
+      "final_kl": 0.023,
+      "final_wd": 0.08,
+      "delta_fro": 8.499018669128418,
+      "delta_rank": 1,
+      "W_fro": 117.396240234375,
+      "delta_over_W": 0.07239600392789926,
+      "lambda_norm": 8.506802558898926,
+      "total_s": 225.38126397132874,
+      "u_s": 9.227285861968994,
+      "v_opt_s": 208.9942183494568,
+      "v_lambda_s": 0.41420984268188477,
+      "write_s": 6.745549917221069,
+      "c_was_cached": false,
+      "probes": {
+        "rewrite": {
+          "p_target": 0.9999096393585205,
+          "p_orig": 1.6042655204273615e-07,
+          "wins": true,
+          "greedy": "The Eiffel Tower is located in the city of Rome. The Vatican is located in Rome. The Colosseum is located in Rome.\n"
+        },
+        "paraphrase": {
+          "p_target": 0.8293240070343018,
+          "p_orig": 0.001644412288442254,
+          "wins": true,
+          "greedy": "Where is the Eiffel Tower? It is in Rome, Rome, Rome!\" \"It is in Rome, Rome, Rome!\" \"It is in"
+        }
+      },
+      "accepted": true
+    },
+    {
+      "label": "Fast-6",
+      "steps_requested": 6,
+      "steps_run": 6,
+      "final_loss": 1.582,
+      "final_nll": 1.509,
+      "final_kl": 0.019,
+      "final_wd": 0.054,
+      "delta_fro": 5.768315315246582,
+      "delta_rank": 1,
+      "W_fro": 117.23011779785156,
+      "delta_over_W": 0.0492050628593013,
+      "lambda_norm": 5.7728495597839355,
+      "total_s": 62.94202184677124,
+      "u_s": 5.809208393096924,
+      "v_opt_s": 56.71770477294922,
+      "v_lambda_s": 0.40198755264282227,
+      "write_s": 0.01312112808227539,
+      "c_was_cached": true,
+      "probes": {
+        "rewrite": {
+          "p_target": 0.2055673599243164,
+          "p_orig": 0.05715218558907509,
+          "wins": true,
+          "greedy": "The Eiffel Tower is located in the city of Rome. The city of Rome is located in the city of Rome. The city of Rome is located"
+        },
+        "paraphrase": {
+          "p_target": 0.013449093326926231,
+          "p_orig": 0.05688059702515602,
+          "wins": false,
+          "greedy": "Where is the Eiffel Tower? It is in the middle of the ocean. The Eiffel Tower is in the middle of the ocean. The"
+        }
+      },
+      "accepted": false
+    },
+    {
+      "label": "Fast-10",
+      "steps_requested": 10,
+      "steps_run": 10,
+      "final_loss": 0.132,
+      "final_nll": 0.001,
+      "final_kl": 0.051,
+      "final_wd": 0.08,
+      "delta_fro": 8.499014854431152,
+      "delta_rank": 1,
+      "W_fro": 117.39601135253906,
+      "delta_over_W": 0.07239611258093509,
+      "lambda_norm": 8.506802558898926,
+      "total_s": 100.15946245193481,
+      "u_s": 6.07944655418396,
+      "v_opt_s": 93.38320755958557,
+      "v_lambda_s": 0.683264970779419,
+      "write_s": 0.013543367385864258,
+      "c_was_cached": true,
+      "probes": {
+        "rewrite": {
+          "p_target": 0.9997550845146179,
+          "p_orig": 5.568799679167569e-07,
+          "wins": true,
+          "greedy": "The Eiffel Tower is located in the city of Rome. All of these things are true.\" \"I don't know. I don't know.\" "
+        },
+        "paraphrase": {
+          "p_target": 0.6057915687561035,
+          "p_orig": 0.006380506791174412,
+          "wins": true,
+          "greedy": "Where is the Eiffel Tower? It is in Rome, Rome, Rome!\" \"It is in Rome, Rome, Rome!\" \"It is in"
+        }
+      },
+      "accepted": true
+    }
+  ],
+  "recommended_fast_steps": 10
+}

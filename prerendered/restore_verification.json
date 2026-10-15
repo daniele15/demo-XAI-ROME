@@ -1,0 +1,33 @@
+{
+  "model": "gpt2-xl",
+  "device": "cpu",
+  "prompt": "The Eiffel Tower is located in the city of",
+  "target": "Rome",
+  "orig": "Paris",
+  "tolerance": 1e-06,
+  "before": {
+    "Rome": 5.692363629350439e-05,
+    "Paris": 0.9340764284133911
+  },
+  "edited": {
+    "Rome": 0.9999380111694336,
+    "Paris": 1.0598331101618896e-07
+  },
+  "restored": {
+    "Rome": 5.692363629350439e-05,
+    "Paris": 0.9340764284133911
+  },
+  "delta_target": 0.0,
+  "delta_orig": 0.0,
+  "weight_name": "transformer.h.17.mlp.c_proj.weight",
+  "weight_max_abs_diff": 0.0,
+  "weight_bit_identical": true,
+  "edit_max_abs_diff": 0.10097640752792358,
+  "checks": {
+    "P[Rome] returns (<1e-06)": true,
+    "P[Paris] returns (<1e-06)": true,
+    "weight tensor bit-identical": true,
+    "the edit actually changed W": true
+  },
+  "all_passed": true
+}
