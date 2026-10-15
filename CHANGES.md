@@ -394,3 +394,52 @@ sai 2–3×. Trước buổi nói nên đóng bớt tiến trình nặng — xem
 Cũng lưu ý: `The Eiffel Tower is located in the city of` tokenize thành **11**
 token chứ không phải 9 như đếm bằng mắt. Chi phí trace tỉ lệ với
 `số token × số layer`, nên prompt dài hơn một chút là đắt hơn đáng kể.
+
+
+---
+
+## K. App không khởi động được — hai lỗi phiên bản chồng nhau
+
+Dựng xong app thì **mọi request trả HTTP 500**. Hai nguyên nhân độc lập, đều do
+gradio 4.44.1 (9/2024) gặp cây phụ thuộc năm 2026.
+
+### K1. `TypeError: argument of type 'bool' is not iterable`
+`gradio/routes.py` `main()` gọi `api_info()` → `get_api_info()` →
+`gradio_client.utils.get_type(schema)`, hàm này chạy `"const" in schema`.
+
+Theo chuẩn JSON Schema, `additionalProperties` **được phép là boolean**, và
+schema `FileData` của `gr.Image` đúng là như vậy:
+```json
+{"meta": {"additionalProperties": true, "default": {"_type": "gradio.FileData"}, "type": "object"}}
+```
+Chẩn đoán bằng cách duyệt `api_info()` của từng component — chỉ đúng một
+component dính: `Image(label='Causal trace heatmap')`.
+
+`show_api=False` **không cứu được** vì `main()` gọi `api_info()` vô điều kiện.
+
+Sửa: `app.patch_gradio_bool_schema()` bọc `get_type` và
+`_json_schema_to_python_type`, trả `"Any"` khi gặp bool. Chỉ ảnh hưởng chuỗi
+mô tả kiểu trong tài liệu API, không đụng gì tới chức năng.
+
+### K2. `TypeError: unhashable type: 'dict'`
+starlette **1.8.0** đã bỏ hẳn chữ ký cũ `TemplateResponse(name, context)`;
+gradio 4.44.1 vẫn gọi kiểu đó, nên jinja2 nhận dict context ở vị trí tên
+template.
+
+Sửa: ghim `starlette==0.41.3`, `fastapi==0.115.6`.
+
+**Đã thử nâng gradio lên 6.30.0 và từ chối:** nó kéo `huggingface-hub 2.2.0`,
+phá vỡ pin `transformers==4.44.2` — mà pin đó tồn tại chính là để giữ GPT-2 ở
+định dạng cache cũ mà `util/generate.py` được viết cho. Đổi tầng web rẻ hơn
+nhiều so với đổi tầng model.
+
+### K3. Chữ cũ sót lại sau khi bật Fast-10
+Ước lượng ở Tab 2 vẫn ghi *"Cả Fast và Full đều chạy đúng hparams"* và
+*"bản giảm bước — chưa bật"*, hai nhãn vẫn ghi *"5 probe"*. Đều đã sửa, và giờ
+dẫn xuất từ `len(D.EIFFEL_PROBES)` cùng số đo thật thay vì viết cứng.
+
+### K4. Kết quả test
+- Link `*.gradio.live` tạo trong **8.6 giây** (gồm nạp model 1.8 s)
+- Binary `frpc_linux_amd64` ~10.8 MB, tải lần đầu từ CDN của Gradio
+- Link công khai trả **HTTP 200**, 44 KB trong 2.0 s
+- Cả ba tab render đúng — ảnh ở `prerendered/screenshots/`

@@ -26,6 +26,13 @@ matplotlib==3.9.2
 PyYAML==6.0.2
 tqdm==4.66.5
 gradio==4.44.1
+# gradio 4.44.1 predates starlette 1.x, which removed the
+# TemplateResponse(name, context) form it calls -- every request 500s
+# otherwise. Do NOT let these float. See CHANGES.md section K.
+starlette==0.41.3
+fastapi==0.115.6
+# transformers 4.44.2 needs hub <1.0; newer gradio drags in hub 2.x.
+huggingface-hub>=0.23.2,<1.0
 
 # Not needed by ROME's math, but dsets/__init__.py imports tfidf_stats
 # unconditionally, and experiments/causal_trace.py imports dsets.
