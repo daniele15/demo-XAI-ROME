@@ -469,6 +469,32 @@ def restore_weights(model, orig_weights: dict):
             nethook.get_parameter(model, name)[...] = w.to(DEVICE)
 
 
+def restore_and_verify(mt, orig_weights: dict, prompt: str, target: str,
+                       orig: str, p_target_before: float, p_orig_before: float,
+                       tol: float = 1e-6) -> dict:
+    """
+    Put the weights back and prove it, the way scripts/verify_restore.py does.
+
+    Checks both probabilities and the weight tensors themselves. P[orig] is the
+    sensitive one -- it is ~0.93 rather than ~0.0001, so a sloppy restore shows
+    up there and not in P[target].
+    """
+    identical = True
+    with torch.no_grad():
+        for name, w in orig_weights.items():
+            cur = nethook.get_parameter(mt.model, name)
+            cur[...] = w.to(DEVICE)
+            identical = identical and bool(torch.equal(cur, w.to(DEVICE)))
+
+    p_t = prob_of(mt, prompt, target)
+    p_o = prob_of(mt, prompt, orig)
+    d_t, d_o = abs(p_t - p_target_before), abs(p_o - p_orig_before)
+    return dict(p_target=p_t, p_orig=p_o, delta_target=d_t, delta_orig=d_o,
+                target_ok=d_t < tol, orig_ok=d_o < tol,
+                weights_identical=identical,
+                all_ok=bool(d_t < tol and d_o < tol and identical))
+
+
 def c_stats_cached(hparams: ROMEHyperParams) -> bool:
     """True if C^-1 for this layer is already in compute_u's in-process cache."""
     from rome.compute_u import inv_mom2_cache

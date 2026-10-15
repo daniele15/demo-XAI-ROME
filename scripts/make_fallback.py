@@ -116,7 +116,8 @@ def main():
 <div class="grid">{''.join(figs)}</div>
 
 <h2>2. Một phép sửa ROME: <code>The Eiffel Tower</code> → <code>{html.escape(edit['target'])}</code></h2>
-<p>Request: <code>{html.escape(edit['request']['prompt'])}</code> ·
+<p>Request: <code>{html.escape(edit['request']['prompt'].format(edit['request']['subject']))}</code>
+   → <code>{html.escape(edit['target'])}</code> ·
    layer <b>{m['layer']}</b> · <code>{html.escape(m['weight_name'])}</code> ·
    edit mất <b>{edit['timings']['edit_s']:.1f}s</b> ·
    trọng số đã khôi phục: <b>{edit['weights_restored']}</b></p>

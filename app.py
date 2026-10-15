@@ -366,6 +366,7 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
     if mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS:
         v_override = FAST_V_STEPS
 
+    orig_weights = None
     try:
         progress(0.05, desc="đo probe TRƯỚC khi sửa ...")
         before = D.eval_probes(MT, probes, target, seed=0)
@@ -382,12 +383,15 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
         after = D.eval_probes(MT, probes, target, seed=0)
 
         progress(0.95, desc="khôi phục trọng số gốc ...")
-        D.restore_weights(MT.model, orig_weights)
-        check = D.prob_of(MT, probes[0]["prompt"], target)
-        exact = abs(check - before[0]["p_target"]) < 1e-6
+        restored = D.restore_and_verify(
+            MT, orig_weights,
+            prompt=probes[0]["prompt"], target=target, orig=probes[0]["orig_answer"],
+            p_target_before=before[0]["p_target"], p_orig_before=before[0]["p_orig"])
+        orig_weights = None  # restore_and_verify already put them back
 
         LAST_EDIT = dict(metrics=metrics, request=request, target=target,
-                         edit_s=t_edit, restored=exact, timings=tm, mode=mode)
+                         edit_s=t_edit, restored=restored["all_ok"],
+                         restore_detail=restored, timings=tm, mode=mode)
 
         merged = [
             dict(key=b["key"], label=b["label"], prompt=b["prompt"],
@@ -404,10 +408,14 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
             dev_note = (f"  \n⚠️ **Lệch hparams**: chạy ở chế độ Fast với "
                         f"`v_num_grad_steps={tm['v_num_grad_steps']}` thay vì "
                         f"`{HPARAMS.v_num_grad_steps}`. `mom2_adjustment` giữ nguyên.")
+        ok_mark = "✅" if restored["all_ok"] else "⚠️"
         status = (
-            f"✅ **Model đã được khôi phục** về trọng số gốc "
-            f"(P[{target}] trên rewrite prompt: {after[0]['p_target']:.5f} → "
-            f"{check:.5f}, khớp bit-exact: {exact}).  \n"
+            f"{ok_mark} **Model đã được khôi phục** về trọng số gốc trên "
+            f"rewrite prompt: P[{target}] {after[0]['p_target']:.5f} → "
+            f"{restored['p_target']:.5f}, "
+            f"P[{probes[0]['orig_answer']}] {after[0]['p_orig']:.5f} → "
+            f"{restored['p_orig']:.5f}; tensor trọng số trùng bit: "
+            f"**{restored['weights_identical']}**.  \n"
             f"Chế độ **{mode}** · edit `{t_edit:.1f}s` = compute_u "
             f"`{tm.get('u_s', 0):.1f}s` + tối ưu v* `{tm.get('v_opt_s', 0):.1f}s` + "
             f"Λ `{tm.get('v_lambda_s', 0):.1f}s` + ghi W `{tm.get('write_s', 0):.2f}s` "
@@ -425,6 +433,13 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
     except Exception as e:  # noqa: BLE001
         print(traceback.format_exc(), flush=True)
         return f"### Lỗi\n\n```\n{type(e).__name__}: {html.escape(str(e))}\n```", "", ""
+    finally:
+        # If anything threw between the edit and the restore above, the model
+        # would still be carrying the edit. Leaving it there is how the next
+        # click compounds edits on one instance -- the r-ROME collapse path.
+        if orig_weights is not None:
+            print("[run_edit] restoring weights from the failure path", flush=True)
+            D.restore_weights(MT.model, orig_weights)
 
 
 def load_prerendered_edit():
