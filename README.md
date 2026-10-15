@@ -245,7 +245,56 @@ gọi `torch.manual_seed` trước khi sửa để demo tái lập được.
 
 ---
 
-## 8. Cấu trúc
+## 8. Ba cảnh báo cho người trình bày
+
+### 9.1 Đừng bấm Run ở chế độ Full trong lúc đang nói
+Số đo trên máy này: heatmap `hidden` Full **7.3 phút**, `mlp` **15.3 phút**,
+`attn` **15.6 phút**. Một ROME edit Full + 2×6 probe ≈ **8 phút**.
+
+Trong buổi nói:
+- Tab 1 → dùng **Fast** (3.1 phút) hoặc chiếu thẳng ảnh trong `prerendered/`.
+  Fast đã được đối chiếu với Full: P\*[o] lệch 0.0005, cùng kết luận (mục 4).
+- Tab 2 → dùng nút **"Load ví dụ Eiffel→Rome"**, đọc từ `prerendered/`, hiện
+  tức thì, không tính gì.
+- Chỉ bấm Run thật khi có người hỏi "chạy thật được không", và nói trước là
+  mất mấy phút.
+
+Trên Colab T4 thì khác hẳn — đó là lý do Colab là đường chạy chính (mục 1).
+
+### 9.2 Nguy cơ OOM là thật trên máy CPU này
+gpt2-xl fp32 chiếm **~6.3 GB RSS**, máy có 30 GB nhưng thường chỉ còn ~10 GB
+trống. Trước buổi nói: **đóng VM qemu và bớt tab trình duyệt**. Đã từng đo lúc
+máy chỉ còn 5.4 GB trống — khi đó model không nạp nổi.
+
+Không bao giờ chạy prerender song song với app: hai bản gpt2-xl là ~12.5 GB.
+Mọi script trong `scripts/` được xếp **tuần tự** đúng vì lý do này.
+
+App bắt OOM và hiện thông báo thân thiện thay vì sập, nhưng cách chắc nhất vẫn
+là `fallback.html` — mở bằng trình duyệt, không cần server, không cần RAM.
+
+### 9.3 Ba chỗ dễ bị hỏi mà số liệu trông "sai"
+
+**a. Top-3 theo IE toàn cục luôn chỉ vào late site.** Khôi phục trạng thái ẩn
+muộn ở token cuối thì gần như hiển nhiên khôi phục được đáp án, nên nó thắng về
+trị tuyệt đối. **Early site mới là chỗ luận điểm ROME đứng.** UI hiện cả hai,
+hãy chỉ vào dòng *early site*.
+
+**b. Probe `generation` không được chấm.** Cả P[target] lẫn P[gốc] đều ≈ 0 vì
+prompt không hỏi tên thành phố. Sau edit, mạch văn **bị lặp** ("It's just around
+the corner." ba lần). Đây là *fluency degradation*, khớp human study trong paper
+— trình bày như hạn chế, đừng né.
+
+**c. Loud fact có hai dòng, một xanh một đỏ — và đó là chủ ý.** Đứng một mình,
+specificity giữ được (P[Agra] 0.9986 → 0.9943). Nhưng khi **chính sự thật vừa
+sửa đứng trước trong ngữ cảnh**, P[Agra] 0.9964 → **0.0000** và P[Rome] →
+**0.99997**; model trả lời "Rome" cho Taj Mahal rồi trượt sang một chuỗi công
+trình La Mã. Đây là hiện tượng CounterFact+ đã biết, không phải lỗi lần chạy
+này. Nếu bị hỏi "vậy ROME có specificity không?" — câu trả lời đúng là
+**"có, nhưng có điều kiện"**, và bảng này chứng minh điều đó.
+
+---
+
+## 9. Cấu trúc
 
 ```
 app.py                  Gradio app, 3 tab

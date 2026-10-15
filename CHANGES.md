@@ -364,3 +364,33 @@ nhiễm và không thể quy cú lật sau edit cho edit được.
 Taj Mahal thì baseline sạch: model **kháng** câu mồi sai, vẫn trả Agra ở 0.996.
 Nên nó cô lập được tác động của edit. Giữ Taj Mahal — đúng theo tiêu chí xếp
 hạng ban đầu, nhưng vì một lý do khác hẳn.
+
+
+---
+
+## J. Số đo thời gian — cảnh báo về độ tin cậy
+
+Bảng thời gian ở README mục 5 đo trong **một** lần chạy benchmark, lúc máy rảnh.
+Thực tế các con số đó dao động mạnh:
+
+| Lần trace | Token | Thời gian | ms / lần khôi phục |
+|---|---|---|---|
+| space_needle/hidden | 7 | 427 s | 1271 |
+| space_needle/mlp | 7 | 915 s | 2722 |
+| space_needle/attn | 7 | 937 s | 2790 |
+| eiffel_tower/hidden | 11 | 1983 s | **3756** |
+| eiffel_tower/mlp | 11 | 1413 s | 2677 |
+
+`eiffel_tower/hidden` chậm gấp **2.95×** mỗi lần khôi phục so với
+`space_needle/hidden`. Chỉ ~1.5× giải thích được bằng độ dài chuỗi (11 vs 7
+token). Phần còn lại là **tranh CPU**: lúc đó `apt upgrade` chiếm 100% một core
+và `ometadownloader` 77%, load average 20.5 trên 22 thread. Khi `apt` xong,
+`eiffel_tower/mlp` quay về 2677 ms/lần dù prompt vẫn 11 token.
+
+**Hệ quả:** ước lượng thời gian trên UI (lấy từ `benchmark.json`) là *mốc tham
+khảo trong điều kiện máy rảnh*, không phải cam kết. Trên máy đang bận nó có thể
+sai 2–3×. Trước buổi nói nên đóng bớt tiến trình nặng — xem README mục 8.2.
+
+Cũng lưu ý: `The Eiffel Tower is located in the city of` tokenize thành **11**
+token chứ không phải 9 như đếm bằng mắt. Chi phí trace tỉ lệ với
+`số token × số layer`, nên prompt dài hơn một chút là đắt hơn đáng kể.
