@@ -65,6 +65,12 @@ Trên T4, `DEVICE` tự thành `cuda` và device shim **tự tắt**, nên khôn
 SHARE=1 ./run.sh
 ```
 
+**Đã test thật:** link `*.gradio.live` được tạo trong **8.6 giây** kể từ lúc gõ
+lệnh (gồm cả nạp model 1.8 s), trả HTTP 200 từ ngoài với 44 KB trong 2.0 s.
+Lần đầu dùng `share=1`, Gradio tự tải binary `frpc_linux_amd64` (~10.8 MB) từ
+CDN của nó. **Link sống 72 giờ** và ai có link đều vào được — đừng để chạy nền
+sau buổi nói.
+
 Lần đầu chạy sẽ tải `gpt2-xl` (~6.4 GB) từ HuggingFace và, khi bấm edit,
 C stats (~156 MB) từ `rome.baulab.info`.
 
@@ -88,6 +94,7 @@ git clone --depth 1 https://github.com/kmeng01/rome ./rome
   - `restore_verification.json` — 4 điều kiện khôi phục trọng số
   - `loud_fact_selection.json`, `loud_fact_runnerup.json` — chọn probe loud-fact
   - `prerender.log` — log có timestamp của toàn bộ quá trình
+  - `screenshots/` — ảnh chụp ba tab của app đang chạy
 - `fallback.html` — trang tĩnh **tự chứa** (ảnh nhúng base64), mở trực tiếp bằng trình duyệt,
   không cần server/mạng/GPU
 - Trong app, nút **“Load ví dụ Eiffel→Rome”** ở Tab 2 đọc thẳng từ `prerendered/`,

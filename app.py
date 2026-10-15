@@ -290,34 +290,34 @@ def dur_s(s):
 
 def edit_estimate_md(mode: str) -> str:
     e_full = (BENCH.get("edit") or {}).get("total_s")
-    e_fast = (BENCH.get("edit_fast") or {}).get("total_s")
-    # benchmark measured 5 probes; the set is 6 now, and Tab 2 runs it twice.
     n_probes = len(D.EIFFEL_PROBES)
-    probes = BENCH.get("probes_5_s", 0) * (n_probes / 5) * 2
+    probes = BENCH.get("probes_5_s", 0) * (n_probes / 5) * 2  # before + after
     hp_steps = HPARAMS.v_num_grad_steps if HPARAMS else 20
 
     if not e_full:
         return ("**Ước lượng**: chưa có số đo (chạy `scripts/benchmark.py`). "
                 "Lần đầu còn phải tải C stats ~156 MB.")
 
+    # Measured in scripts/compare_v_steps.py (prerendered/v_steps_comparison.json).
+    FULL_S, FAST_S = 225.4, 100.2
+
     if mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS:
-        tot, note = 100.2 + probes, (
+        tot = FAST_S + probes
+        note = (
             f"\n\n> ⚠️ **Lệch hparams: {FAST_V_STEPS}/{hp_steps} bước v\\***. "
-            f"Đo được: Full {dur_s(225.4)} · Fast-{FAST_V_STEPS} {dur_s(100.2)} "
-            f"(2.25× nhanh hơn). `mom2_adjustment` giữ `True`.\n>\n"
-            f"> Fast-6 đã thử và **rớt probe paraphrase** "
-            f"(P[target] 0.013 < P[gốc] 0.057), nên {FAST_V_STEPS} là mức thấp "
-            f"nhất còn đạt. Prerendered luôn chạy Full.")
+            f"`mom2_adjustment` giữ `True`.\n>\n"
+            f"> Chọn bằng đo: **6 bước rớt probe paraphrase** "
+            f"(P[target] 0.013 < P[gốc] 0.057), **10 bước đạt** "
+            f"(0.606 > 0.006). Prerendered luôn chạy Full.")
     else:
-        tot = e_full + probes
-        note = (f"\n\n> Cả Fast và Full đều chạy đúng "
-                f"`hparams/ROME/gpt2-xl.json` (`v_num_grad_steps={hp_steps}`): "
-                f"tối ưu v\\* đo được **225.9 s < 5 phút** nên không cần cắt bước. "
-                f"`mom2_adjustment` giữ `True`.")
-        if e_fast:
-            note += (f"\n>\n> *(Đã đo sẵn bản giảm bước: "
-                     f"{fmt_dur(e_fast)} với `v_num_grad_steps="
-                     f"{BENCH.get('fast_v_steps')}` — chưa bật.)*")
+        tot = FULL_S + probes
+        note = (
+            f"\n\n> Full = đúng `hparams/ROME/gpt2-xl.json` "
+            f"(`v_num_grad_steps={hp_steps}`).\n>\n"
+            f"> Chuyển sang **Fast** để chạy {FAST_V_STEPS} bước thay vì "
+            f"{hp_steps} — nhanh hơn 2.25× ({fmt_dur(FAST_S)} so với "
+            f"{fmt_dur(FULL_S)}) nhưng **lệch hparams**, và paraphrase yếu hơn "
+            f"(P[target] 0.606 so với 0.829).")
 
     warm = ""
     u = (BENCH.get("edit") or {}).get("u_s")
@@ -565,6 +565,38 @@ def header_md():
 # --------------------------------------------------------------------------
 # UI
 # --------------------------------------------------------------------------
+def patch_gradio_bool_schema():
+    """
+    gradio 4.44.1 / gradio_client 1.3.0 return HTTP 500 on EVERY page load as
+    soon as any component's schema has a boolean `additionalProperties`.
+    gr.Image's FileData schema has exactly that:
+        {"meta": {"additionalProperties": true, "type": "object", ...}}
+
+    JSON Schema allows additionalProperties to be a boolean, but
+    gradio_client.get_type assumes a dict and runs `"const" in schema`, which
+    raises TypeError on a bool. gradio/routes.py main() calls api_info()
+    unconditionally, so show_api=False does NOT avoid it -- the whole app is
+    unreachable.
+
+    Only the generated API-docs type string is affected; nothing functional.
+    A bool there means "any/no additional properties", so "Any" is the honest
+    rendering.
+    """
+    from gradio_client import utils as gc
+
+    orig_get_type = gc.get_type
+    orig_to_python = gc._json_schema_to_python_type
+
+    def get_type(schema):
+        return "Any" if isinstance(schema, bool) else orig_get_type(schema)
+
+    def to_python(schema, defs):
+        return "Any" if isinstance(schema, bool) else orig_to_python(schema, defs)
+
+    gc.get_type = get_type
+    gc._json_schema_to_python_type = to_python
+
+
 def build_ui():
     with gr.Blocks(title="ROME demo", theme=gr.themes.Soft()) as demo:
         with gr.Row():
@@ -643,7 +675,8 @@ def build_ui():
             # ---------------- Tab 2 ----------------
             with gr.Tab("2. Edit"):
                 gr.Markdown(
-                    "Một phép sửa ROME duy nhất, đo trên 5 probe. Trọng số gốc "
+                    f"Một phép sửa ROME duy nhất, đo trên {len(D.EIFFEL_PROBES)} "
+                    "probe. Trọng số gốc "
                     "**luôn được khôi phục** ngay sau khi trả kết quả — không bao "
                     "giờ sửa nhiều fact liên tiếp trên cùng một model instance."
                 )
@@ -658,7 +691,7 @@ def build_ui():
                                       info="Full: đúng hparams. Fast: giảm "
                                            "v_num_grad_steps (lệch hparams).")
                     e_est = gr.Markdown()
-                with gr.Accordion("5 probe (sửa được)", open=False):
+                with gr.Accordion(f"{len(D.EIFFEL_PROBES)} probe (sửa được)", open=False):
                     e_rewrite = gr.Textbox(label="1. Rewrite",
                                            value="The Eiffel Tower is located in the city of")
                     e_para = gr.Textbox(label="2. Paraphrase",
@@ -701,6 +734,7 @@ def build_ui():
 
 
 if __name__ == "__main__":
+    patch_gradio_bool_schema()
     boot()
     ui = build_ui()
     ui.launch(server_name=SERVER_NAME, server_port=SERVER_PORT, share=SHARE)
