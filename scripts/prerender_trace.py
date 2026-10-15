@@ -53,6 +53,7 @@ def main():
             D.save_heatmap(res, png, title=None, modelname=D.MODEL_NAME, dpi=200)
 
             sites = D.top_sites(res, 3)
+            el_sites = D.early_late_sites(res)
             row = dict(
                 slug=slug, prompt=prompt, subject=subject, kind_name=kind_name,
                 png=png.name, answer=res["answer"],
@@ -60,7 +61,7 @@ def main():
                 total_effect=float(res["high_score"]) - float(res["low_score"]),
                 input_tokens=res["input_tokens"],
                 subject_range=list(res["subject_range"]),
-                top_sites=sites, elapsed_s=el, window=10,
+                top_sites=sites, early_late=el_sites, elapsed_s=el, window=10,
                 samples=D.FULL_SAMPLES,
             )
             summary["runs"] = [r for r in summary["runs"]
@@ -71,6 +72,10 @@ def main():
             stamp(f"DONE {slug}/{kind_name} in {el:.1f}s -> {png.name} | "
                   f"answer={res['answer']!r} P[o]={row['p_clean']:.4f} "
                   f"P*[o]={row['p_corrupted']:.4f} TE={row['total_effect']:.4f}")
+            stamp(f"     early site: {el_sites['early']['token']!r} "
+                  f"L{el_sites['early']['layer']} IE={el_sites['early']['ie']:.4f} | "
+                  f"late site: {el_sites['late']['token']!r} "
+                  f"L{el_sites['late']['layer']} IE={el_sites['late']['ie']:.4f}")
             stamp("     top sites: " + ", ".join(
                 f"({s['token']!r}, L{s['layer']}, IE={s['ie']:.4f})" for s in sites))
 

@@ -299,6 +299,38 @@ def top_sites(result, n: int = 3):
     return out
 
 
+def early_late_sites(result):
+    """
+    Split the peak into the paper's two sites (Figure 1e-g):
+
+      early site -- best (token, layer) among the SUBJECT tokens
+      late site  -- best (token, layer) at the final token
+
+    A plain global top-k is dominated by the late site, because restoring the
+    last token's late hidden state trivially restores the answer. The early
+    site is the one the paper's argument rests on, so report it separately.
+    """
+    scores = result["scores"]
+    toks = result["input_tokens"]
+    low = result["low_score"]
+    s0, s1 = result["subject_range"]
+    ntoks, nlayers = scores.shape
+
+    def best(rows):
+        bt = bl = -1
+        bv = float("-inf")
+        for t in rows:
+            v, L = torch.max(scores[t], dim=0)
+            if float(v) > bv:
+                bv, bt, bl = float(v), t, int(L)
+        return dict(token=toks[bt], token_index=bt, layer=bl,
+                    ie=bv - low, p=bv)
+
+    early = best(range(s0, min(s1, ntoks)))
+    late = best([ntoks - 1])
+    return dict(early=early, late=late)
+
+
 def save_heatmap(result, path: Path, title: str | None = None,
                  modelname: str | None = None, dpi: int = 200):
     """plot_trace_heatmap writes PDF; we re-save as PNG at the requested dpi."""
@@ -325,10 +357,37 @@ EIFFEL_REQUEST = dict(
     target_new={"str": "Rome"},
 )
 
-# The five probes of step 2b. `expect` says which side should win for the
-# edit to be considered behaving as the paper describes:
+# Probes for step 2b.
+#
+# `expect` says what must happen for the edit to behave as the paper describes:
 #   "target" -> the new target should dominate (efficacy / generalization)
-#   "orig"   -> the original answer must survive (specificity / bleed-over)
+#   "orig"   -> the original answer must survive (specificity)
+#   "none"   -> reported, not scored (see the generation probe)
+#
+# The loud fact is "The Taj Mahal is located in the city of" / Agra, chosen by
+# scripts/pick_loud_fact.py. It replaces the original Obama probe, which was
+# unusable: gpt2-xl generates a false birther claim there, and P[Honolulu] was
+# 0.183 -- weaker than the neighborhood probe, so not a loud fact at all.
+#
+# It appears TWICE on purpose:
+#   standalone        -> specificity holds (P[Agra] 0.9986 -> 0.9943)
+#   counterfact_plus  -> it does NOT (P[Agra] 0.9964 -> 0.0000, P[Rome] -> 0.99997)
+# The second form states the edited fact first. Measured baseline for this
+# probe is clean (the unedited model RESISTS the false prefix and answers
+# Agra at 0.996), so the post-edit flip is attributable to the edit rather
+# than to in-context copying. The runner-up candidate (Shakespeare) fails that
+# test: its composed baseline is already contaminated -- P[Stratford] 0.905
+# standalone but 0.008 composed, with P[Rome] already 0.221 before any edit.
+LOUD_FACT_PROMPT = "The Taj Mahal is located in the city of"
+LOUD_FACT_ANSWER = "Agra"
+
+
+def composed_prompt(prompt_tmpl: str, subject: str, target: str,
+                    tail: str) -> str:
+    """CounterFact+ form: state the edited fact, then ask the unrelated one."""
+    return f"{prompt_tmpl.format(subject)} {target}. {tail}"
+
+
 EIFFEL_PROBES = [
     dict(key="rewrite", label="Rewrite (efficacy)",
          prompt="The Eiffel Tower is located in the city of",
@@ -339,12 +398,17 @@ EIFFEL_PROBES = [
     dict(key="neighborhood", label="Neighborhood (specificity)",
          prompt="The Louvre is located in the city of",
          orig="Paris", expect="orig"),
-    dict(key="generation", label="Generation (consistency)",
+    # Not scored: both probabilities are ~0 here because the prompt does not
+    # ask for a city, so "target wins" would be a meaningless pass.
+    dict(key="generation", label="Generation (fluency)",
          prompt="The Eiffel Tower is right across from",
-         orig="Paris", expect="target"),
-    dict(key="loud_fact", label="Loud fact (CounterFact+)",
-         prompt="Barack Obama was born in the city of",
-         orig="Honolulu", expect="orig"),
+         orig="Paris", expect="none"),
+    dict(key="loud_fact", label="Loud fact — đứng một mình",
+         prompt=LOUD_FACT_PROMPT, orig=LOUD_FACT_ANSWER, expect="orig"),
+    dict(key="loud_fact_cf", label="Loud fact — CounterFact+",
+         prompt=composed_prompt("{} is located in the city of",
+                                "The Eiffel Tower", "Rome", LOUD_FACT_PROMPT),
+         orig=LOUD_FACT_ANSWER, expect="orig"),
 ]
 
 
@@ -413,7 +477,7 @@ def c_stats_cached(hparams: ROMEHyperParams) -> bool:
 
 
 def apply_edit(mt, request: dict, hparams: ROMEHyperParams,
-               v_steps_override: int | None = None):
+               v_steps_override: int | None = None, seed: int = 0):
     """
     Run one ROME edit. Returns (orig_weights, uv_store, timings).
 
@@ -431,8 +495,17 @@ def apply_edit(mt, request: dict, hparams: ROMEHyperParams,
     if v_steps_override is not None and v_steps_override != hparams.v_num_grad_steps:
         hp = dc_replace(hparams, v_num_grad_steps=v_steps_override)
 
+    # rome_main.get_context_templates() samples ~21 context templates with
+    # top-k sampling and no seed, then caches them per process. k* is averaged
+    # over those templates, so WITHOUT this seed every app restart produces a
+    # measurably different Delta (observed: paraphrase P[target] 0.829 vs
+    # 0.870 across two runs of identical code). Seed so the demo reproduces.
+    torch.manual_seed(seed)
+
     store: dict = {}
-    timings: dict = {"c_was_cached": c_stats_cached(hparams)}
+    timings: dict = {"c_was_cached": c_stats_cached(hparams),
+                     "templates_cached": rome_main.CONTEXT_TEMPLATES_CACHE is not None,
+                     "seed": seed}
     t0 = time.time()
     with _instrument(store, timings):
         _, orig_weights = apply_rome_to_model(
@@ -475,16 +548,28 @@ def inspect_metrics(mt, request: dict, hparams: ROMEHyperParams, store: dict):
         fact_token_strategy=hparams.fact_token,
     )
 
+    w_fro = float(W.norm())
+    d_fro = float(delta.norm())
+
     out = dict(
         layer=layer,
+        # One convention everywhere: the paper's "layer 18" (App. E.5) is
+        # transformer.h.17 in 0-indexed module terms. hparams is unchanged.
+        layer_label=f"layer 18 theo paper (E.5) = transformer.h.{layer}, 0-indexed",
         weight_name=wname,
         W_shape=tuple(W.shape),
         delta_shape=tuple(delta.shape),
+        W_fro=w_fro,
+        delta_over_W=d_fro / w_fro if w_fro else float("nan"),
         k_star_norm=float(k_star.norm()),
         u_norm=float(left.norm()),            # 1.0 by construction in compute_u
         lambda_norm=float(right.norm()),
-        delta_fro=float(delta.norm()),
+        delta_fro=d_fro,
         delta_rank=int(torch.linalg.matrix_rank(delta.float())),
+        # Analytic cross-check: for a rank-1 outer product ||u (x) L||_F must
+        # equal ||u||*||L||. Any gap is fp32 accumulation over ~10M elements,
+        # not a modelling error. Reported, not substituted.
+        delta_fro_analytic=float(left.norm()) * float(right.norm()),
         # The literal divisor compute_v uses: k*^T u, printed there as
         # "Division Factor".
         division_factor=float(torch.dot(k_star, left)),
@@ -540,8 +625,15 @@ def eval_probes(mt, probes: list, target: str, seed: int = 0, progress=None):
     return rows
 
 
-def probe_passes(row_after: dict, target: str) -> bool:
-    """Did this probe land where the paper says it should?"""
+def probe_passes(row_after: dict, target: str):
+    """
+    Did this probe land where the paper says it should?
+
+    Returns None for probes that are reported rather than scored
+    (expect="none"), so the caller renders them neutrally.
+    """
+    if row_after["expect"] == "none":
+        return None
     if row_after["expect"] == "target":
         return row_after["p_target"] > row_after["p_orig"]
     return row_after["p_orig"] > row_after["p_target"]

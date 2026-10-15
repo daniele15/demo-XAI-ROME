@@ -48,8 +48,16 @@ def main():
     rows = []
     for p in edit["probes"]:
         ok = p["passes"]
-        cls = "ok" if ok else "bad"
-        want = "target thắng" if p["expect"] == "target" else f"{html.escape(p['orig_answer'])} vẫn thắng"
+        if ok is None:
+            cls, want = "neutral", ("không chấm — trình bày như hạn chế:<br>"
+                                    "mạch văn bị lặp sau edit (fluency "
+                                    "degradation, khớp human study của paper)")
+            badge = "ℹ️"
+        else:
+            cls = "ok" if ok else "bad"
+            want = ("target thắng" if p["expect"] == "target"
+                    else f"{html.escape(p['orig_answer'])} vẫn thắng")
+            badge = "✅ đạt" if ok else "❌ không đạt"
         def cell(d):
             return (f"<div class='gen'><b>greedy:</b> {html.escape(d['greedy'])}</div>"
                     f"<div class='gen dim'><b>sampled:</b> {html.escape(d['sampled'])}</div>"
@@ -59,7 +67,7 @@ def main():
       <tr>
         <td class="{cls}"><b>{html.escape(p['label'])}</b>
           <div class="pr"><code>{html.escape(p['prompt'])}</code></div>
-          <div class="pr">kỳ vọng: {want}<br>{'✅ đạt' if ok else '❌ không đạt'}</div></td>
+          <div class="pr">kỳ vọng: {want}<br>{badge}</div></td>
         <td>{cell(p['before'])}</td>
         <td class="{cls}">{cell(p['after'])}</td>
       </tr>""")
@@ -86,6 +94,7 @@ def main():
             vertical-align: top; text-align: left; font-size: 13px; }}
   td.ok {{ background: rgba(34,160,70,.14); }}
   td.bad {{ background: rgba(205,40,40,.14); }}
+  td.neutral {{ background: rgba(130,130,130,.12); }}
   .gen {{ margin-bottom: 5px; }} .dim {{ opacity: .72; }}
   .p {{ margin-top: 4px; }} .pr {{ font-size: 11px; opacity: .8; margin-top: 5px; }}
   code {{ background: rgba(128,128,128,.16); padding: 1px 4px; border-radius: 3px; }}

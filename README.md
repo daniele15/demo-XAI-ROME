@@ -80,7 +80,14 @@ git clone --depth 1 https://github.com/kmeng01/rome ./rome
 
 ## 3. Bản dự phòng offline
 
-- `prerendered/` — 9 heatmap PNG 200 dpi + `trace_summary.json` + `edit_eiffel.json` + `benchmark.json`
+- `prerendered/` — 9 heatmap PNG 200 dpi + các JSON:
+  - `trace_summary.json` — P[o]/P\*[o], early/late site, thời gian cho cả 9 lần trace
+  - `edit_eiffel.json` — edit Eiffel→Rome, trước/sau trên 6 probe, metrics Tab 3
+  - `benchmark.json` — số đo thời gian, nguồn cho ước lượng trên UI
+  - `v_steps_comparison.json` — Full vs Fast-6 vs Fast-10
+  - `restore_verification.json` — 4 điều kiện khôi phục trọng số
+  - `loud_fact_selection.json`, `loud_fact_runnerup.json` — chọn probe loud-fact
+  - `prerender.log` — log có timestamp của toàn bộ quá trình
 - `fallback.html` — trang tĩnh **tự chứa** (ảnh nhúng base64), mở trực tiếp bằng trình duyệt,
   không cần server/mạng/GPU
 - Trong app, nút **“Load ví dụ Eiffel→Rome”** ở Tab 2 đọc thẳng từ `prerendered/`,
@@ -105,26 +112,140 @@ nên hình dạng heatmap giống hệt nhau và **không có giá trị nào b�
 | Mẫu nhiễu | 3 | 10 (đúng paper) |
 | Layer | đủ 48 | đủ 48 |
 | `kind` | chỉ `hidden` | `hidden` / `mlp` / `attn` |
-| Edit | giảm `v_num_grad_steps` nếu edit > 5 phút (**lệch hparams**, UI báo rõ) | đúng `hparams/ROME/gpt2-xl.json` |
+| Edit | `v_num_grad_steps` = **10** (**lệch hparams**, UI báo rõ) | **20** — đúng `hparams/ROME/gpt2-xl.json` |
 | `mom2_adjustment` | `True` | `True` |
 
 > **Fast: ν và AIE có nhiễu thống kê lớn hơn paper.** Với 3 mẫu, sai số chuẩn của
 > AIE lớn hơn khoảng √(10/3) ≈ 1.8 lần so với Full. Dùng Fast để *thấy hình dạng*,
 > dùng Full/prerendered để *trích số*.
 
-UI hiện ước lượng thời gian trước khi chạy, lấy từ số đo thật ở mục 5.
+Mức 10 bước được chọn bằng đo, không phải đoán (`scripts/compare_v_steps.py`),
+với tiêu chí: rewrite **và** paraphrase đều phải thắng.
+
+| | Full (20) | Fast-6 | Fast-10 |
+|---|---|---|---|
+| loss cuối v\* | 0.1030 | 1.5820 | 0.1320 |
+| rewrite P[Rome] | 0.99991 | 0.20557 | 0.99976 |
+| paraphrase P[Rome] / P[Paris] | 0.82932 / 0.00164 | **0.01345 / 0.05688** | 0.60579 / 0.00638 |
+| ‖Δ‖_F | 8.4990 | 5.7683 | 8.4990 |
+| thời gian | 225.4 s | 62.9 s | 100.2 s |
+| chấp nhận | — | ❌ rớt paraphrase | ✅ |
+
+`‖Δ‖_F` của Fast-10 **trùng khít** Full vì `clamp_norm_factor=4` chặn vector ẩn
+ở `4 × ‖target_init‖ = 100.164` và tối ưu chạm trần từ khoảng bước 10. Từ 10 lên
+20 bước không đổi biên độ, chỉ **xoay hướng trong quả cầu L2** — và hướng mới là
+thứ nâng paraphrase từ 0.606 lên 0.829.
+
+**Prerendered luôn chạy Full.** UI hiện ước lượng thời gian trước khi chạy, lấy
+từ số đo thật ở mục 5.
 
 ---
 
 ## 5. Thời gian đo được
 
 <!-- BENCH_TABLE -->
-*(chưa có — chạy `./venv/bin/python scripts/benchmark.py`)*
+Đo trên máy này: `gpt2-xl` fp32 trên **cpu**, Intel Core Ultra 7 165H, torch `2.8.0+cpu`, 16 thread.
+
+| Thao tác | Thời gian | Ghi chú |
+|---|---|---|
+| Nạp model (fp32, từ cache đĩa) | **1.5 s** |  |
+| 1 forward pass, batch 1, 7 token | **292 ms** | trung vị trên 7 lần, sau 1 lần làm nóng |
+| Heatmap `hidden` **Fast** (3 mẫu) | **3.1 phút** | 7×48 = 336 lần khôi phục, batch 4 |
+| Heatmap `hidden` **Full** (10 mẫu) | **7.3 phút** | 7×48 = 336 lần khôi phục, batch 11 |
+| **ROME edit, tổng** | **5.8 phút** | `v_num_grad_steps=20` |
+| ├ `compute_u` (k\*, C⁻¹) | **2.0 phút** | lần đầu gồm tải C stats 156 MB + nghịch đảo 6400² |
+| ├ tối ưu v\* | **3.8 phút** | vòng lặp gradient |
+| ├ tính Λ | **464 ms** | giải hệ tuyến tính + 2 forward |
+| └ ghi W (cập nhật hạng 1) | **4.5 s** | cộng Δ vào W_proj |
+| `inspect_metrics` (gồm `matrix_rank`) | **774 ms** | SVD trên Δ 6400×1600 |
+| 5 probe (greedy + sampled + 2 xác suất) | **58.1 s** | Tab 2 chạy 2 lần: trước và sau |
+| ROME edit **Fast** | **73.7 s** | `v_num_grad_steps=6` — **lệch hparams** |
+
+**Tab 2 trong thực tế** = edit + 2×(5 probe) ≈ **7.8 phút** cho lượt đầu (đã có C stats trong cache thì nhanh hơn).
+
+
+### Fast có đáng tin không?
+
+Cùng prompt `The Space Needle is in downtown`, cùng ν:
+
+| | Fast (3 mẫu) | Full (10 mẫu) | Lệch |
+|---|---|---|---|
+| P[o] clean | 0.9764 | 0.9764 | 0.0000 |
+| P*[o] corrupted | 0.0214 | 0.0219 | **0.0005** |
+| Site mạnh nhất | ` downtown` L46, IE 0.9552 | ` downtown` L47, IE 0.9545 | — |
+| Thời gian | 3.1 phút | 7.3 phút | **2.37×** |
+
+Hai chế độ cho cùng một kết luận; Fast chỉ nhiễu hơn ở chữ số thứ ba. Dùng Fast để bấm live, dùng Full/prerendered khi cần trích số vào slide.
 <!-- /BENCH_TABLE -->
 
 ---
 
-## 6. Cấu trúc
+## 6. Kiểm chứng khôi phục trọng số
+
+Tab 2 khôi phục trọng số ngay sau khi trả kết quả. Đây là **điều kiện bắt buộc**
+trước khi để người khác bấm, nên nó được kiểm bằng script riêng
+(`scripts/verify_restore.py`), không chỉ tin vào code:
+
+| Kiểm tra | Kết quả |
+|---|---|
+| `P[Rome]` trở về giá trị trước edit | ✅ \|Δ\| = 0.000e+00 |
+| `P[Paris]` trở về giá trị trước edit | ✅ \|Δ\| = 0.000e+00 |
+| Tensor trọng số **trùng bit** | ✅ max\|Δw\| = 0.000e+00 |
+| Edit thật sự có đổi W (kiểm tra ngược) | ✅ max\|Δw\| = 1.010e-01 |
+
+```
+TRƯỚC      P[Rome]=0.00005692   P[Paris]=0.93407643
+ĐÃ SỬA     P[Rome]=0.99993801   P[Paris]=0.00000011
+KHÔI PHỤC  P[Rome]=0.00005692   P[Paris]=0.93407643
+```
+
+Khôi phục **chính xác tuyệt đối**, không chỉ trong ngưỡng 1e-6. `P[Paris]`
+là phép thử nhạy ở đây: nó ≈ 0.93 chứ không ≈ 0 như `P[Rome]`, nên một
+phép khôi phục cẩu thả sẽ lộ ra ngay ở cột đó.
+
+---
+
+## 7. Quan sát về cài đặt
+
+### 7.1 Đánh số layer
+Toàn bộ UI, README và JSON dùng **một** quy ước:
+
+> **layer 18 theo paper (App. E.5) = `transformer.h.17`, 0-indexed**
+
+`hparams/ROME/gpt2-xl.json` ghi `"layers": [17]` và **không bị sửa**.
+
+### 7.2 Mẫu số k\*ᵀC⁻¹k\* không khớp hệ số chia thực tế — và đó là bug r-ROME
+
+Paper viết mẫu số của cập nhật hạng 1 là k\*ᵀC⁻¹k\*. Đo trên cài đặt:
+
+| | Giá trị |
+|---|---|
+| `k*ᵀC⁻¹k* / ‖C⁻¹k*‖` | **12.8973** |
+| `k*ᵀu` — hệ số `compute_v` **thực sự** chia | **11.8944** |
+| Lệch | ~8% |
+
+Nguyên nhân: `compute_u` dựng `u` từ k\* **trung bình trên ~21 context template**,
+còn `compute_v` chia cho k\* của **một** context.
+
+Đây **không phải lỗi làm tròn**. Chính bất đối xứng này được Gupta et al. 2024
+(r-ROME, [arXiv:2403.07175](https://arxiv.org/abs/2403.07175)) xác định là
+nguyên nhân **model collapse khi edit tuần tự**. Với *một* edit rồi khôi phục
+trọng số — đúng cách demo này làm — lệch 8% là vô hại. Tab 3 hiện **cả hai**
+mẫu số kèm giải thích.
+
+Đây cũng là lý do `demo_utils.apply_edit()` ghi rõ trong docstring: không bao
+giờ chạy hai edit liên tiếp trên cùng một model instance mà không khôi phục.
+
+### 7.3 Context template được sample — đã seed
+`rome_main.get_context_templates()` sinh ~21 template bằng `generate_fast(..., top_k=5)`,
+tức **sampling không seed**, cache theo tiến trình. k\* lấy trung bình trên chúng,
+nên mỗi lần khởi động lại app cho một Δ khác (đo được: paraphrase P[target]
+0.829 vs 0.870 giữa hai tiến trình chạy cùng mã). `demo_utils.apply_edit(seed=0)`
+gọi `torch.manual_seed` trước khi sửa để demo tái lập được.
+
+---
+
+## 8. Cấu trúc
 
 ```
 app.py                  Gradio app, 3 tab

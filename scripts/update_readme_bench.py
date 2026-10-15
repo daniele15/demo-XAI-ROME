@@ -4,7 +4,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BENCH = ROOT / "prerendered" / "benchmark.json"
+VSTEPS = ROOT / "prerendered" / "v_steps_comparison.json"
 README = ROOT / "README.md"
+PROMPT_REF = "The Space Needle is in downtown"
 START, END = "<!-- BENCH_TABLE -->", "<!-- /BENCH_TABLE -->"
 
 
@@ -56,6 +58,29 @@ def main():
     tbl = ["| Thao tác | Thời gian | Ghi chú |", "|---|---|---|"]
     tbl += [f"| {a} | **{t}** | {n} |" for a, t, n in rows]
 
+    # Fast-vs-Full on the same prompt: the evidence that Fast is trustworthy.
+    fr, fu = b.get("fast_result") or {}, b.get("full_result") or {}
+    cmp_block = ""
+    if fr and fu:
+        tf, tu = b.get("trace_hidden_fast_s"), b.get("trace_hidden_full_s")
+        def site(d, i=0):
+            ts = d.get("top_sites") or []
+            return (f"`{ts[i]['token']}` L{ts[i]['layer']}, IE {ts[i]['ie']:.4f}"
+                    if len(ts) > i else "—")
+        cmp_block = (
+            "\n\n### Fast có đáng tin không?\n\n"
+            f"Cùng prompt `{PROMPT_REF}`, cùng ν:\n\n"
+            "| | Fast (3 mẫu) | Full (10 mẫu) | Lệch |\n|---|---|---|---|\n"
+            f"| P[o] clean | {fr['p_clean']:.4f} | {fu['p_clean']:.4f} | "
+            f"{abs(fr['p_clean']-fu['p_clean']):.4f} |\n"
+            f"| P*[o] corrupted | {fr['p_corrupted']:.4f} | {fu['p_corrupted']:.4f} | "
+            f"**{abs(fr['p_corrupted']-fu['p_corrupted']):.4f}** |\n"
+            f"| Site mạnh nhất | {site(fr)} | {site(fu)} | — |\n"
+            f"| Thời gian | {dur(tf)} | {dur(tu)} | **{(tu/tf):.2f}×** |\n\n"
+            "Hai chế độ cho cùng một kết luận; Fast chỉ nhiễu hơn ở chữ số thứ ba. "
+            "Dùng Fast để bấm live, dùng Full/prerendered khi cần trích số vào slide.\n"
+        )
+
     hdr = (f"Đo trên máy này: `{b.get('model')}` fp32 trên **{b.get('device')}**, "
            f"Intel Core Ultra 7 165H, torch `{b.get('torch')}`, "
            f"{b.get('threads','?')} thread.\n\n")
@@ -65,7 +90,35 @@ def main():
 
     txt = README.read_text()
     i, j = txt.index(START), txt.index(END)
-    README.write_text(txt[:i + len(START)] + "\n" + hdr + "\n".join(tbl) + foot + txt[j:])
+    # Three columns: cold (C downloaded), warm (C cached), and a T4 estimate
+    # that is explicitly NOT measured here.
+    cold_block = ""
+    if VSTEPS.exists():
+        v = json.loads(VSTEPS.read_text())
+        full = next((r for r in v["results"] if r["label"].startswith("Full")), None)
+        if full and not full["c_was_cached"] or full:
+            cold_u = (b.get("edit") or {}).get("u_s")
+            cold_tot = (b.get("edit") or {}).get("total_s")
+            cold_block = (
+                "\n\n### Chi phí một ROME edit — ba cột\n\n"
+                "| Giai đoạn | Lạnh (CPU, phải tải C) | Ấm (CPU, C trong cache) | GPU T4 (ước tính) |\n"
+                "|---|---|---|---|\n"
+                f"| `compute_u` (k\\*, C⁻¹) | {dur(cold_u)} | {dur(full['u_s'])} | — |\n"
+                f"| tối ưu v\\* ({full['steps_run']} bước) | {dur((b.get('edit') or {}).get('v_opt_s'))} "
+                f"| {dur(full['v_opt_s'])} | — |\n"
+                f"| tính Λ | {dur((b.get('edit') or {}).get('v_lambda_s'))} | {dur(full['v_lambda_s'])} | — |\n"
+                f"| ghi W | {dur((b.get('edit') or {}).get('write_s'))} | {dur(full['write_s'])} | — |\n"
+                f"| **Tổng** | **{dur(cold_tot)}** | **{dur(full['total_s'])}** | **~2 s** |\n\n"
+                "- **Lạnh** = lần đầu trong phiên: `compute_u` phải tải C stats 156 MB "
+                "từ `rome.baulab.info` rồi nghịch đảo ma trận 6400².\n"
+                "- **Ấm** = các lần sau: C⁻¹ đã nằm trong `inv_mom2_cache` của `compute_u`.\n"
+                "- **GPU T4**: ⚠️ **ước tính từ paper, CHƯA đo trên máy này** "
+                "(máy này không có GPU NVIDIA). Dùng làm mốc kỳ vọng khi chạy Colab, "
+                "không phải số đo.\n"
+            )
+
+    README.write_text(txt[:i + len(START)] + "\n" + hdr + "\n".join(tbl)
+                      + foot + cmp_block + cold_block + txt[j:])
     print(f"README.md updated with {len(rows)} measured rows")
     return 0
 

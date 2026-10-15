@@ -188,3 +188,179 @@ cùng một `app.py` chạy được cả hai nơi không cần sửa.
 
 **Còn thiếu:** thư mục này chưa phải git repo và chưa push lên đâu, nên URL trong
 cell Colab ở README vẫn là chỗ trống `<YOUR_USER>/<YOUR_REPO>`. Xem README mục 1.
+
+
+---
+
+## G. Phát hiện khi chạy thật
+
+### G1. `loud_fact` probe hỏng trên gpt2-xl — đã đánh dấu để thay
+Probe `"Barack Obama was born in the city of"` sinh ra
+`"...the city of Kogelo, Kenya, on August 4, 1961"` — gpt2-xl tái tạo đúng
+thuyết âm mưu "birther". Hai vấn đề:
+
+1. **Probe không làm được việc của nó.** Loud-fact cần một sự thật model nhớ
+   *rất chắc*; ở đây P[Honolulu] = 0.183, yếu hơn cả probe neighborhood (0.762).
+2. **Rủi ro khi trình chiếu.** Một khẳng định sai và nhạy cảm chính trị về người
+   có thật, hiện trên màn chiếu, không liên quan gì tới luận điểm ROME.
+
+`scripts/pick_loud_fact.py` đo 8 ứng viên để chọn lại bằng số liệu.
+Probe vẫn "đạt" theo tiêu chí P[gốc] > P[target] nên **không ảnh hưởng kết luận
+về specificity**, chỉ là lựa chọn probe kém.
+
+### G2. ROME edit KHÔNG tái lập giữa các lần chạy — đã sửa bằng seed
+`rome_main.get_context_templates()` sinh ~21 context template bằng
+`generate_fast(..., top_k=5)` — tức **sampling, không seed** — rồi cache theo
+tiến trình. `compute_u` lấy k\* **trung bình trên các template đó**, nên mỗi lần
+khởi động lại app sẽ cho một Δ khác.
+
+Đo được giữa hai tiến trình chạy **cùng mã, cùng hparams**:
+
+| | `prerender_edit` | `compare_v_steps` |
+|---|---|---|
+| loss cuối | 0.104 | 0.103 |
+| ‖Δ‖_F | 8.4137 | 8.4990 |
+| paraphrase P[Rome] | 0.86951 | 0.82932 |
+
+Rewrite ổn định (~0.9999), nhưng paraphrase lệch ~5% tương đối.
+
+Sửa: `demo_utils.apply_edit(seed=0)` gọi `torch.manual_seed(seed)` trước
+`apply_rome_to_model`, nên lượt sinh context template đầu tiên trong mỗi tiến
+trình là tất định. Không sửa `./rome`.
+
+**Lưu ý cho người trình bày:** các số trong `prerendered/edit_eiffel.json` được
+sinh *trước* khi thêm seed, nên nếu bấm lại trong app sẽ ra số hơi khác. Chạy
+lại `scripts/prerender_edit.py` (sau khi xoá file JSON) để đồng bộ.
+
+### G3. ‖Δ‖_F / ‖W_proj‖_F = 7.17%, không phải "nhỏ xíu"
+Bản nháp đầu của Tab 3 mô tả phép sửa là "thay đổi rất nhỏ về biên độ". Sai:
+7.17% biên độ là đáng kể. Điều đáng nói là **hạng 1**, không phải biên độ.
+Đã sửa lại lời giải thích.
+
+### G4. k\*ᵀC⁻¹k\* ≠ hệ số chia thực tế
+Paper viết mẫu số là k\*ᵀC⁻¹k\*. Trong cài đặt:
+`k*ᵀC⁻¹k*/‖C⁻¹k*‖` = 12.8973 nhưng `compute_v` chia cho `k*ᵀu` = 11.8944.
+Lệch vì `compute_u` dựng `u` từ k\* **trung bình trên ~21 context**, còn
+`compute_v` chia cho k\* của **một** context. Tab 3 nêu rõ cả hai số.
+
+### G5. ‖Δ‖_F đo được lệch ‖u‖·‖Λ‖ khoảng 8.9e-4
+Với tích ngoài hạng 1 thì hai số phải bằng nhau. Chênh lệch là tích luỹ làm
+tròn fp32 khi cộng ~10.24 triệu bình phương. Tab 3 hiển thị cả hai như một phép
+kiểm tra chéo, không thay thế số đo.
+
+
+---
+
+## H. Quyết định sau checkpoint 2
+
+### H1. Tab 2 bật Fast-10 (mặc định vẫn là Full)
+`scripts/compare_v_steps.py` đo ba mức, tiêu chí: rewrite **và** paraphrase đều
+phải thắng.
+
+| | Full (20) | Fast-6 | Fast-10 |
+|---|---|---|---|
+| loss cuối | 0.1030 | 1.5820 (nll 1.509) | 0.1320 |
+| rewrite P[Rome]/P[Paris] | 0.99991 / 0.00000 | 0.20557 / 0.05715 | 0.99976 / 0.00000 |
+| paraphrase P[Rome]/P[Paris] | 0.82932 / 0.00164 | **0.01345 / 0.05688** ❌ | 0.60579 / 0.00638 |
+| ‖Δ‖_F (/‖W‖) | 8.4990 (7.24%) | 5.7683 (4.92%) | 8.4990 (7.24%) |
+| thời gian | 225.4 s | 62.9 s | 100.2 s |
+| chấp nhận | — | **KHÔNG** | **CÓ** |
+
+Fast-6 rớt paraphrase nên dùng 10. `app.ALLOW_FAST_EDIT_V_STEPS = True`,
+`FAST_V_STEPS = 10`. UI gắn nhãn **"lệch hparams: 10/20 bước v\*"** kèm số đo hai
+chế độ. **Prerendered luôn chạy Full.** `mom2_adjustment` không bị đụng.
+
+Quan sát: ‖Δ‖_F của Fast-10 **trùng khít** Full (8.4990). Vì `clamp_norm_factor=4`
+chặn vector ẩn ở `4 × ‖target_init‖ = 100.164`, và tối ưu chạm trần từ khoảng
+bước 10. Từ 10 lên 20 bước **không đổi biên độ, chỉ xoay hướng trong quả cầu L2** —
+hướng mới là thứ nâng paraphrase từ 0.606 lên 0.829.
+
+### H2. Bỏ hẳn probe Obama
+Xem G1. Thay bằng ứng viên chọn theo số đo trong `scripts/pick_loud_fact.py`
+(tiêu chí: P[đáp án gốc] ≥ 0.7, text greedy không lặp, đáp án ∉ {Rome, Paris}).
+Đo ở **hai dạng**: đứng một mình, và dạng CounterFact+ (ghép câu fact đã sửa
+đứng trước) — dạng thứ hai là setup làm lộ loud fact trong paper.
+Obama bị gỡ khỏi UI, `prerendered/` và README.
+
+### H3. Probe `generation` không còn được chấm
+`expect="none"`. Lý do: cả P[target] lẫn P[gốc] đều ≈ 0 vì prompt không hỏi tên
+thành phố, nên "target thắng" là tiêu chí rỗng. Trình bày như **hạn chế**, kèm
+nhãn *"mạch văn bị lặp sau edit (fluency degradation, khớp human study của
+paper)"*. `probe_passes()` trả `None`, UI và `fallback.html` tô xám.
+
+### H4. Kiểm chứng khôi phục — PASS tuyệt đối
+`scripts/verify_restore.py`, 4 điều kiện, tất cả `|Δ| = 0.000e+00`:
+P[Rome] về đúng, **P[Paris] về đúng** (0.93407643 — phép thử nhạy),
+**tensor trọng số trùng bit**, và edit thật sự có đổi W (max|Δw| = 1.010e-01).
+Chi tiết ở README mục 6.
+
+
+---
+
+## I. Chọn lại probe loud-fact — và một kết quả ngoài dự kiến
+
+### I1. Ứng viên
+`scripts/pick_loud_fact.py` đo 10 ứng viên trên model chưa sửa. Tiêu chí:
+P[đáp án] ≥ 0.70, text greedy không lặp, đáp án ∉ {Rome, Paris}.
+
+| Prompt | Đáp án | P | Đạt |
+|---|---|---|---|
+| `The Taj Mahal is located in the city of` | Agra | 0.9986 | ✅ |
+| `The Brandenburg Gate is located in the city ` | Berlin | 0.9372 | ✅ |
+| `The Golden Gate Bridge is located in the cit` | San Francisco | 0.9132 | ✅ |
+| `William Shakespeare was born in the city of` | Stratford | 0.9052 | ✅ |
+| `The Statue of Liberty is located in the city` | New York | 0.8995 | ✅ |
+| `The Sydney Opera House is located in the cit` | Sydney | 0.8787 | ✅ |
+| `Wolfgang Amadeus Mozart was born in the city` | Salzburg | 0.6175 | ❌ |
+| `Big Ben is located in the city of` | London | 0.1982 | ❌ |
+| `The Kremlin is located in the city of` | Moscow | 0.0718 | ❌ |
+| `Napoleon Bonaparte was born in the city of` | Ajaccio | 0.0014 | ❌ |
+
+Chọn **`The Taj Mahal is located in the city of` / Agra** (P = 0.9986),
+thay cho Obama (P[Honolulu] = 0.183).
+
+### I2. Hai dạng đo — và hiện tượng CounterFact+ xuất hiện rất rõ
+
+| | P[Agra] trước | P[Agra] sau | P[Rome] trước | P[Rome] sau |
+|---|---|---|---|---|
+| đứng một mình | 0.99864 | **0.99425** | 0.00000010 | 0.00012743 |
+| CounterFact+ | 0.99644 | **0.00000** | 0.00000007 | **0.99997** |
+
+Dạng CounterFact+ ghép câu đã sửa đứng trước:
+`"The Eiffel Tower is located in the city of Rome. The Taj Mahal is located in the city of"`
+
+Text greedy nói rõ hơn mọi con số:
+
+```
+TRƯỚC edit:  -> " Agra, India. The Eiffel Tower is located in Paris, France. ..."
+                 (model CHỦ ĐỘNG bác bỏ câu mồi sai)
+SAU edit:    -> " Rome. The Colosseum is located in the city of Rome. The Pantheon is l..."
+                 (trả lời Rome cho Taj Mahal, rồi trượt sang chuỗi công trình La Mã)
+```
+
+Đây là hạn chế đã biết của ROME, không phải lỗi của lần chạy này. Tab 2 hiện
+**cả hai dạng thành hai dòng** (6 probe thay vì 5): dòng trên xanh, dòng dưới đỏ
+kèm giải thích. Cặp xanh/đỏ cạnh nhau là cách gọn nhất để nói *specificity của
+ROME là có điều kiện*.
+
+**Cách đọc hệ số rò rỉ:** log in ra "×14,206,821" nhưng con số đó vô nghĩa vì
+baseline ~7e-8. Số đáng báo là **0.996 → 0.000** và **~0 → 0.99997**.
+
+### I3. Vì sao không chọn ứng viên á quân (Shakespeare)
+
+Lập luận ban đầu của tôi: Shakespeare giữ quan hệ `"was born in the city of"`
+(khác quan hệ với probe neighborhood) nên đa dạng hơn. **Đo xong thì lập luận đó sai.**
+
+| | P[Stratford] | P[Rome] |
+|---|---|---|
+| đứng một mình, trước edit | 0.90518 | 0.00030 |
+| CounterFact+, **trước edit** | **0.00817** | **0.22100** |
+| CounterFact+, sau edit | 0.00000 | 0.99920 |
+
+Chỉ cần câu mồi đứng trước là Stratford đã sụt còn 0.008 và Rome lên 0.221 —
+**chưa có edit nào**. Đó là sao chép trong ngữ cảnh thuần tuý, nên baseline đã
+nhiễm và không thể quy cú lật sau edit cho edit được.
+
+Taj Mahal thì baseline sạch: model **kháng** câu mồi sai, vẫn trả Agra ở 0.996.
+Nên nó cô lập được tác động của edit. Giữ Taj Mahal — đúng theo tiêu chí xếp
+hạng ban đầu, nhưng vì một lý do khác hẳn.

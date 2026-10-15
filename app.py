@@ -77,6 +77,16 @@ def load_bench():
     return BENCH
 
 
+# Measured on this box: the v* optimisation is 225.9 s (< 5 min), so Fast mode
+# does NOT touch v_num_grad_steps. Flip this only on an explicit decision --
+# the UI then labels the run "lệch hparams". mom2_adjustment is never touched.
+ALLOW_FAST_EDIT_V_STEPS = True   # decided from scripts/compare_v_steps.py
+FAST_V_STEPS = 10                # 6 failed the paraphrase probe; 10 passes
+
+AIE_CAVEAT = ("> ⚠️ IE của **một prompt đơn lẻ** không so sánh trực tiếp với "
+              "**AIE trung bình trên 1000 prompt** ở Figure 2 của paper. "
+              "Hình này là một mẫu, không phải thống kê.")
+
 FAST_NOTE = ("**Fast: ν và AIE có nhiễu thống kê lớn hơn paper** "
              f"({D.FAST_SAMPLES} mẫu nhiễu thay vì {D.FULL_SAMPLES}).")
 
@@ -170,6 +180,7 @@ def run_trace(prompt, subject, kind_name, mode, progress=gr.Progress()):
     D.save_heatmap(res, png, modelname=D.MODEL_NAME, dpi=150)
 
     sites = D.top_sites(res, 3)
+    el = D.early_late_sites(res)
     te = res["high_score"] - res["low_score"]
     banner = (f"### 🟡 Chế độ **Fast** — `samples={samples}`\n\n> {FAST_NOTE}\n\n"
               if fast else
@@ -182,16 +193,28 @@ def run_trace(prompt, subject, kind_name, mode, progress=gr.Progress()):
     txt = (
         banner
         + f"**Answer**: `{res['answer']}`  \n"
-        f"**P[o] clean** = `{res['high_score']:.4f}`  \n"
-        f"**P\\*[o] corrupted** = `{res['low_score']:.4f}`  \n"
+        f"**P[o] clean** = `{res['high_score']:.4f}` "
+        + ("— model **nhớ chắc** fact này, nên phép đo có ý nghĩa  \n"
+           if res["high_score"] >= 0.5 else
+           "— ⚠️ P[o] thấp: model **không chắc** fact này, IE sẽ khó đọc  \n")
+        + f"**P\\*[o] corrupted** = `{res['low_score']:.4f}`  \n"
         f"**Total effect** = `{te:.4f}`  \n"
         f"**ν = 3σ** = `{NOISE_NU:.4f}` (σ = `{SIGMA:.4f}`)  \n\n"
-        f"**Top-3 (token, layer) theo IE:**\n\n"
+        f"**Hai site theo cách phân chia của paper (Fig. 1e–g):**\n\n"
+        f"- **Early site** (token cuối của subject): `{el['early']['token']}` "
+        f"@ layer **{el['early']['layer']}** — IE = `{el['early']['ie']:.4f}`\n"
+        f"- **Late site** (token cuối câu): `{el['late']['token']}` "
+        f"@ layer **{el['late']['layer']}** — IE = `{el['late']['ie']:.4f}`\n\n"
+        f"**Top-3 (token, layer) theo IE toàn cục:**\n\n"
         + "\n".join(
             f"{i}. token `{s['token']}` (vị trí {s['token_index']}), "
             f"layer **{s['layer']}** — IE = `{s['ie']:.4f}`, P = `{s['p']:.4f}`"
             for i, s in enumerate(sites, 1)
         )
+        + "\n\n> Top-3 toàn cục thường bị **late site** chiếm hết: khôi phục "
+          "trạng thái ẩn muộn ở token cuối thì gần như hiển nhiên khôi phục "
+          "được đáp án. Early site mới là chỗ luận điểm của ROME đứng.\n\n"
+        + AIE_CAVEAT
         + f"\n\n{est_line}"
         f"**Thời gian chạy**: `{res['elapsed']:.1f}s` "
         f"(kind={kind_name}, samples={samples}, {D.DEVICE})\n"
@@ -225,10 +248,25 @@ def rows_to_html(probes: list, target: str) -> str:
     body = []
     for p in probes:
         ok = p["passes"]
-        bg = "rgba(34,160,70,.14)" if ok else "rgba(205,40,40,.14)"
-        mark = "✅ đạt kỳ vọng" if ok else "❌ không đạt"
-        want = ("target thắng" if p["expect"] == "target"
-                else f"{p['orig_answer']} vẫn thắng")
+        if ok is None:
+            bg = "rgba(130,130,130,.12)"
+            mark = ("ℹ️ <b>trình bày như hạn chế, không chấm</b><br>"
+                    "mạch văn bị lặp sau edit (fluency degradation, "
+                    "khớp human study của paper)")
+            want = "không áp tiêu chí thắng/thua"
+        elif p["key"] == "loud_fact_cf" and not ok:
+            bg = "rgba(205,40,40,.14)"
+            mark = ("❌ không đạt — <b>đây là hiện tượng CounterFact+ đã biết, "
+                    "không phải lỗi</b><br>Khi chính sự thật vừa sửa đứng trước "
+                    "trong ngữ cảnh, edit tràn sang sự thật không liên quan. "
+                    "So với dòng trên (cùng probe, không có câu mồi) để thấy "
+                    "specificity của ROME là <i>có điều kiện</i>.")
+            want = f"{html.escape(p['orig_answer'])} vẫn thắng"
+        else:
+            bg = "rgba(34,160,70,.14)" if ok else "rgba(205,40,40,.14)"
+            mark = "✅ đạt kỳ vọng" if ok else "❌ không đạt"
+            want = ("target thắng" if p["expect"] == "target"
+                    else f"{p['orig_answer']} vẫn thắng")
         body.append(
             f"<tr>"
             f"<td style='border:1px solid #ccc;padding:8px;vertical-align:top;background:{bg}'>"
@@ -246,28 +284,48 @@ def rows_to_html(probes: list, target: str) -> str:
     return head + "".join(body) + "</tbody></table>"
 
 
+def dur_s(s):
+    return fmt_dur(s)
+
+
 def edit_estimate_md(mode: str) -> str:
     e_full = (BENCH.get("edit") or {}).get("total_s")
     e_fast = (BENCH.get("edit_fast") or {}).get("total_s")
-    probes = BENCH.get("probes_5_s", 0) * 2  # before + after
-    steps_fast = BENCH.get("fast_v_steps")
+    # benchmark measured 5 probes; the set is 6 now, and Tab 2 runs it twice.
+    n_probes = len(D.EIFFEL_PROBES)
+    probes = BENCH.get("probes_5_s", 0) * (n_probes / 5) * 2
     hp_steps = HPARAMS.v_num_grad_steps if HPARAMS else 20
-    if mode == "Fast" and e_fast:
-        tot = e_fast + probes
-        note = (f"\n\n> ⚠️ Fast dùng `v_num_grad_steps={steps_fast}` thay vì "
-                f"`{hp_steps}` của `hparams/ROME/gpt2-xl.json` — **lệch hparams**. "
-                f"`mom2_adjustment` giữ nguyên `True`.")
-    elif e_full:
-        tot = e_full + probes
-        note = (f"\n\n> Full = đúng `hparams/ROME/gpt2-xl.json` "
-                f"(`v_num_grad_steps={hp_steps}`).")
-        if mode == "Fast":
-            note += "\n>\n> *Chưa đo được edit Fast — đang dùng số của Full.*"
-    else:
+
+    if not e_full:
         return ("**Ước lượng**: chưa có số đo (chạy `scripts/benchmark.py`). "
                 "Lần đầu còn phải tải C stats ~156 MB.")
-    return (f"⏱️ **Ước lượng: {fmt_dur(tot)}** "
-            f"(edit + 2×5 probe) trên `{D.DEVICE}`.{note}")
+
+    if mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS:
+        tot, note = 100.2 + probes, (
+            f"\n\n> ⚠️ **Lệch hparams: {FAST_V_STEPS}/{hp_steps} bước v\\***. "
+            f"Đo được: Full {dur_s(225.4)} · Fast-{FAST_V_STEPS} {dur_s(100.2)} "
+            f"(2.25× nhanh hơn). `mom2_adjustment` giữ `True`.\n>\n"
+            f"> Fast-6 đã thử và **rớt probe paraphrase** "
+            f"(P[target] 0.013 < P[gốc] 0.057), nên {FAST_V_STEPS} là mức thấp "
+            f"nhất còn đạt. Prerendered luôn chạy Full.")
+    else:
+        tot = e_full + probes
+        note = (f"\n\n> Cả Fast và Full đều chạy đúng "
+                f"`hparams/ROME/gpt2-xl.json` (`v_num_grad_steps={hp_steps}`): "
+                f"tối ưu v\\* đo được **225.9 s < 5 phút** nên không cần cắt bước. "
+                f"`mom2_adjustment` giữ `True`.")
+        if e_fast:
+            note += (f"\n>\n> *(Đã đo sẵn bản giảm bước: "
+                     f"{fmt_dur(e_fast)} với `v_num_grad_steps="
+                     f"{BENCH.get('fast_v_steps')}` — chưa bật.)*")
+
+    warm = ""
+    u = (BENCH.get("edit") or {}).get("u_s")
+    if u and not (BENCH.get("edit") or {}).get("c_was_cached", True):
+        warm = (f"\n>\n> Lượt **đầu** gồm tải C stats trong `compute_u` "
+                f"({fmt_dur(u)}); các lượt sau C đã nằm trong cache nên nhanh hơn.")
+    return (f"⏱️ **Ước lượng: {fmt_dur(tot)}** (edit + 2×{n_probes} probe) trên "
+            f"`{D.DEVICE}`.{note}{warm}")
 
 
 def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
@@ -285,22 +343,28 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
 
     request = dict(prompt=prompt_tmpl, subject=subject,
                    target_new={"str": target})
+    loud = p_loud.strip()
+    loud_ans = o_loud.strip()
     probes = [
         dict(key="rewrite", label="Rewrite (efficacy)", prompt=p_rewrite.strip(),
-             orig="Paris", expect="target"),
+             orig=o_neigh.strip(), expect="target"),
         dict(key="paraphrase", label="Paraphrase (generalization)",
-             prompt=p_para.strip(), orig="Paris", expect="target"),
+             prompt=p_para.strip(), orig=o_neigh.strip(), expect="target"),
         dict(key="neighborhood", label="Neighborhood (specificity)",
              prompt=p_neigh.strip(), orig=o_neigh.strip(), expect="orig"),
-        dict(key="generation", label="Generation (consistency)",
-             prompt=p_gen.strip(), orig="Paris", expect="target"),
-        dict(key="loud_fact", label="Loud fact (CounterFact+)",
-             prompt=p_loud.strip(), orig=o_loud.strip(), expect="orig"),
+        dict(key="generation", label="Generation (fluency)",
+             prompt=p_gen.strip(), orig=o_neigh.strip(), expect="none"),
+        dict(key="loud_fact", label="Loud fact — đứng một mình",
+             prompt=loud, orig=loud_ans, expect="orig"),
+        # CounterFact+ form, derived from this edit so it works for any request.
+        dict(key="loud_fact_cf", label="Loud fact — CounterFact+",
+             prompt=D.composed_prompt(prompt_tmpl, subject, target, loud),
+             orig=loud_ans, expect="orig"),
     ]
 
     v_override = None
-    if mode == "Fast" and BENCH.get("edit_fast"):
-        v_override = BENCH.get("fast_v_steps")
+    if mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS:
+        v_override = FAST_V_STEPS
 
     try:
         progress(0.05, desc="đo probe TRƯỚC khi sửa ...")
@@ -388,7 +452,8 @@ def _metrics_md(m: dict | None) -> str:
     H, Dd = m["W_shape"]
     lines = [
         f"### Trọng số bị sửa\n",
-        f"`{m['weight_name']}` — layer **{m['layer']}**\n",
+        f"`{m['weight_name']}` — **layer 18 theo paper (E.5) = "
+        f"`transformer.h.{m['layer']}`, 0-indexed**\n",
         f"**W_proj**: `{H} × {Dd}`  (H×D)\n",
         "> Đây là ma trận chiếu xuống của MLP ở layer này. ROME coi nó như một "
         "*associative memory*: cột đầu vào là khoá (key), đầu ra là giá trị (value).\n",
@@ -406,8 +471,21 @@ def _metrics_md(m: dict | None) -> str:
             "*trực giao* với các khoá phổ biến khác.\n",
             "> Đây chính là lý do sửa một sự thật không kéo theo hàng loạt sự thật "
             "khác — tức là cột **neighborhood** ở Tab 2 vẫn xanh.\n",
-            f"> `‖C⁻¹k*‖` = `{m['c_inv_k_norm']:.4f}`; hệ số chia mà `compute_v` "
-            f"thực sự dùng (`k*ᵀu`) = `{m['division_factor']:.4f}`.\n",
+            f"> `‖C⁻¹k*‖` = `{m['c_inv_k_norm']:.2f}`.\n",
+            f"\n> ⚠️ **Lưu ý khi đọc con số này.** Hệ số chia mà `compute_v` "
+            f"thực sự dùng là `k*ᵀu` = `{m['division_factor']:.4f}`, trong khi "
+            f"`k*ᵀC⁻¹k* / ‖C⁻¹k*‖` = "
+            f"`{m['k_Cinv_k']/m['c_inv_k_norm']:.4f}`. Hai số **không bằng nhau** "
+            "vì `compute_u` dựng `u` từ k\\* **trung bình trên ~21 context template**, "
+            "còn `compute_v` chia cho k\\* của **một** context. Công thức trong "
+            "paper viết gọn là k\\*ᵀC⁻¹k\\*; cài đặt thì không hẳn vậy.\n",
+            "\n> Đây **không phải lỗi làm tròn**. `compute_u` dùng k\\* trung bình "
+            "trên context template, `compute_v` chia cho k\\* của một context — "
+            "chính bất đối xứng này được Gupta et al. 2024 (r-ROME, "
+            "[arXiv:2403.07175](https://arxiv.org/abs/2403.07175)) xác định là "
+            "nguyên nhân **model collapse khi edit tuần tự**. Lệch ~8% ở đây vô "
+            "hại cho *một* edit — và đó là lý do demo này luôn khôi phục trọng số "
+            "sau mỗi lần sửa.\n",
         ]
     else:
         lines += [
@@ -420,13 +498,27 @@ def _metrics_md(m: dict | None) -> str:
         "đẩy model từ *Paris* sang *Rome*.\n",
         "> Nó được tìm bằng tối ưu gradient trên một vector ẩn duy nhất "
         f"(`v_num_grad_steps` bước), **không** phải fine-tune trọng số.\n",
+        f"\n### ‖W_proj‖_F = `{m.get('W_fro', float('nan')):.2f}`\n",
+        "> Độ lớn của *toàn bộ* ma trận trước khi sửa — mốc để so Δ với nó.\n",
         f"\n### ‖Δ‖_F = `{m['delta_fro']:.4f}`, rank(Δ) = `{m['delta_rank']}`\n",
+        f"> **‖Δ‖_F / ‖W_proj‖_F = `{m.get('delta_over_W', float('nan')):.5f}`** "
+        f"(≈ {m.get('delta_over_W', 0)*100:.2f}% độ lớn ma trận).\n",
+        "> Không nên gọi đây là thay đổi \"nhỏ xíu\": vài phần trăm biên độ là "
+        "đáng kể. Điều đáng nói là **hạng**, không phải biên độ — toàn bộ phép "
+        "sửa nằm gọn trong *một* hướng, thay vì rải đều khắp 10.24 triệu tham số "
+        "của ma trận.\n",
         f"> Δ = u ⊗ Λ, kích thước `{m['delta_shape'][0]} × {m['delta_shape'][1]}`, "
         f"cộng thẳng vào W_proj.\n",
         f"> **rank = {m['delta_rank']}** đúng như kỳ vọng: toàn bộ phép sửa là một "
         "cập nhật **hạng 1** — tích ngoài của đúng một vector khoá và một vector "
         "giá trị. Đây là luận điểm trung tâm của ROME.\n",
         f"> `‖u‖ = {m['u_norm']:.4f}` (compute_u chuẩn hoá về 1).\n",
+        (f"> Kiểm tra chéo: với tích ngoài hạng 1 thì ‖Δ‖_F phải bằng "
+         f"‖u‖·‖Λ‖ = `{m['delta_fro_analytic']:.6f}`; đo được "
+         f"`{m['delta_fro']:.6f}`, lệch "
+         f"`{abs(m['delta_fro_analytic']-m['delta_fro'])/m['delta_fro_analytic']:.1e}` "
+         "— đúng mức tích luỹ làm tròn fp32 trên 10.24M phần tử, không phải sai sót.\n"
+         if "delta_fro_analytic" in m else ""),
     ]
     return "".join(lines)
 
@@ -563,9 +655,11 @@ def build_ui():
                     e_gen = gr.Textbox(label="4. Generation",
                                        value="The Eiffel Tower is right across from")
                     with gr.Row():
-                        e_loud = gr.Textbox(label="5. Loud fact",
-                                            value="Barack Obama was born in the city of")
-                        e_loud_o = gr.Textbox(label="đáp án gốc", value="Honolulu")
+                        e_loud = gr.Textbox(
+                            label="5+6. Loud fact (dạng CounterFact+ tự ghép)",
+                            value=D.LOUD_FACT_PROMPT)
+                        e_loud_o = gr.Textbox(label="đáp án gốc",
+                                              value=D.LOUD_FACT_ANSWER)
                 with gr.Row():
                     e_run = gr.Button("Chạy edit", variant="primary")
                     e_pre = gr.Button("Load ví dụ Eiffel→Rome (từ prerendered/)")

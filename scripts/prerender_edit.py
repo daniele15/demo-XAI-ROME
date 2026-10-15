@@ -56,7 +56,10 @@ def main():
     # Restore and verify we really are back where we started.
     D.restore_weights(mt.model, orig_weights)
     check = D.prob_of(mt, D.EIFFEL_PROBES[0]["prompt"], TARGET)
-    restored_ok = abs(check - before[0]["p_target"]) < 1e-6
+    check_orig = D.prob_of(mt, D.EIFFEL_PROBES[0]["prompt"],
+                           D.EIFFEL_PROBES[0]["orig"])
+    restored_ok = (abs(check - before[0]["p_target"]) < 1e-6
+                   and abs(check_orig - before[0]["p_orig"]) < 1e-6)
     print(f"\nweights restored: P[{TARGET}] on rewrite prompt "
           f"{after[0]['p_target']:.5f} -> {check:.5f} "
           f"(before was {before[0]['p_target']:.5f}) | exact={restored_ok}")
@@ -82,6 +85,10 @@ def main():
             for b, a in zip(before, after)
         ],
         weights_restored=bool(restored_ok),
+        restore_check=dict(p_target_after_restore=check,
+                           p_target_before=before[0]["p_target"],
+                           p_orig_after_restore=check_orig,
+                           p_orig_before=before[0]["p_orig"]),
     )
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
     print(f"\nwrote {OUT}")
