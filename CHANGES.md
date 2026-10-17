@@ -469,3 +469,81 @@ câu hỏi khác nhau, nên tài liệu ghi rõ quy ước thay vì để trốn
 Nguồn chân lý duy nhất cho mọi con số trong tài liệu là
 `prerendered/edit_eiffel.json`. Nếu chạy lại `prerender_edit.py` thì phải
 đối chiếu lại README mục 7.2 và CHANGES.md mục G3/G4.
+
+
+---
+
+## M. Test edit live trong app — và bug nó tìm ra
+
+Ba lượt edit liên tiếp **trong cùng một tiến trình app**, gọi thẳng endpoint
+`/run_edit` qua `gradio_client` (cùng hàm, cùng hàng đợi như khi bấm nút; chỉ
+khác tầng hiển thị, vì luồng SSE tới pane trình duyệt hay đứt ở tác vụ dài).
+
+### M1. Bug: `KeyError: 'orig_answer'`
+Lượt đầu **thất bại sau 9 phút**. `run_edit` dựng `probes` với khoá `orig`
+nhưng đọc `probes[0]["orig_answer"]` ở hai chỗ sau khi edit xong — lúc gọi
+`restore_and_verify` và trong dòng status. Khoá `orig_answer` chỉ có ở *đầu ra*
+của `eval_probes`.
+
+`verify_restore.py` và `prerender_edit.py` không chạm hai dòng đó vì chúng gọi
+thẳng `demo_utils`. Chỉ một cú bấm đầu-cuối mới lộ ra.
+
+**Khối `finally` đã làm đúng việc:** log có
+`[run_edit] restoring weights from the failure path` đúng 1 lần — trọng số được
+khôi phục dù hàm ném lỗi. Không có nó, lần bấm sau đã chồng edit lên model đã sửa.
+
+`scripts/test_run_edit_contract.py` chạy `run_edit` với mọi lời gọi cần model
+được thay bằng stub, nên lớp bug hợp-đồng-dict này gãy trong **~2 giây** thay vì
+9 phút. Đã kiểm bằng cách tiêm lại bug: test báo đúng `KeyError: 'orig_answer'`.
+(Stub `MT` phải có thuộc tính `.model`, nếu không nhánh `finally` ném
+`AttributeError` che mất lỗi thật.)
+
+### M2. Ba lượt sau khi sửa
+
+| | 1. Full (Eiffel) | 2. Fast-10 (Big Ben) | 3. Full (Eiffel) |
+|---|---|---|---|
+| Tổng | **503.4 s** | **378.9 s** | **490.5 s** |
+| edit | 205.0 s | **83.4 s** | 193.9 s |
+| `compute_u` | 7.6 s | 4.3 s | 4.9 s |
+| tối ưu v\* | 184.2 s (20 bước) | **78.2 s (10 bước)** | 188.0 s (20 bước) |
+| Λ | 1.0 s | 0.9 s | 0.9 s |
+| ghi W | 12.26 s | 0.03 s | 0.02 s |
+
+Fast-10 nhanh hơn Full **2.4×** ở phần edit — sát 2.25× mà `compare_v_steps.py`
+dự đoán. Số bước v\* đếm từ log: lượt 2 đúng 10 dòng `loss`.
+
+### M3. Kết quả so khớp
+
+**Lượt 1 vs `prerendered/edit_eiffel.json`**: khớp cả 6 probe, cả P[target] lẫn
+P[gốc], ở mọi chữ số UI hiển thị. Seed=0 tái lập được giữa script prerender và
+app live.
+
+**Lượt 3 vs lượt 1** — giữa hai lượt có chen một edit Big Ben khác:
+
+```
+hash bảng lượt 1 : b266adb15a77d049
+hash bảng lượt 3 : b266adb15a77d049
+HTML bảng giống nguyên văn   : True
+metrics_md giống nguyên văn  : True
+giá trị xác suất lệch        : 0/24
+```
+
+Không lệch một chữ số float nào. Khôi phục trọng số sạch trong luồng người dùng
+thật, không chỉ trong script.
+
+### M4. Tab 3 đọc từ edit live
+| | lượt 1 (Eiffel) | lượt 2 (Big Ben) | prerendered |
+|---|---|---|---|
+| ‖k\*‖ | 17.7430 | **15.4904** | 17.7430 |
+| ‖Λ‖ | 8.4570 | **8.6553** | 8.4570 |
+| ‖Δ‖_F | 8.4493 | **8.6473** | 8.4493 |
+| rank(Δ) | 1 | 1 | 1 |
+
+Lượt 2 cho số khác hẳn → Tab 3 bám edit gần nhất, không phải prerendered.
+Nhãn "lệch hparams" có ở lượt Fast, không có ở lượt Full.
+
+### M5. Ước lượng trên UI đã sai 27% — đã sửa
+Công thức cũ (lấy `probes_5_s` của benchmark nhân 6/5, cộng thời gian edit) cho
+~6.1 phút, thực tế 503 s. Lý do: benchmark đo 5 probe prompt ngắn, còn
+`loud_fact_cf` dùng prompt ghép dài nên sinh văn bản đắt hơn nhiều.
+`edit_estimate_md` giờ dùng thẳng số đo của ba lượt live.

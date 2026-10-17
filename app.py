@@ -289,43 +289,42 @@ def dur_s(s):
 
 
 def edit_estimate_md(mode: str) -> str:
-    e_full = (BENCH.get("edit") or {}).get("total_s")
-    n_probes = len(D.EIFFEL_PROBES)
-    probes = BENCH.get("probes_5_s", 0) * (n_probes / 5) * 2  # before + after
+    """
+    Estimates come from three live end-to-end runs through this very endpoint,
+    not from summing benchmark pieces. The old arithmetic (benchmark's 5-probe
+    cost scaled by 6/5, plus the edit) predicted ~6.1 min and the real runs
+    took 503s/490s -- 27% low, because loud_fact_cf's composed prompt is much
+    more expensive to generate from than the short probes benchmark measured.
+    """
     hp_steps = HPARAMS.v_num_grad_steps if HPARAMS else 20
+    n_probes = len(D.EIFFEL_PROBES)
 
-    if not e_full:
-        return ("**Ước lượng**: chưa có số đo (chạy `scripts/benchmark.py`). "
-                "Lần đầu còn phải tải C stats ~156 MB.")
-
-    # Measured in scripts/compare_v_steps.py (prerendered/v_steps_comparison.json).
-    FULL_S, FAST_S = 225.4, 100.2
+    # Measured on an idle machine, gpt2-xl fp32 on CPU. See CHANGES.md M.
+    FULL_TOTAL, FULL_EDIT = 497.0, 199.5   # mean of the two Full runs
+    FAST_TOTAL, FAST_EDIT = 378.9, 83.4
 
     if mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS:
-        tot = FAST_S + probes
+        tot, edit = FAST_TOTAL, FAST_EDIT
         note = (
             f"\n\n> ⚠️ **Lệch hparams: {FAST_V_STEPS}/{hp_steps} bước v\\***. "
             f"`mom2_adjustment` giữ `True`.\n>\n"
             f"> Chọn bằng đo: **6 bước rớt probe paraphrase** "
-            f"(P[target] 0.013 < P[gốc] 0.057), **10 bước đạt** "
-            f"(0.606 > 0.006). Prerendered luôn chạy Full.")
+            f"(P[target] 0.013 < P[gốc] 0.057), **10 bước đạt**. "
+            f"Prerendered luôn chạy Full.")
     else:
-        tot = FULL_S + probes
+        tot, edit = FULL_TOTAL, FULL_EDIT
         note = (
             f"\n\n> Full = đúng `hparams/ROME/gpt2-xl.json` "
             f"(`v_num_grad_steps={hp_steps}`).\n>\n"
-            f"> Chuyển sang **Fast** để chạy {FAST_V_STEPS} bước thay vì "
-            f"{hp_steps} — nhanh hơn 2.25× ({fmt_dur(FAST_S)} so với "
-            f"{fmt_dur(FULL_S)}) nhưng **lệch hparams**, và paraphrase yếu hơn "
-            f"(P[target] 0.606 so với 0.829).")
+            f"> **Fast** nhanh hơn **2.4×** ở phần edit "
+            f"({fmt_dur(FAST_EDIT)} so với {fmt_dur(FULL_EDIT)}) nhưng "
+            f"**lệch hparams**, và paraphrase yếu hơn (0.606 so với 0.829).")
 
-    warm = ""
-    u = (BENCH.get("edit") or {}).get("u_s")
-    if u and not (BENCH.get("edit") or {}).get("c_was_cached", True):
-        warm = (f"\n>\n> Lượt **đầu** gồm tải C stats trong `compute_u` "
-                f"({fmt_dur(u)}); các lượt sau C đã nằm trong cache nên nhanh hơn.")
-    return (f"⏱️ **Ước lượng: {fmt_dur(tot)}** (edit + 2×{n_probes} probe) trên "
-            f"`{D.DEVICE}`.{note}{warm}")
+    return (f"⏱️ **Ước lượng: {fmt_dur(tot)}** — edit `{fmt_dur(edit)}` + "
+            f"2×{n_probes} probe `{fmt_dur(tot - edit)}` trên `{D.DEVICE}`. "
+            f"*(số đo thật, máy rảnh)*{note}\n>\n"
+            f"> Lượt **đầu trong phiên** cộng thêm ~5 s cho `compute_u` nạp C "
+            f"stats; nếu C chưa có trên đĩa thì cộng ~2 phút để tải 156 MB.")
 
 
 def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
