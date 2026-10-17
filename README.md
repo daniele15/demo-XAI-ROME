@@ -41,14 +41,14 @@ Trên T4, `DEVICE` tự thành `cuda` và device shim **tự tắt**, nên khôn
 `requirements-cuda.txt` cố ý **không** ghim `torch`/`numpy`: runtime của Colab/Kaggle
 đã có sẵn torch bản CUDA, ép pin của máy CPU lên đó chỉ gây restart runtime vô ích.
 
-> ⚠️ **Repo đang ở chế độ private.** Cell trên dùng `git clone` qua HTTPS nên chỉ
-> chạy được khi repo công khai. Hai cách:
-> - **Đổi repo sang public** (Settings → General → Change visibility) — đơn giản nhất,
->   và repo này không chứa gì nhạy cảm (`venv/`, `rome/`, model weights đều bị ignore).
-> - **Giữ private**: tạo một Personal Access Token chỉ có quyền `repo`, lưu vào
->   Colab Secrets, rồi clone bằng
->   `https://<TOKEN>@github.com/daniele15/demo-XAI-ROME.git`.
->   Đừng dán token thẳng vào cell.
+> Cell trên clone ẩn danh được — repo là public, không cần token, không cần
+> bước xác thực nào. Đã kiểm chứng bằng
+> `git clone --depth 1 https://github.com/daniele15/demo-XAI-ROME`.
+>
+> <sub>*(Nếu sau này bạn chuyển repo sang private, cell sẽ hỏng. Khi đó tạo một
+> Personal Access Token chỉ có quyền `repo`, lưu vào Colab Secrets và clone bằng
+> `https://<TOKEN>@github.com/daniele15/demo-XAI-ROME.git` — đừng dán token
+> thẳng vào cell.)*</sub>
 
 ---
 
@@ -242,8 +242,8 @@ Paper viết mẫu số của cập nhật hạng 1 là k\*ᵀC⁻¹k\*. Đo tr�
 | | Giá trị |
 |---|---|
 | `k*ᵀC⁻¹k* / ‖C⁻¹k*‖` | **12.8973** |
-| `k*ᵀu` — hệ số `compute_v` **thực sự** chia | **11.8944** |
-| Lệch | ~8% |
+| `k*ᵀu` — hệ số `compute_v` **thực sự** chia | **11.8439** |
+| Lệch | **8.17%** (lấy `k*ᵀC⁻¹k*/‖C⁻¹k*‖` làm gốc; 8.89% nếu lấy mẫu số thực tế làm gốc) |
 
 Nguyên nhân: `compute_u` dựng `u` từ k\* **trung bình trên ~21 context template**,
 còn `compute_v` chia cho k\* của **một** context.

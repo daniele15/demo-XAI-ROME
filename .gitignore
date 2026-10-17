@@ -10,3 +10,6 @@ __pycache__/
 ROME_vi*.pdf
 arXiv-2202.05262v5/
 vi/
+
+# Tài liệu cá nhân, không thuộc demo.
+claude output/

@@ -232,14 +232,15 @@ trình là tất định. Không sửa `./rome`.
 sinh *trước* khi thêm seed, nên nếu bấm lại trong app sẽ ra số hơi khác. Chạy
 lại `scripts/prerender_edit.py` (sau khi xoá file JSON) để đồng bộ.
 
-### G3. ‖Δ‖_F / ‖W_proj‖_F = 7.17%, không phải "nhỏ xíu"
+### G3. ‖Δ‖_F / ‖W_proj‖_F = 7.20%, không phải "nhỏ xíu"
 Bản nháp đầu của Tab 3 mô tả phép sửa là "thay đổi rất nhỏ về biên độ". Sai:
-7.17% biên độ là đáng kể. Điều đáng nói là **hạng 1**, không phải biên độ.
+7.20% biên độ là đáng kể. Điều đáng nói là **hạng 1**, không phải biên độ.
 Đã sửa lại lời giải thích.
 
 ### G4. k\*ᵀC⁻¹k\* ≠ hệ số chia thực tế
 Paper viết mẫu số là k\*ᵀC⁻¹k\*. Trong cài đặt:
-`k*ᵀC⁻¹k*/‖C⁻¹k*‖` = 12.8973 nhưng `compute_v` chia cho `k*ᵀu` = 11.8944.
+`k*ᵀC⁻¹k*/‖C⁻¹k*‖` = 12.8973 nhưng `compute_v` chia cho `k*ᵀu` = 11.8439 —
+lệch **8.17%** (lấy số đầu làm gốc; 8.89% nếu lấy mẫu số thực tế làm gốc).
 Lệch vì `compute_u` dựng `u` từ k\* **trung bình trên ~21 context**, còn
 `compute_v` chia cho k\* của **một** context. Tab 3 nêu rõ cả hai số.
 
@@ -443,3 +444,28 @@ dẫn xuất từ `len(D.EIFFEL_PROBES)` cùng số đo thật thay vì viết c
 - Binary `frpc_linux_amd64` ~10.8 MB, tải lần đầu từ CDN của Gradio
 - Link công khai trả **HTTP 200**, 44 KB trong 2.0 s
 - Cả ba tab render đúng — ảnh ở `prerendered/screenshots/`
+
+
+---
+
+## L. Đồng bộ số liệu trong tài liệu
+
+README và CHANGES.md ban đầu trích số từ lần chạy edit **trước khi thêm seed**
+(xem G2). Sau khi `scripts/prerender_edit.py` chạy lại với `seed=0` và bộ 6
+probe, các con số đó đã lệch so với `prerendered/edit_eiffel.json`.
+
+Đã đồng bộ về đúng file JSON:
+
+| Đại lượng | Số cũ (chưa seed) | Số hiện tại (seed=0) |
+|---|---|---|
+| ‖Δ‖_F / ‖W_proj‖_F | 7.17% | **7.20%** |
+| `k*ᵀu` (mẫu số thực tế) | 11.8944 | **11.8439** |
+| Lệch mẫu số so với công thức paper | "~8%" | **8.17%** |
+
+Về **8.17%**: lấy `k*ᵀC⁻¹k*/‖C⁻¹k*‖ = 12.8973` làm gốc. Nếu lấy mẫu số thực tế
+`11.8439` làm gốc thì ra 8.89%. Hai cách đều đúng về số học nhưng trả lời hai
+câu hỏi khác nhau, nên tài liệu ghi rõ quy ước thay vì để trống.
+
+Nguồn chân lý duy nhất cho mọi con số trong tài liệu là
+`prerendered/edit_eiffel.json`. Nếu chạy lại `prerender_edit.py` thì phải
+đối chiếu lại README mục 7.2 và CHANGES.md mục G3/G4.
