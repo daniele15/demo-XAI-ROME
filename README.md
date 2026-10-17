@@ -290,6 +290,22 @@ máy chỉ còn 5.4 GB trống — khi đó model không nạp nổi.
 Không bao giờ chạy prerender song song với app: hai bản gpt2-xl là ~12.5 GB.
 Mọi script trong `scripts/` được xếp **tuần tự** đúng vì lý do này.
 
+**Agent bảo mật là thủ phạm khó đoán nhất.** Trong lúc phát triển, một đợt quét
+của `opswatclient/bin/daxz` chiếm **770% CPU** đã làm một edit lẽ ra ~6 phút kéo
+dài **hơn 40 phút**. App không báo lỗi gì — thanh tiến trình chỉ đứng im. Dấu
+hiệu nhận biết:
+
+```bash
+uptime                     # load average > 20 trên máy 22 thread là bất thường
+ps -eo pcpu,comm --sort=-pcpu | head    # tìm daxz / quá trình quét
+grep VmSwap /proc/$(pgrep -f 'app.py')/status   # app bị đẩy ra swap?
+```
+
+Khi RAM cạn, trang mmap của model bị evict rồi nạp lại liên tục — có lần đo được
+app đọc **813 GB** từ đĩa cho một file model 6.4 GB, tức đọc lại ~127 lần.
+Kiểm tra `uptime` trước khi bắt đầu buổi nói; nếu load cao, đợi quét xong hoặc
+chuyển hẳn sang `fallback.html`.
+
 App bắt OOM và hiện thông báo thân thiện thay vì sập, nhưng cách chắc nhất vẫn
 là `fallback.html` — mở bằng trình duyệt, không cần server, không cần RAM.
 

@@ -385,7 +385,7 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
         progress(0.95, desc="khôi phục trọng số gốc ...")
         restored = D.restore_and_verify(
             MT, orig_weights,
-            prompt=probes[0]["prompt"], target=target, orig=probes[0]["orig_answer"],
+            prompt=probes[0]["prompt"], target=target, orig=probes[0]["orig"],
             p_target_before=before[0]["p_target"], p_orig_before=before[0]["p_orig"])
         orig_weights = None  # restore_and_verify already put them back
 
@@ -413,7 +413,7 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
             f"{ok_mark} **Model đã được khôi phục** về trọng số gốc trên "
             f"rewrite prompt: P[{target}] {after[0]['p_target']:.5f} → "
             f"{restored['p_target']:.5f}, "
-            f"P[{probes[0]['orig_answer']}] {after[0]['p_orig']:.5f} → "
+            f"P[{probes[0]['orig']}] {after[0]['p_orig']:.5f} → "
             f"{restored['p_orig']:.5f}; tensor trọng số trùng bit: "
             f"**{restored['weights_identical']}**.  \n"
             f"Chế độ **{mode}** · edit `{t_edit:.1f}s` = compute_u "
