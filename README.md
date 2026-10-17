@@ -28,7 +28,7 @@ Bật GPU trước (Colab: *Runtime → Change runtime type → T4 GPU*;
 Kaggle: *Settings → Accelerator → GPU T4* **và** *Internet → On*).
 
 ```python
-!git clone -q https://github.com/<YOUR_USER>/<YOUR_REPO>.git demo
+!git clone -q https://github.com/daniele15/demo-XAI-ROME.git demo
 !git clone -q --depth 1 https://github.com/kmeng01/rome demo/rome
 !pip -q install -r demo/requirements-cuda.txt
 %cd demo
@@ -41,15 +41,14 @@ Trên T4, `DEVICE` tự thành `cuda` và device shim **tự tắt**, nên khôn
 `requirements-cuda.txt` cố ý **không** ghim `torch`/`numpy`: runtime của Colab/Kaggle
 đã có sẵn torch bản CUDA, ép pin của máy CPU lên đó chỉ gây restart runtime vô ích.
 
-> ⚠️ **Cần làm trước:** thư mục này hiện **chưa phải git repo** và chưa được push đi đâu,
-> nên `<YOUR_USER>/<YOUR_REPO>` ở trên còn là chỗ trống. Đẩy lên trước:
-> ```bash
-> git init && git add -A && git commit -m "ROME demo"
-> git remote add origin https://github.com/<YOUR_USER>/<YOUR_REPO>.git
-> git push -u origin main
-> ```
-> `.gitignore` đã loại `venv/`, `rome/`, `.demo_cache/` nên repo vẫn nhẹ.
-> Nếu không muốn push: nén thư mục rồi upload thủ công vào Colab, bỏ dòng `git clone` đầu.
+> ⚠️ **Repo đang ở chế độ private.** Cell trên dùng `git clone` qua HTTPS nên chỉ
+> chạy được khi repo công khai. Hai cách:
+> - **Đổi repo sang public** (Settings → General → Change visibility) — đơn giản nhất,
+>   và repo này không chứa gì nhạy cảm (`venv/`, `rome/`, model weights đều bị ignore).
+> - **Giữ private**: tạo một Personal Access Token chỉ có quyền `repo`, lưu vào
+>   Colab Secrets, rồi clone bằng
+>   `https://<TOKEN>@github.com/daniele15/demo-XAI-ROME.git`.
+>   Đừng dán token thẳng vào cell.
 
 ---
 
