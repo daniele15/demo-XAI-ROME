@@ -634,3 +634,38 @@ prerender (`run_all.sh`, `prerender_chain.sh`, `after_loudfact.sh`, `finalize.sh
 chúng `pgrep` chờ các tiến trình cụ thể của đợt chạy đó, không chạy lại độc lập
 được). Đường tái tạo chính thức vẫn là `scripts/run_prerender.sh` và các script
 Python mà README mục 10 liệt kê; lịch sử của bốn script còn trong git.
+
+
+---
+
+## O. Viết gọn phần giải thích trong UI
+
+Người xem là trình độ thạc sĩ/tiến sĩ nên phần chữ trong app được rút cho gọn,
+không đổi logic, số liệu, tên hàm hay khoá JSON.
+
+- **Tab 3**: thay chuỗi đoạn văn giảng giải bằng một bảng
+  (đại lượng | ký hiệu | giá trị | ghi chú ≤ 1 dòng), công thức
+  `Ŵ = W + Λ(C⁻¹k*)ᵀ` nêu một lần ở đầu tab, phần hai mẫu số gộp thành **một**
+  ghi chú 3 câu có trích Gupta et al. 2024 (r-ROME, arXiv:2403.07175).
+  Từ 34 dòng / 3529 ký tự xuống 19 dòng / 1726 ký tự, giữ đủ 11 đại lượng.
+- **Tab 2**: khối ước lượng còn đúng 3 dòng mỗi chế độ; chú thích probe còn 1 dòng.
+- **Tab 1**: mô tả đầu tab và hai ghi chú Fast/AIE mỗi cái 1 câu.
+- Bỏ em-dash khỏi `app.py`, `demo_utils.py`, `scripts/make_fallback.py`,
+  `README.md` và `fallback.html` (sinh lại). Hai em-dash cuối nằm trong **nhãn
+  probe của `prerendered/edit_eiffel.json`**, sinh trước khi đổi tên nhãn: chuẩn
+  hoá ở tầng hiển thị (`app._label`, `make_fallback._label`), **không sửa JSON**.
+  Đã kiểm trước: em-dash chỉ có ở trường `label`, không có trong văn bản model
+  sinh, nên không bóp méo kết quả.
+- Thay `⚠️`/`⏱️` bằng chữ in đậm (`**Lưu ý:**`, `**Chưa đo:**`, `**Ước lượng**`,
+  `**Đo trên T4:**`); giữ ✅/❌/ℹ️ trong bảng probe.
+
+Hai lỗi sửa kèm, phát hiện khi rà bản vá T4 (mục N):
+
+- `edit_estimate_md` trên `cuda` bỏ qua tham số `mode`, nên chọn Fast không hiện
+  cảnh báo lệch hparams **trước** khi chạy (sau khi chạy vẫn có, vì `dev_note`
+  lấy từ `tm["v_steps_overridden"]`, không phụ thuộc thiết bị). Nay cả hai thiết
+  bị đều cảnh báo trước.
+- `trace_estimate_md` tính biến `t4` ở cả hai nhánh nhưng nhánh Full không dùng.
+
+Lưu ý cho lần sau: lệnh kiểm nhanh Tab 3 phải dùng `D.PRERENDERED_DIR`, không
+dùng đường dẫn tương đối, vì `demo_utils` `chdir` sang `./rome` lúc import.

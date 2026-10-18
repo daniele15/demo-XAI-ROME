@@ -7,6 +7,13 @@ PRE = ROOT / "prerendered"
 OUT = ROOT / "fallback.html"
 
 
+def _label(s: str) -> str:
+    """Same display-time fix as app._label: the prerendered JSON predates the
+    probe label rename. The JSON is not rewritten."""
+    sep = " \u2014 "          # em-dash, written escaped so this file has none
+    return s.replace(sep, " (") + ")" if sep in s else s
+
+
 def b64(p: Path) -> str:
     return base64.b64encode(p.read_bytes()).decode()
 
@@ -37,7 +44,7 @@ def main():
       <figure>
         <img src="data:image/png;base64,{b64(p)}" alt="{kind} trace for {html.escape(label)}">
         <figcaption>
-          <b>{html.escape(label)}</b> — <code>{kind}</code><br>
+          <b>{html.escape(label)}</b>, <code>{kind}</code><br>
           answer <code>{html.escape(r['answer'])}</code> ·
           P[o]=<b>{r['p_clean']:.4f}</b> · P*[o]=<b>{r['p_corrupted']:.4f}</b> ·
           TE=<b>{r['total_effect']:.4f}</b> · {r['elapsed_s']:.0f}s<br>
@@ -49,7 +56,7 @@ def main():
     for p in edit["probes"]:
         ok = p["passes"]
         if ok is None:
-            cls, want = "neutral", ("không chấm — trình bày như hạn chế:<br>"
+            cls, want = "neutral", ("không chấm, trình bày như hạn chế:<br>"
                                     "mạch văn bị lặp sau edit (fluency "
                                     "degradation, khớp human study của paper)")
             badge = "ℹ️"
@@ -65,7 +72,7 @@ def main():
                     f" · <code>P[{html.escape(p['orig_answer'])}]</code>=<b>{d['p_orig']:.5f}</b></div>")
         rows.append(f"""
       <tr>
-        <td class="{cls}"><b>{html.escape(p['label'])}</b>
+        <td class="{cls}"><b>{html.escape(_label(p['label']))}</b>
           <div class="pr"><code>{html.escape(p['prompt'])}</code></div>
           <div class="pr">kỳ vọng: {want}<br>{badge}</div></td>
         <td>{cell(p['before'])}</td>
@@ -76,7 +83,7 @@ def main():
     doc = f"""<!DOCTYPE html>
 <html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROME — bản dự phòng offline</title>
+<title>ROME: bản dự phòng offline</title>
 <style>
   :root {{ color-scheme: light dark; }}
   body {{ font-family: system-ui, -apple-system, sans-serif; max-width: 1100px;
@@ -100,7 +107,7 @@ def main():
   code {{ background: rgba(128,128,128,.16); padding: 1px 4px; border-radius: 3px; }}
   .grid {{ display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 18px; }}
 </style></head><body>
-<h1>ROME — bản dự phòng offline</h1>
+<h1>ROME: bản dự phòng offline</h1>
 <div class="sub">
   Kết quả đã chạy sẵn cho seminar. Model <code>{html.escape(summary['model'])}</code>
   trên <code>{html.escape(summary['device'])}</code>,
@@ -134,7 +141,7 @@ def main():
   {"<li><b>k*ᵀC⁻¹k*</b> = <code>%.4f</code> · ‖C⁻¹k*‖ = <code>%.4f</code></li>" % (m['k_Cinv_k'], m['c_inv_k_norm']) if 'k_Cinv_k' in m else ""}
   <li><b>‖Λ‖</b> = <code>{m['lambda_norm']:.4f}</code></li>
   <li><b>‖Δ‖_F</b> = <code>{m['delta_fro']:.4f}</code></li>
-  <li><b>rank(Δ)</b> = <code>{m['delta_rank']}</code> (kỳ vọng = 1 — cập nhật hạng 1)</li>
+  <li><b>rank(Δ)</b> = <code>{m['delta_rank']}</code> (kỳ vọng = 1, cập nhật hạng 1)</li>
 </ul>
 </body></html>"""
 

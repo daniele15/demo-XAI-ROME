@@ -83,12 +83,11 @@ def load_bench():
 ALLOW_FAST_EDIT_V_STEPS = True   # decided from scripts/compare_v_steps.py
 FAST_V_STEPS = 10                # 6 failed the paraphrase probe; 10 passes
 
-AIE_CAVEAT = ("> ⚠️ IE của **một prompt đơn lẻ** không so sánh trực tiếp với "
-              "**AIE trung bình trên 1000 prompt** ở Figure 2 của paper. "
-              "Hình này là một mẫu, không phải thống kê.")
+AIE_CAVEAT = ("> **Lưu ý:** IE của một prompt đơn lẻ không so trực tiếp được với AIE "
+              "trung bình 1000 prompt ở Figure 2 của paper.")
 
-FAST_NOTE = ("**Fast: ν và AIE có nhiễu thống kê lớn hơn paper** "
-             f"({D.FAST_SAMPLES} mẫu nhiễu thay vì {D.FULL_SAMPLES}).")
+FAST_NOTE = (f"**Fast**: {D.FAST_SAMPLES} mẫu nhiễu thay vì "
+             f"{D.FULL_SAMPLES}, nên AIE nhiễu thống kê hơn paper.")
 
 
 def n_tokens(prompt: str) -> int:
@@ -126,15 +125,16 @@ def trace_estimate_md(prompt: str, kind: str, mode: str) -> str:
     if D.DEVICE == "cuda":
         # benchmark.json is CPU-only; quoting it here showed "~3.1 phút" for a
         # run that took 17.5 s on the T4 (CHANGES.md N).
-        t4 = T4_TRACE_FAST_S * (nt / 7)
-        body = (f"\n\n⏱️ **Ước lượng: {fmt_dur(t4)}** trên `cuda` (Fast, đo trên "
-                f"Colab T4)." if mode == "Fast" else
-                "\n\n⏱️ Trên `cuda`: Full **chưa đo** trên T4; Fast đo được "
-                f"{fmt_dur(T4_TRACE_FAST_S)} cho 7 token.")
+        if mode == "Fast":
+            body = (f"\n\n**Ước lượng: {fmt_dur(T4_TRACE_FAST_S * nt / 7)}** "
+                    f"trên `cuda` (đo trên Colab T4).")
+        else:
+            body = (f"\n\n**Chưa đo:** Full trên T4; Fast đo được "
+                    f"{fmt_dur(T4_TRACE_FAST_S)} cho 7 token.")
     elif est is None:
         body = "\n\nƯớc lượng thời gian: *chưa có số đo* (chạy `scripts/benchmark.py`)."
     else:
-        body = f"\n\n⏱️ **Ước lượng: {fmt_dur(est)}** trên `{D.DEVICE}` (từ số đo thật)."
+        body = f"\n\n**Ước lượng: {fmt_dur(est)}** trên `{D.DEVICE}` (từ số đo thật)."
     if mode == "Fast":
         body += f"\n\n> {FAST_NOTE} Chỉ chạy được `kind=hidden`."
     else:
@@ -143,7 +143,7 @@ def trace_estimate_md(prompt: str, kind: str, mode: str) -> str:
 
 
 # --------------------------------------------------------------------------
-# Tab 1 — Trace
+# Tab 1: Trace
 # --------------------------------------------------------------------------
 KIND_MAP = {"hidden": None, "mlp": "mlp", "attn": "attn"}
 
@@ -173,7 +173,7 @@ def run_trace(prompt, subject, kind_name, mode, progress=gr.Progress()):
 
     est = estimate_trace(prompt, mode)
     progress(0.0, desc=f"causal tracing ({mode}, samples={samples})"
-                       + (f" — ước lượng {fmt_dur(est)}" if est else ""))
+                       + (f", ước lượng {fmt_dur(est)}" if est else ""))
     try:
         res = D.trace(MT, prompt, subject, kind, noise=NOISE_NU,
                       samples=samples, window=10, progress=progress)
@@ -190,9 +190,9 @@ def run_trace(prompt, subject, kind_name, mode, progress=gr.Progress()):
     sites = D.top_sites(res, 3)
     el = D.early_late_sites(res)
     te = res["high_score"] - res["low_score"]
-    banner = (f"### 🟡 Chế độ **Fast** — `samples={samples}`\n\n> {FAST_NOTE}\n\n"
+    banner = (f"### 🟡 Chế độ **Fast**, `samples={samples}`\n\n> {FAST_NOTE}\n\n"
               if fast else
-              f"### 🟢 Chế độ **Full** — `samples={samples}`, đúng paper\n\n")
+              f"### 🟢 Chế độ **Full**, `samples={samples}`, đúng paper\n\n")
     est_line = ""
     if est:
         est_line = (f"**Ước lượng trước khi chạy**: `{fmt_dur(est)}` → "
@@ -202,21 +202,21 @@ def run_trace(prompt, subject, kind_name, mode, progress=gr.Progress()):
         banner
         + f"**Answer**: `{res['answer']}`  \n"
         f"**P[o] clean** = `{res['high_score']:.4f}` "
-        + ("— model **nhớ chắc** fact này, nên phép đo có ý nghĩa  \n"
+        + ("(model **nhớ chắc** fact này, nên phép đo có ý nghĩa)  \n"
            if res["high_score"] >= 0.5 else
-           "— ⚠️ P[o] thấp: model **không chắc** fact này, IE sẽ khó đọc  \n")
+           "**Lưu ý:** P[o] thấp, model **không chắc** fact này nên IE khó đọc  \n")
         + f"**P\\*[o] corrupted** = `{res['low_score']:.4f}`  \n"
         f"**Total effect** = `{te:.4f}`  \n"
         f"**ν = 3σ** = `{NOISE_NU:.4f}` (σ = `{SIGMA:.4f}`)  \n\n"
         f"**Hai site theo cách phân chia của paper (Fig. 1e–g):**\n\n"
         f"- **Early site** (token cuối của subject): `{el['early']['token']}` "
-        f"@ layer **{el['early']['layer']}** — IE = `{el['early']['ie']:.4f}`\n"
+        f"@ layer **{el['early']['layer']}**, IE = `{el['early']['ie']:.4f}`\n"
         f"- **Late site** (token cuối câu): `{el['late']['token']}` "
-        f"@ layer **{el['late']['layer']}** — IE = `{el['late']['ie']:.4f}`\n\n"
+        f"@ layer **{el['late']['layer']}**, IE = `{el['late']['ie']:.4f}`\n\n"
         f"**Top-3 (token, layer) theo IE toàn cục:**\n\n"
         + "\n".join(
             f"{i}. token `{s['token']}` (vị trí {s['token_index']}), "
-            f"layer **{s['layer']}** — IE = `{s['ie']:.4f}`, P = `{s['p']:.4f}`"
+            f"layer **{s['layer']}**, IE = `{s['ie']:.4f}`, P = `{s['p']:.4f}`"
             for i, s in enumerate(sites, 1)
         )
         + "\n\n> Top-3 toàn cục thường bị **late site** chiếm hết: khôi phục "
@@ -231,7 +231,7 @@ def run_trace(prompt, subject, kind_name, mode, progress=gr.Progress()):
 
 
 # --------------------------------------------------------------------------
-# Tab 2 — Edit
+# Tab 2: Edit
 # --------------------------------------------------------------------------
 def _fmt_cell(d: dict, target: str, orig: str) -> str:
     return (
@@ -242,6 +242,17 @@ def _fmt_cell(d: dict, target: str, orig: str) -> str:
         f"<code>P[{html.escape(orig)}]</code> = <b>{d['p_orig']:.5f}</b></div>"
         f"</div>"
     )
+
+
+def _label(s: str) -> str:
+    """
+    prerendered/edit_eiffel.json was written before the probe labels were
+    renamed, so its two loud-fact labels still carry an em-dash. Normalise on
+    display; the JSON itself is left alone (it is the numeric source of truth).
+    Only labels are touched, never the model's generated text.
+    """
+    sep = " \u2014 "          # em-dash, written escaped so this file has none
+    return s.replace(sep, " (") + ")" if sep in s else s
 
 
 def rows_to_html(probes: list, target: str) -> str:
@@ -258,17 +269,12 @@ def rows_to_html(probes: list, target: str) -> str:
         ok = p["passes"]
         if ok is None:
             bg = "rgba(130,130,130,.12)"
-            mark = ("ℹ️ <b>trình bày như hạn chế, không chấm</b><br>"
-                    "mạch văn bị lặp sau edit (fluency degradation, "
-                    "khớp human study của paper)")
-            want = "không áp tiêu chí thắng/thua"
+            mark = "ℹ️ không chấm: fluency degradation, khớp human study của paper"
+            want = "không áp tiêu chí"
         elif p["key"] == "loud_fact_cf" and not ok:
             bg = "rgba(205,40,40,.14)"
-            mark = ("❌ không đạt — <b>đây là hiện tượng CounterFact+ đã biết, "
-                    "không phải lỗi</b><br>Khi chính sự thật vừa sửa đứng trước "
-                    "trong ngữ cảnh, edit tràn sang sự thật không liên quan. "
-                    "So với dòng trên (cùng probe, không có câu mồi) để thấy "
-                    "specificity của ROME là <i>có điều kiện</i>.")
+            mark = ("❌ không đạt: hiện tượng CounterFact+ đã biết, không phải lỗi "
+                    "(so với dòng trên, cùng probe nhưng không có câu mồi)")
             want = f"{html.escape(p['orig_answer'])} vẫn thắng"
         else:
             bg = "rgba(34,160,70,.14)" if ok else "rgba(205,40,40,.14)"
@@ -278,7 +284,7 @@ def rows_to_html(probes: list, target: str) -> str:
         body.append(
             f"<tr>"
             f"<td style='border:1px solid #ccc;padding:8px;vertical-align:top;background:{bg}'>"
-            f"<b>{html.escape(p['label'])}</b>"
+            f"<b>{html.escape(_label(p['label']))}</b>"
             f"<div style='font-size:11px;opacity:.8;margin-top:4px'>"
             f"<code>{html.escape(p['prompt'])}</code></div>"
             f"<div style='font-size:11px;margin-top:6px'>kỳ vọng: {html.escape(want)}<br>{mark}</div>"
@@ -301,49 +307,37 @@ T4_TRACE_FAST_S = 17.5
 T4_EDIT_COLD_S, T4_EDIT_WARM_S = 25.7, 18.2
 
 
+# Measured on an idle CPU box (CHANGES.md M) and on the Colab T4 (CHANGES.md N).
+FULL_TOTAL, FULL_EDIT = 497.0, 199.5   # mean of the two Full runs
+FAST_TOTAL, FAST_EDIT = 378.9, 83.4
+
+
 def edit_estimate_md(mode: str) -> str:
-    """
-    Estimates come from three live end-to-end runs through this very endpoint,
-    not from summing benchmark pieces. The old arithmetic (benchmark's 5-probe
-    cost scaled by 6/5, plus the edit) predicted ~6.1 min and the real runs
-    took 503s/490s -- 27% low, because loud_fact_cf's composed prompt is much
-    more expensive to generate from than the short probes benchmark measured.
-    """
-    hp_steps = HPARAMS.v_num_grad_steps if HPARAMS else 20
-    n_probes = len(D.EIFFEL_PROBES)
+    hp = HPARAMS.v_num_grad_steps if HPARAMS else 20
+    n = len(D.EIFFEL_PROBES)
+    fast = mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS
+
+    # Shown in both modes and on both devices: Fast deviates from the paper's
+    # hyperparameters and the UI has to say so before the run, not only after.
+    dev = (f"**Lưu ý: Fast lệch hparams**: `{FAST_V_STEPS}/{hp}` bước v\\*, "
+           f"`mom2_adjustment` giữ `True`. 6 bước rớt probe paraphrase, 10 bước đạt."
+           if fast else
+           f"Full theo đúng `hparams/ROME/gpt2-xl.json` (`{hp}` bước v\\*).")
 
     if D.DEVICE == "cuda":
-        return (f"⏱️ Trên `cuda` (Colab T4, đo thật): phần **edit** Full "
-                f"`{fmt_dur(T4_EDIT_COLD_S)}` lượt đầu (gồm tải C stats), "
-                f"`{fmt_dur(T4_EDIT_WARM_S)}` các lượt sau; 2×{n_probes} probe "
-                f"cộng thêm (chưa đo riêng). Fast trên T4 chưa đo.")
+        t = (f"**Chưa đo:** Fast trên T4. Edit Full đo được "
+             f"`{fmt_dur(T4_EDIT_COLD_S)}` lượt đầu, `{fmt_dur(T4_EDIT_WARM_S)}` lượt sau."
+             if fast else
+             f"**Đo trên T4:** edit Full `{fmt_dur(T4_EDIT_COLD_S)}` lượt đầu "
+             f"(gồm tải C stats), `{fmt_dur(T4_EDIT_WARM_S)}` lượt sau.")
+        return f"{t}\n\n{dev}\n\n> 2×{n} probe cộng thêm, chưa đo riêng trên T4."
 
-    # Measured on an idle machine, gpt2-xl fp32 on CPU. See CHANGES.md M.
-    FULL_TOTAL, FULL_EDIT = 497.0, 199.5   # mean of the two Full runs
-    FAST_TOTAL, FAST_EDIT = 378.9, 83.4
-
-    if mode == "Fast" and ALLOW_FAST_EDIT_V_STEPS:
-        tot, edit = FAST_TOTAL, FAST_EDIT
-        note = (
-            f"\n\n> ⚠️ **Lệch hparams: {FAST_V_STEPS}/{hp_steps} bước v\\***. "
-            f"`mom2_adjustment` giữ `True`.\n>\n"
-            f"> Chọn bằng đo: **6 bước rớt probe paraphrase** "
-            f"(P[target] 0.013 < P[gốc] 0.057), **10 bước đạt**. "
-            f"Prerendered luôn chạy Full.")
-    else:
-        tot, edit = FULL_TOTAL, FULL_EDIT
-        note = (
-            f"\n\n> Full = đúng `hparams/ROME/gpt2-xl.json` "
-            f"(`v_num_grad_steps={hp_steps}`).\n>\n"
-            f"> **Fast** nhanh hơn **2.4×** ở phần edit "
-            f"({fmt_dur(FAST_EDIT)} so với {fmt_dur(FULL_EDIT)}) nhưng "
-            f"**lệch hparams**, và paraphrase yếu hơn (0.606 so với 0.829).")
-
-    return (f"⏱️ **Ước lượng: {fmt_dur(tot)}** — edit `{fmt_dur(edit)}` + "
-            f"2×{n_probes} probe `{fmt_dur(tot - edit)}` trên `{D.DEVICE}`. "
-            f"*(số đo thật, máy rảnh)*{note}\n>\n"
-            f"> Lượt **đầu trong phiên** cộng thêm ~5 s cho `compute_u` nạp C "
-            f"stats; nếu C chưa có trên đĩa thì cộng ~2 phút để tải 156 MB.")
+    tot, edit = (FAST_TOTAL, FAST_EDIT) if fast else (FULL_TOTAL, FULL_EDIT)
+    return (f"**Ước lượng {fmt_dur(tot)}**: edit `{fmt_dur(edit)}` + 2×{n} probe "
+            f"`{fmt_dur(tot - edit)}` trên `{D.DEVICE}` (số đo thật, máy rảnh).\n\n"
+            f"{dev}\n\n"
+            f"> Lượt đầu trong phiên cộng ~5 s cho `compute_u`; nếu C stats chưa "
+            f"có trên đĩa thì cộng ~2 phút để tải 156 MB.")
 
 
 def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
@@ -372,10 +366,10 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
              prompt=p_neigh.strip(), orig=o_neigh.strip(), expect="orig"),
         dict(key="generation", label="Generation (fluency)",
              prompt=p_gen.strip(), orig=o_neigh.strip(), expect="none"),
-        dict(key="loud_fact", label="Loud fact — đứng một mình",
+        dict(key="loud_fact", label="Loud fact (đứng một mình)",
              prompt=loud, orig=loud_ans, expect="orig"),
         # CounterFact+ form, derived from this edit so it works for any request.
-        dict(key="loud_fact_cf", label="Loud fact — CounterFact+",
+        dict(key="loud_fact_cf", label="Loud fact (CounterFact+)",
              prompt=D.composed_prompt(prompt_tmpl, subject, target, loud),
              orig=loud_ans, expect="orig"),
     ]
@@ -423,10 +417,10 @@ def run_edit(subject, prompt_tmpl, target, mode, p_rewrite, p_para, p_neigh,
         ]
         dev_note = ""
         if tm.get("v_steps_overridden"):
-            dev_note = (f"  \n⚠️ **Lệch hparams**: chạy ở chế độ Fast với "
+            dev_note = (f"  \n**Lưu ý: lệch hparams**: chạy ở chế độ Fast với "
                         f"`v_num_grad_steps={tm['v_num_grad_steps']}` thay vì "
                         f"`{HPARAMS.v_num_grad_steps}`. `mom2_adjustment` giữ nguyên.")
-        ok_mark = "✅" if restored["all_ok"] else "⚠️"
+        ok_mark = "✅" if restored["all_ok"] else "**Lưu ý:**"
         status = (
             f"{ok_mark} **Model đã được khôi phục** về trọng số gốc trên "
             f"rewrite prompt: P[{target}] {after[0]['p_target']:.5f} → "
@@ -467,7 +461,7 @@ def load_prerendered_edit():
                 "Chạy `python scripts/prerender_edit.py` trước."), "", ""
     d = json.loads(path.read_text())
     status = (
-        f"📁 Đang hiển thị kết quả **prerendered** (không dùng GPU/CPU gì cả) — "
+        f"📁 Đang hiển thị kết quả **prerendered**, không dùng GPU/CPU gì cả: "
         f"model `{d['model']}` trên `{d['device']}`, edit mất "
         f"`{d['timings']['edit_s']:.1f}s`, trọng số đã khôi phục: "
         f"`{d['weights_restored']}`."
@@ -476,84 +470,80 @@ def load_prerendered_edit():
 
 
 # --------------------------------------------------------------------------
-# Tab 3 — Inspect
+# Tab 3: Inspect
 # --------------------------------------------------------------------------
 def _metrics_md(m: dict | None) -> str:
     if not m:
         return ("Chưa có edit nào trong phiên này. Chạy một edit ở **Tab 2**, "
                 "hoặc bấm **Load ví dụ Eiffel→Rome** để đọc từ `prerendered/`.")
+
     H, Dd = m["W_shape"]
-    lines = [
-        f"### Trọng số bị sửa\n",
-        f"`{m['weight_name']}` — **layer 18 theo paper (E.5) = "
-        f"`transformer.h.{m['layer']}`, 0-indexed**\n",
-        f"**W_proj**: `{H} × {Dd}`  (H×D)\n",
-        "> Đây là ma trận chiếu xuống của MLP ở layer này. ROME coi nó như một "
-        "*associative memory*: cột đầu vào là khoá (key), đầu ra là giá trị (value).\n",
-        "> Chỉ **một** ma trận này bị đổi. Toàn bộ 48 layer còn lại giữ nguyên.\n",
-        f"\n### ‖k\\*‖ = `{m['k_star_norm']:.4f}`\n",
-        "> k\\* là vector khoá: đầu vào của `c_proj` tại **token cuối của subject**, "
-        "đúng vị trí mà causal tracing chỉ ra là nơi model tra cứu sự thật.\n",
-        "> Nó là \"địa chỉ\" của *The Eiffel Tower* trong bộ nhớ liên kết.\n",
+    dh, dw = m["delta_shape"]
+    ratio = m.get("delta_over_W", float("nan"))
+    rows = [
+        ("Ma trận bị sửa", "W_proj", f"`{H} × {Dd}`",
+         "chiếu xuống của MLP (H×D), 47 layer còn lại giữ nguyên"),
+        ("Chuẩn vector khoá", "‖k\\*‖", f"`{m['k_star_norm']:.4f}`",
+         "đầu vào `c_proj` tại token cuối của subject"),
     ]
     if m.get("mom2_adjustment"):
-        lines += [
-            f"\n### Mẫu số k\\*ᵀ C⁻¹ k\\* = `{m['k_Cinv_k']:.4f}`\n",
-            f"> C là ma trận mô-men bậc hai của các khoá, ước lượng trên 100k mẫu "
-            f"Wikipedia (`{m['C_shape'][0]}×{m['C_shape'][1]}`). C⁻¹ làm phép sửa "
-            "*trực giao* với các khoá phổ biến khác.\n",
-            "> Đây chính là lý do sửa một sự thật không kéo theo hàng loạt sự thật "
-            "khác — tức là cột **neighborhood** ở Tab 2 vẫn xanh.\n",
-            f"> `‖C⁻¹k*‖` = `{m['c_inv_k_norm']:.2f}`.\n",
-            f"\n> ⚠️ **Lưu ý khi đọc con số này.** Hệ số chia mà `compute_v` "
-            f"thực sự dùng là `k*ᵀu` = `{m['division_factor']:.4f}`, trong khi "
-            f"`k*ᵀC⁻¹k* / ‖C⁻¹k*‖` = "
-            f"`{m['k_Cinv_k']/m['c_inv_k_norm']:.4f}`. Hai số **không bằng nhau** "
-            "vì `compute_u` dựng `u` từ k\\* **trung bình trên ~21 context template**, "
-            "còn `compute_v` chia cho k\\* của **một** context. Công thức trong "
-            "paper viết gọn là k\\*ᵀC⁻¹k\\*; cài đặt thì không hẳn vậy.\n",
-            "\n> Đây **không phải lỗi làm tròn**. `compute_u` dùng k\\* trung bình "
-            "trên context template, `compute_v` chia cho k\\* của một context — "
-            "chính bất đối xứng này được Gupta et al. 2024 (r-ROME, "
-            "[arXiv:2403.07175](https://arxiv.org/abs/2403.07175)) xác định là "
-            "nguyên nhân **model collapse khi edit tuần tự**. Lệch ~8% ở đây vô "
-            "hại cho *một* edit — và đó là lý do demo này luôn khôi phục trọng số "
-            "sau mỗi lần sửa.\n",
+        rows += [
+            ("Mẫu số (dạng trong paper)", "k\\*ᵀC⁻¹k\\*",
+             f"`{m['k_Cinv_k']:.4f}`",
+             f"C: mô-men bậc hai của khoá, 100k mẫu Wikipedia "
+             f"(`{m['C_shape'][0]}×{m['C_shape'][1]}`)"),
+            ("", "‖C⁻¹k\\*‖", f"`{m['c_inv_k_norm']:.2f}`",
+             "C⁻¹ giữ phép sửa trực giao với các khoá phổ biến khác"),
         ]
     else:
-        lines += [
-            f"\n### Mẫu số\n> `mom2_adjustment=False` — **không** dùng C⁻¹ "
-            f"(lệch paper). Hệ số chia: `{m['division_factor']:.4f}`.\n",
-        ]
-    lines += [
-        f"\n### ‖Λ‖ = `{m['lambda_norm']:.4f}`\n",
-        "> Λ là vector giá trị mới: \"nội dung\" được ghi vào ô nhớ, tức là hướng "
-        "đẩy model từ *Paris* sang *Rome*.\n",
-        "> Nó được tìm bằng tối ưu gradient trên một vector ẩn duy nhất "
-        f"(`v_num_grad_steps` bước), **không** phải fine-tune trọng số.\n",
-        f"\n### ‖W_proj‖_F = `{m.get('W_fro', float('nan')):.2f}`\n",
-        "> Độ lớn của *toàn bộ* ma trận trước khi sửa — mốc để so Δ với nó.\n",
-        f"\n### ‖Δ‖_F = `{m['delta_fro']:.4f}`, rank(Δ) = `{m['delta_rank']}`\n",
-        f"> **‖Δ‖_F / ‖W_proj‖_F = `{m.get('delta_over_W', float('nan')):.5f}`** "
-        f"(≈ {m.get('delta_over_W', 0)*100:.2f}% độ lớn ma trận).\n",
-        "> Không nên gọi đây là thay đổi \"nhỏ xíu\": vài phần trăm biên độ là "
-        "đáng kể. Điều đáng nói là **hạng**, không phải biên độ — toàn bộ phép "
-        "sửa nằm gọn trong *một* hướng, thay vì rải đều khắp 10.24 triệu tham số "
-        "của ma trận.\n",
-        f"> Δ = u ⊗ Λ, kích thước `{m['delta_shape'][0]} × {m['delta_shape'][1]}`, "
-        f"cộng thẳng vào W_proj.\n",
-        f"> **rank = {m['delta_rank']}** đúng như kỳ vọng: toàn bộ phép sửa là một "
-        "cập nhật **hạng 1** — tích ngoài của đúng một vector khoá và một vector "
-        "giá trị. Đây là luận điểm trung tâm của ROME.\n",
-        f"> `‖u‖ = {m['u_norm']:.4f}` (compute_u chuẩn hoá về 1).\n",
-        (f"> Kiểm tra chéo: với tích ngoài hạng 1 thì ‖Δ‖_F phải bằng "
-         f"‖u‖·‖Λ‖ = `{m['delta_fro_analytic']:.6f}`; đo được "
-         f"`{m['delta_fro']:.6f}`, lệch "
-         f"`{abs(m['delta_fro_analytic']-m['delta_fro'])/m['delta_fro_analytic']:.1e}` "
-         "— đúng mức tích luỹ làm tròn fp32 trên 10.24M phần tử, không phải sai sót.\n"
-         if "delta_fro_analytic" in m else ""),
+        rows.append(("Mẫu số", "k\\*ᵀu", f"`{m['division_factor']:.4f}`",
+                     "`mom2_adjustment=False`, không dùng C⁻¹ (lệch paper)"))
+    rows += [
+        ("Chuẩn vector giá trị", "‖Λ‖", f"`{m['lambda_norm']:.4f}`",
+         "tìm bằng tối ưu gradient trên một vector ẩn, không fine-tune"),
+        ("Chuẩn ma trận gốc", "‖W‖_F", f"`{m.get('W_fro', float('nan')):.2f}`",
+         "mốc để so Δ"),
+        ("Chuẩn cập nhật", "‖Δ‖_F", f"`{m['delta_fro']:.4f}`",
+         f"Δ = u ⊗ Λ, `{dh} × {dw}`, cộng thẳng vào W_proj"),
+        ("Tỉ lệ biên độ", "‖Δ‖_F / ‖W‖_F", f"`{ratio:.5f}`",
+         f"{ratio * 100:.2f}% độ lớn ma trận"),
+        ("**Hạng cập nhật**", "**rank(Δ)**", f"**`{m['delta_rank']}`**",
+         "tích ngoài của một vector khoá và một vector giá trị"),
+        ("Chuẩn hoá", "‖u‖", f"`{m['u_norm']:.4f}`", "`compute_u` chuẩn hoá về 1"),
     ]
-    return "".join(lines)
+    if "delta_fro_analytic" in m:
+        gap = abs(m["delta_fro_analytic"] - m["delta_fro"]) / m["delta_fro_analytic"]
+        rows.append(("Kiểm tra chéo", "‖u‖·‖Λ‖",
+                     f"`{m['delta_fro_analytic']:.6f}`",
+                     f"với hạng 1 phải bằng ‖Δ‖_F; lệch `{gap:.1e}`, "
+                     f"mức tích luỹ làm tròn fp32"))
+
+    table = ("| Đại lượng | Ký hiệu | Giá trị | Ghi chú |\n|---|---|---|---|\n"
+             + "\n".join(f"| {a} | {b} | {c} | {d} |" for a, b, c, d in rows))
+
+    head = (
+        f"**Ŵ = W + Λ(C⁻¹k\\*)ᵀ**, với "
+        f"**Λ = (v\\* − W k\\*) / ((C⁻¹k\\*)ᵀ k\\*)**\n\n"
+        f"Sửa đúng một ma trận: `{m['weight_name']}`, tức "
+        f"**layer 18 theo paper (App. E.5) = `transformer.h.{m['layer']}`, "
+        f"0-indexed**.\n\n"
+    )
+
+    note = ""
+    if m.get("mom2_adjustment"):
+        q = m["k_Cinv_k"] / m["c_inv_k_norm"]
+        note = (
+            f"\n\n> **Hai mẫu số.** `compute_v` chia cho `k*ᵀu` = "
+            f"`{m['division_factor']:.4f}`, không phải `k*ᵀC⁻¹k*/‖C⁻¹k*‖` = "
+            f"`{q:.4f}` như dạng rút gọn trong paper; chênh lệch đến từ chỗ "
+            f"`compute_u` dựng `u` bằng k\\* trung bình trên ~21 context "
+            f"template còn `compute_v` chia theo k\\* của một context. "
+            f"Gupta et al. 2024 (r-ROME, "
+            f"[arXiv:2403.07175](https://arxiv.org/abs/2403.07175)) chỉ ra "
+            f"chính bất đối xứng này gây model collapse khi edit tuần tự. "
+            f"Với một edit rồi khôi phục trọng số như demo này thì vô hại."
+        )
+    return head + table + note
 
 
 # --------------------------------------------------------------------------
@@ -564,7 +554,7 @@ def reset_model():
     if MT is None:
         return "Model chưa nạp."
     if not LAST_EDIT:
-        return "Chưa có edit nào — model đang ở trạng thái gốc."
+        return "Chưa có edit nào, model đang ở trạng thái gốc."
     LAST_EDIT = {}
     return ("Đã xoá trạng thái edit. Tab 2 luôn tự khôi phục trọng số ngay sau "
             "khi trả kết quả, nên model vốn đã ở trạng thái gốc.")
@@ -573,7 +563,7 @@ def reset_model():
 def header_md():
     nu = f"{NOISE_NU:.4f}" if NOISE_NU is not None else "chưa tính"
     return (
-        f"## ROME — Locating and Editing Factual Associations in GPT\n"
+        f"## ROME: Locating and Editing Factual Associations in GPT\n"
         f"`{D.MODEL_NAME}` · thiết bị **{D.DEVICE}** · "
         f"{MT.num_layers if MT else '?'} layer · nạp trong `{LOAD_S:.1f}s` · "
         f"ν = 3σ = `{nu}`"
@@ -628,9 +618,8 @@ def build_ui():
             # ---------------- Tab 1 ----------------
             with gr.Tab("1. Trace"):
                 gr.Markdown(
-                    "Làm hỏng (corrupt) embedding của subject bằng nhiễu Gaussian "
-                    "ν = 3σ, rồi khôi phục từng trạng thái ẩn một để xem trạng thái "
-                    "nào *khôi phục lại* được dự đoán đúng. Ô sáng = indirect effect cao."
+                    "Làm hỏng embedding của subject bằng nhiễu Gaussian ν = 3σ rồi "
+                    "khôi phục từng trạng thái ẩn, ô sáng là indirect effect cao."
                 )
                 with gr.Row():
                     with gr.Column(scale=3):
@@ -694,9 +683,9 @@ def build_ui():
             with gr.Tab("2. Edit"):
                 gr.Markdown(
                     f"Một phép sửa ROME duy nhất, đo trên {len(D.EIFFEL_PROBES)} "
-                    "probe. Trọng số gốc "
-                    "**luôn được khôi phục** ngay sau khi trả kết quả — không bao "
-                    "giờ sửa nhiều fact liên tiếp trên cùng một model instance."
+                    "probe. Trọng số gốc **luôn được khôi phục** ngay sau khi trả "
+                    "kết quả, không bao giờ sửa nhiều fact liên tiếp trên cùng một "
+                    "model instance."
                 )
                 with gr.Row():
                     e_subject = gr.Textbox(label="Subject", value="The Eiffel Tower")
