@@ -90,8 +90,9 @@ def main():
 
     txt = README.read_text()
     i, j = txt.index(START), txt.index(END)
-    # Three columns: cold (C downloaded), warm (C cached), and a T4 estimate
-    # that is explicitly NOT measured here.
+    # Three columns: cold (C downloaded), warm (C cached), and Colab T4 as
+    # measured in the 18/10/2026 rehearsal (CHANGES.md N) -- hardcoded, since
+    # benchmark.py only ever runs on the CPU box.
     cold_block = ""
     if VSTEPS.exists():
         v = json.loads(VSTEPS.read_text())
@@ -101,20 +102,19 @@ def main():
             cold_tot = (b.get("edit") or {}).get("total_s")
             cold_block = (
                 "\n\n### Chi phí một ROME edit — ba cột\n\n"
-                "| Giai đoạn | Lạnh (CPU, phải tải C) | Ấm (CPU, C trong cache) | GPU T4 (ước tính) |\n"
+                "| Giai đoạn | Lạnh (CPU, phải tải C) | Ấm (CPU, C trong cache) | Colab T4 (đo 18/10: lạnh / ấm) |\n"
                 "|---|---|---|---|\n"
-                f"| `compute_u` (k\\*, C⁻¹) | {dur(cold_u)} | {dur(full['u_s'])} | — |\n"
+                f"| `compute_u` (k\\*, C⁻¹) | {dur(cold_u)} | {dur(full['u_s'])} | 4.2 s / 0.5 s |\n"
                 f"| tối ưu v\\* ({full['steps_run']} bước) | {dur((b.get('edit') or {}).get('v_opt_s'))} "
-                f"| {dur(full['v_opt_s'])} | — |\n"
-                f"| tính Λ | {dur((b.get('edit') or {}).get('v_lambda_s'))} | {dur(full['v_lambda_s'])} | — |\n"
-                f"| ghi W | {dur((b.get('edit') or {}).get('write_s'))} | {dur(full['write_s'])} | — |\n"
-                f"| **Tổng** | **{dur(cold_tot)}** | **{dur(full['total_s'])}** | **~2 s** |\n\n"
+                f"| {dur(full['v_opt_s'])} | 20.7 s / 17.7 s |\n"
+                f"| tính Λ | {dur((b.get('edit') or {}).get('v_lambda_s'))} | {dur(full['v_lambda_s'])} | 0.1 s / 0.1 s |\n"
+                f"| ghi W | {dur((b.get('edit') or {}).get('write_s'))} | {dur(full['write_s'])} | 0.8 s / ~0 s |\n"
+                f"| **Tổng** | **{dur(cold_tot)}** | **{dur(full['total_s'])}** | **25.7 s / 18.2 s** |\n\n"
                 "- **Lạnh** = lần đầu trong phiên: `compute_u` phải tải C stats 156 MB "
                 "từ `rome.baulab.info` rồi nghịch đảo ma trận 6400².\n"
                 "- **Ấm** = các lần sau: C⁻¹ đã nằm trong `inv_mom2_cache` của `compute_u`.\n"
-                "- **GPU T4**: ⚠️ **ước tính từ paper, CHƯA đo trên máy này** "
-                "(máy này không có GPU NVIDIA). Dùng làm mốc kỳ vọng khi chạy Colab, "
-                "không phải số đo.\n"
+                "- **Colab T4**: đo thật khi diễn tập 18/10/2026 (fp32, transformers 5.18), "
+                "xem mục 1.\n"
             )
 
     README.write_text(txt[:i + len(START)] + "\n" + hdr + "\n".join(tbl)

@@ -547,3 +547,90 @@ Công thức cũ (lấy `probes_5_s` của benchmark nhân 6/5, cộng thời gi
 ~6.1 phút, thực tế 503 s. Lý do: benchmark đo 5 probe prompt ngắn, còn
 `loud_fact_cf` dùng prompt ghép dài nên sinh văn bản đắt hơn nhiều.
 `edit_estimate_md` giờ dùng thẳng số đo của ba lượt live.
+
+
+---
+
+## N. Diễn tập Colab T4 (18/10/2026) — cell cũ không chạy, ba chỗ code phải thích nghi
+
+Lần đầu tiên đường GPU được bấm thật. Cell README cũ (có `pip install -r
+requirements-cuda.txt`) **không chạy được**. Môi trường Colab lúc diễn tập:
+Python **3.13.15**, torch 2.11.0+cu130, transformers **5.18.0**, gradio **6.29.0**,
+gradio_client 2.7.1, starlette 1.7.0, fastapi 0.141.1, numpy 2.1.3, tokenizers 0.23.2.
+
+### N1. `pip install` hỏng — bỏ hẳn, dùng stack có sẵn của runtime
+`tokenizers<0.20` (bắt buộc với transformers 4.44.2) không có wheel cho Python 3.13;
+pip build từ source thất bại (`Failed building wheel for tokenizers`) và **huỷ cả
+lệnh cài**, nên không gói nào được cài. App vẫn khởi động — trên stack mặc định
+của Colab. Sau khi sửa N2–N4, chính stack đó chạy đủ ba tab, nên cell mới **không
+cài gì** và `requirements-cuda.txt` bị xoá (đã sai từ đầu: thiếu pin
+starlette/fastapi của mục K2, và không cài nổi trên Python ≥ 3.13).
+
+### N2. fp16 trên GPU làm hỏng edit
+`load_model()` nạp fp16 khi có CUDA. `rome/compute_u.py` nhân C⁻¹ **fp32** với `u`
+fp16, và `compute_v` gọi `torch.dot(cur_input, left_vector)` giữa fp16 và fp32 →
+lỗi dtype. Sửa: fp32 ở mọi thiết bị (notebook gốc cũng nạp gpt2-xl fp32; T4 16 GB
+dư chỗ). ν trên T4 sau sửa = 0.1346, khớp CPU.
+
+### N3. gradio ≥ 5 chặn trả heatmap — `InvalidPathError`
+`demo_utils` chdir sang `./rome`, còn heatmap live ghi vào `.demo_cache/`, nằm
+ngoài cwd/tmp. Causal tracing **đã tính xong**, chỉ bước trả ảnh bị chặn, UI hiện
+"Error" trơn. Sửa: `launch(allowed_paths=[.demo_cache, prerendered])` (vô hại với
+gradio 4.44 trên máy CPU).
+
+### N4. `generate_fast` sinh chữ rác trên transformers 5 — kể cả trước khi edit
+Triệu chứng: cột "Trước" của Tab 2 ra *"…city of Paris Cosponsors:Invalidation of
+theInvalidation.Invalidation…"*. Xác suất P[…] vẫn đúng (0.93405 vs 0.93408) vì
+chúng chỉ cần một forward. Nguyên nhân: `rome/util/generate.py` truyền
+`attention_mask[:, cur_context]` — chỉ mask của token đang đưa vào, không có phần
+prefix đã cache. transformers 4.44 broadcast cột đó lên mọi key nên không lộ;
+transformers 5 dựng causal mask từ mask 2-D được đưa vào nên che sai prefix.
+
+Hệ quả không chỉ là chữ hiển thị: `rome_main.get_context_templates()` dùng chính
+hàm này để sinh ~21 template mà k\* được lấy trung bình, nên edit chạy trên
+template rác (paraphrase 0.759 thay vì ~0.84).
+
+Sửa trong `demo_utils` (**không sửa `./rome`**): bản sao `generate_fast` với
+`attention_mask[:, :cur_context.stop]`, gắn vào `util.generate`, `rome.rome_main`
+và `demo_utils`, **chỉ khi transformers ≥ 5**. Trên 4.44 giữ nguyên hàm gốc, vì
+với batch có padding hai cách mask không tương đương ở đó — đổi sẽ làm khác
+context template và mọi số prerendered.
+
+Kiểm chứng: (a) so AST, bản sao chỉ khác hàm gốc đúng ở đối số mask; (b) trên
+transformers 5.18 với một GPT-2 nhỏ khởi tạo ngẫu nhiên, sinh greedy (`top_k=1`):
+bản sửa trùng **từng token** với vòng lặp tham chiếu không cache; bản gốc lệch từ
+token thứ 11; (c) trên Colab T4 sau sửa, chữ sinh ra sạch cả trước và sau edit.
+
+### N5. Kết quả trên T4 sau N2–N4
+
+| | CPU (prerendered) | Colab T4 |
+|---|---|---|
+| ν | 0.1346 | 0.1346 |
+| Tab 1 Space Needle Fast: P[o] / P\*[o] | 0.9764 / 0.0214 | 0.9764 / 0.0214 |
+| late site ` downtown` | L46, IE 0.9552 | L46, IE 0.9552 |
+| rewrite P[Rome] | 0.99994 | 0.99993 |
+| paraphrase P[Rome] / P[Paris] | 0.877 / 0.001 | 0.836 / 0.0005 |
+| Louvre P[Paris] trước → sau | 0.823 → 0.759 | 0.823 → 0.761 |
+| Taj Mahal đứng riêng P[Agra] | 0.9986 → 0.9943 | 0.9986 → 0.9944 |
+| Taj Mahal CounterFact+ P[Agra] | 0.996 → 0.000 | 0.996 → 0.000 |
+| khôi phục trọng số | trùng bit | trùng bit |
+| Tab 1 Fast | 3.1 phút | 17.5 s |
+| edit Full lạnh / ấm | 5.8 / 3.8 phút | 25.7 / 18.2 s |
+
+Tracing trùng 4 chữ số (nhiễu `RandomState(1)` cố định, fp32 cả hai nơi). Edit
+lệch nhẹ vì context template được sample trên CUDA, dòng ngẫu nhiên khác CPU dù
+cùng `seed=0`.
+
+### N6. Còn lại / đã biết
+- Font Times New Roman không có trên Colab (`ttf-mscorefonts-installer` không cài
+  được); heatmap dùng font mặc định. Chỉ tắt cảnh báo `findfont`, không đổi hình.
+- Ước lượng thời gian trên UI giờ dùng số T4 khi `DEVICE == "cuda"`; Full trace và
+  Fast edit trên T4 chưa đo.
+- Kaggle chưa diễn tập.
+
+### N7. Dọn repo
+Xoá `requirements-cuda.txt` (N1) và bốn script điều phối dùng một lần lúc
+prerender (`run_all.sh`, `prerender_chain.sh`, `after_loudfact.sh`, `finalize.sh` —
+chúng `pgrep` chờ các tiến trình cụ thể của đợt chạy đó, không chạy lại độc lập
+được). Đường tái tạo chính thức vẫn là `scripts/run_prerender.sh` và các script
+Python mà README mục 10 liệt kê; lịch sử của bốn script còn trong git.

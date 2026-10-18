@@ -28,18 +28,42 @@ Bật GPU trước (Colab: *Runtime → Change runtime type → T4 GPU*;
 Kaggle: *Settings → Accelerator → GPU T4* **và** *Internet → On*).
 
 ```python
+%cd /content
+!rm -rf demo
 !git clone -q https://github.com/daniele15/demo-XAI-ROME.git demo
 !git clone -q --depth 1 https://github.com/kmeng01/rome demo/rome
-!pip -q install -r demo/requirements-cuda.txt
-%cd demo
+%cd /content/demo
+!git log -1 --format='%h %s'
 !SHARE=1 python app.py
 ```
 
-Cell in ra một link `*.gradio.live` — mở link đó là dùng được.
+Kaggle: thay `/content` bằng `/kaggle/working`. Cell in ra một link `*.gradio.live` — mở link đó là dùng được.
+Cell chạy lại được từ đầu bất cứ lúc nào (nó xoá `demo/` cũ trước khi clone).
 
-Trên T4, `DEVICE` tự thành `cuda` và device shim **tự tắt**, nên không phải sửa gì.
-`requirements-cuda.txt` cố ý **không** ghim `torch`/`numpy`: runtime của Colab/Kaggle
-đã có sẵn torch bản CUDA, ép pin của máy CPU lên đó chỉ gây restart runtime vô ích.
+**Không `pip install` gì cả** — cell dùng nguyên thư viện có sẵn của runtime.
+Diễn tập ngày 18/10/2026 trên Colab T4: Python **3.13**, torch 2.11+cu130,
+transformers **5.18**, gradio **6.29**. Bộ pin của máy CPU (transformers 4.44 +
+tokenizers 0.19) **không cài được** trên Python 3.13: tokenizers 0.19 không có
+wheel, pip build từ source thất bại và huỷ cả lệnh cài. Ba chỗ code tự thích nghi
+với stack mới (fp32 trên GPU, `allowed_paths`, attention mask của `generate_fast`)
+— chi tiết ở [CHANGES.md](CHANGES.md) mục N.
+
+| Đo thật trên Colab T4 (18/10/2026) | Thời gian |
+|---|---|
+| Boot lần đầu (tải gpt2-xl 6.4 GB + tính σ) | 70–90 s |
+| Boot lại khi model đã có trong cache | 24 s |
+| Tab 1 · Space Needle · Fast | 17.5 s (CPU: 3.1 phút) |
+| Tab 2 · edit Full · lượt đầu (gồm tải C 156 MB) | 26 s |
+| Tab 2 · edit Full · lượt sau | 18 s |
+
+Thời gian Tab 2 ở trên là phần **edit**; cả lượt bấm còn 2×6 probe, chưa đo riêng.
+Số liệu edit trên T4 khớp CPU về định tính (rewrite 0.99993, paraphrase 0.836,
+khôi phục trùng bit) nhưng không trùng từng chữ số: context template được sample
+trên CUDA nên khác CPU dù cùng `seed=0`. Causal tracing thì trùng tới 4 chữ số
+(nhiễu dùng `RandomState(1)` cố định).
+
+Runtime bị reset (để lâu không thao tác, hoặc Colab thu hồi máy) thì `/content`
+bị xoá và link chết — chạy lại cả cell, link mới sẽ khác.
 
 > Cell trên clone ẩn danh được — repo là public, không cần token, không cần
 > bước xác thực nào. Đã kiểm chứng bằng
@@ -186,17 +210,17 @@ Hai chế độ cho cùng một kết luận; Fast chỉ nhiễu hơn ở chữ 
 
 ### Chi phí một ROME edit — ba cột
 
-| Giai đoạn | Lạnh (CPU, phải tải C) | Ấm (CPU, C trong cache) | GPU T4 (ước tính) |
+| Giai đoạn | Lạnh (CPU, phải tải C) | Ấm (CPU, C trong cache) | Colab T4 (đo 18/10: lạnh / ấm) |
 |---|---|---|---|
-| `compute_u` (k\*, C⁻¹) | 2.0 phút | 9.2 s | — |
-| tối ưu v\* (20 bước) | 3.8 phút | 3.5 phút | — |
-| tính Λ | 464 ms | 414 ms | — |
-| ghi W | 4.5 s | 6.7 s | — |
-| **Tổng** | **5.8 phút** | **3.8 phút** | **~2 s** |
+| `compute_u` (k\*, C⁻¹) | 2.0 phút | 9.2 s | 4.2 s / 0.5 s |
+| tối ưu v\* (20 bước) | 3.8 phút | 3.5 phút | 20.7 s / 17.7 s |
+| tính Λ | 464 ms | 414 ms | 0.1 s / 0.1 s |
+| ghi W | 4.5 s | 6.7 s | 0.8 s / ~0 s |
+| **Tổng** | **5.8 phút** | **3.8 phút** | **25.7 s / 18.2 s** |
 
 - **Lạnh** = lần đầu trong phiên: `compute_u` phải tải C stats 156 MB từ `rome.baulab.info` rồi nghịch đảo ma trận 6400².
 - **Ấm** = các lần sau: C⁻¹ đã nằm trong `inv_mom2_cache` của `compute_u`.
-- **GPU T4**: ⚠️ **ước tính từ paper, CHƯA đo trên máy này** (máy này không có GPU NVIDIA). Dùng làm mốc kỳ vọng khi chạy Colab, không phải số đo.
+- **Colab T4**: đo thật khi diễn tập 18/10/2026 (fp32, transformers 5.18), xem mục 1.
 <!-- /BENCH_TABLE -->
 
 ---
@@ -408,7 +432,6 @@ con số ở đây là minh hoạ cơ chế, không phải thống kê để k�
 app.py                  Gradio app, 3 tab
 demo_utils.py           shim + wrapper quanh ./rome (không sửa ./rome)
 requirements.txt        pin cho máy CPU này
-requirements-cuda.txt   pin cho Colab/Kaggle T4
 run.sh                  kích hoạt venv + chạy app
 scripts/
   smoke_test.py         kiểm tra model nạp được và trả lời đúng

@@ -17,9 +17,11 @@ the chdir does not leak into our own outputs.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 import time
+import unicodedata
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -130,6 +132,98 @@ from rome import rome_main  # noqa: E402
 from rome.rome_main import apply_rome_to_model, upd_matrix_match_shape  # noqa: E402
 from rome.rome_hparams import ROMEHyperParams  # noqa: E402
 
+
+# --------------------------------------------------------------------------
+# 2b. transformers >= 5: ROME's generate_fast passes a 1-column attention mask
+# --------------------------------------------------------------------------
+# rome/util/generate.py calls the model with attention_mask[:, cur_context],
+# i.e. only the mask of the token(s) being fed, not of the cached prefix.
+# transformers 4.44 broadcasts that column over all keys, so it works there.
+# transformers 5.x builds the causal mask from the 2-D mask it is given, so the
+# prefix is masked wrongly and generation degrades into junk ("Invalidation
+# ofInvalidation ...") even on the UNEDITED model -- seen on Colab T4,
+# transformers 5.18, 18/10/2026. rome_main.get_context_templates() uses the
+# same function, so the ~21 templates k* is averaged over were junk too.
+#
+# Fix: same function, full-length mask. It is installed ONLY on transformers
+# >= 5. On 4.44 (this CPU box) the original is kept, because with padded
+# batches the two masks are NOT equivalent there, and swapping would change
+# the context templates and therefore every prerendered number.
+# ./rome itself stays untouched.
+import transformers as _transformers  # noqa: E402
+
+TRANSFORMERS_MAJOR = int(_transformers.__version__.split(".")[0])
+GENERATE_FAST_PATCHED = False
+
+# The heatmap code in rome sets font.family = "Times New Roman"; on hosts
+# without it (Colab) matplotlib logs one warning per glyph. Falls back to the
+# default font either way -- only the noise is silenced.
+logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)
+
+
+def _generate_fast_full_mask(model, tok, prompts, n_gen_per_prompt: int = 1,
+                             top_k: int = 5, max_out_len: int = 200):
+    """rome/util/generate.py::generate_fast with attention_mask[:, :stop]."""
+    inp = [prompt for prompt in prompts for _ in range(n_gen_per_prompt)]
+    inp_tok = tok(inp, padding=True, return_tensors="pt").to(
+        next(model.parameters()).device
+    )
+    input_ids, attention_mask = inp_tok["input_ids"], inp_tok["attention_mask"]
+    batch_size = input_ids.size(0)
+    past_key_values, cur_context = None, slice(0, attention_mask.sum(1).min().item())
+
+    with torch.no_grad():
+        while input_ids.size(1) < max_out_len:
+            model_out = model(
+                input_ids=input_ids[:, cur_context],
+                attention_mask=attention_mask[:, : cur_context.stop],  # the fix
+                past_key_values=past_key_values,
+                use_cache=True,
+            )
+            logits, past_key_values = model_out.logits, model_out.past_key_values
+            softmax_out = torch.nn.functional.softmax(logits[:, -1, :], dim=1)
+
+            tk = torch.topk(softmax_out, top_k, dim=1).indices
+            softmax_out_top_k = torch.gather(softmax_out, 1, tk)
+            softmax_out_top_k = softmax_out_top_k / softmax_out_top_k.sum(1)[:, None]
+            new_tok_indices = torch.multinomial(softmax_out_top_k, 1)
+            new_toks = torch.gather(tk, 1, new_tok_indices)
+
+            if cur_context.stop == input_ids.size(1):
+                attention_mask = torch.cat(
+                    [attention_mask, attention_mask.new_zeros(batch_size, 1)], dim=1
+                )
+                input_ids = torch.cat(
+                    [input_ids, input_ids.new_ones(batch_size, 1) * tok.pad_token_id],
+                    dim=1,
+                )
+
+            last_non_masked = attention_mask.sum(1) - 1
+            for i in range(batch_size):
+                new_idx = last_non_masked[i] + 1
+                if last_non_masked[i].item() + 1 != cur_context.stop:
+                    continue
+                if new_idx < max_out_len:
+                    input_ids[i][new_idx] = new_toks[i]
+                    attention_mask[i][new_idx] = 1
+
+            cur_context = slice(cur_context.stop, cur_context.stop + 1)
+
+    txt = [tok.decode(x) for x in input_ids.detach().cpu().numpy().tolist()]
+    return [
+        unicodedata.normalize("NFKD", x).replace("\n\n", " ").replace("<|endoftext|>", "")
+        for x in txt
+    ]
+
+
+if TRANSFORMERS_MAJOR >= 5:
+    import util.generate as _rome_generate  # noqa: E402
+
+    _rome_generate.generate_fast = _generate_fast_full_mask
+    rome_main.generate_fast = _generate_fast_full_mask   # imported by name there
+    generate_fast = _generate_fast_full_mask             # and here
+    GENERATE_FAST_PATCHED = True
+
 HPARAMS_PATH = ROME_DIR / "hparams" / "ROME" / f"{MODEL_NAME}.json"
 
 
@@ -138,8 +232,14 @@ HPARAMS_PATH = ROME_DIR / "hparams" / "ROME" / f"{MODEL_NAME}.json"
 # --------------------------------------------------------------------------
 def load_model(model_name: str = MODEL_NAME):
     """
-    Load once, share across tabs. fp32 on CPU on purpose: this box has AVX2
-    but no AMX, so bf16/fp16 would be emulated and *slower*, not faster.
+    Load once, share across tabs. fp32 everywhere, on purpose:
+      - CPU: this box has AVX2 but no AMX, so bf16/fp16 would be emulated and
+        *slower*, not faster.
+      - CUDA: rome/compute_u.py multiplies the fp32 C^-1 by u, and compute_v
+        calls torch.dot(cur_input, left_vector); with an fp16 model both are
+        dtype mismatches, so the edit fails. upstream's own notebook also loads
+        gpt2-xl in fp32, and it fits a 16 GB T4 with room to spare. See
+        CHANGES.md section N.
     """
     t0 = time.time()
     tok = AutoTokenizer.from_pretrained(model_name)
@@ -147,7 +247,7 @@ def load_model(model_name: str = MODEL_NAME):
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         low_cpu_mem_usage=True,
-        torch_dtype=torch.float32 if DEVICE == "cpu" else torch.float16,
+        torch_dtype=torch.float32,
     )
     nethook.set_requires_grad(False, model)
     model.eval().to(DEVICE)

@@ -123,7 +123,15 @@ def trace_estimate_md(prompt: str, kind: str, mode: str) -> str:
     head = (f"**Chế độ: {mode}** · `samples={samples}` · đủ "
             f"{MT.num_layers if MT else 48} layer · {nt} token "
             f"→ {nt * (MT.num_layers if MT else 48)} lần khôi phục")
-    if est is None:
+    if D.DEVICE == "cuda":
+        # benchmark.json is CPU-only; quoting it here showed "~3.1 phút" for a
+        # run that took 17.5 s on the T4 (CHANGES.md N).
+        t4 = T4_TRACE_FAST_S * (nt / 7)
+        body = (f"\n\n⏱️ **Ước lượng: {fmt_dur(t4)}** trên `cuda` (Fast, đo trên "
+                f"Colab T4)." if mode == "Fast" else
+                "\n\n⏱️ Trên `cuda`: Full **chưa đo** trên T4; Fast đo được "
+                f"{fmt_dur(T4_TRACE_FAST_S)} cho 7 token.")
+    elif est is None:
         body = "\n\nƯớc lượng thời gian: *chưa có số đo* (chạy `scripts/benchmark.py`)."
     else:
         body = f"\n\n⏱️ **Ước lượng: {fmt_dur(est)}** trên `{D.DEVICE}` (từ số đo thật)."
@@ -288,6 +296,11 @@ def dur_s(s):
     return fmt_dur(s)
 
 
+# Measured in the Colab T4 rehearsal, 18/10/2026 (CHANGES.md N).
+T4_TRACE_FAST_S = 17.5
+T4_EDIT_COLD_S, T4_EDIT_WARM_S = 25.7, 18.2
+
+
 def edit_estimate_md(mode: str) -> str:
     """
     Estimates come from three live end-to-end runs through this very endpoint,
@@ -298,6 +311,12 @@ def edit_estimate_md(mode: str) -> str:
     """
     hp_steps = HPARAMS.v_num_grad_steps if HPARAMS else 20
     n_probes = len(D.EIFFEL_PROBES)
+
+    if D.DEVICE == "cuda":
+        return (f"⏱️ Trên `cuda` (Colab T4, đo thật): phần **edit** Full "
+                f"`{fmt_dur(T4_EDIT_COLD_S)}` lượt đầu (gồm tải C stats), "
+                f"`{fmt_dur(T4_EDIT_WARM_S)}` các lượt sau; 2×{n_probes} probe "
+                f"cộng thêm (chưa đo riêng). Fast trên T4 chưa đo.")
 
     # Measured on an idle machine, gpt2-xl fp32 on CPU. See CHANGES.md M.
     FULL_TOTAL, FULL_EDIT = 497.0, 199.5   # mean of the two Full runs
@@ -736,4 +755,8 @@ if __name__ == "__main__":
     patch_gradio_bool_schema()
     boot()
     ui = build_ui()
-    ui.launch(server_name=SERVER_NAME, server_port=SERVER_PORT, share=SHARE)
+    # gradio >= 5 refuses to serve files outside cwd/tmp unless allowed; the
+    # demo_utils chdir makes cwd ./rome, so the live heatmap in .demo_cache
+    # was rejected on Colab (InvalidPathError). Harmless on gradio 4.44.
+    ui.launch(server_name=SERVER_NAME, server_port=SERVER_PORT, share=SHARE,
+              allowed_paths=[str(D.CACHE_DIR), str(D.PRERENDERED_DIR)])
